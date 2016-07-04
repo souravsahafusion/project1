@@ -7,14 +7,11 @@
 
             },
 
-            "y_axis_name":[
-               {"items_sold","revenue","visited"}
-            ],
+            "y_axis_name": ["items_sold","revenue","visited"],
+            
 
-            "x_axis_name":[
-                {"Jan","Feb","Mar","Apr","May","Jun"}
 
-            ],
+            "x_axis_name":["Jan","Feb","Mar","Apr","May","Jun"],
             
             "data": [
                 
