@@ -1,0 +1,79 @@
+
+{
+        
+
+            "data1": [{
+                "label": "Jan",
+                    
+                    "items_sold": "500"
+                    "revenue": "$5.6K"
+                    "visited": "700"
+            }, {
+                "label": "Feb",
+                   
+                    "items_sold": "500"
+                    "revenue": "$5.6K"
+                    "visited": "700"
+            }, {
+                "label": "Mar",
+                    "items_sold": "500"
+                    "revenue": "$5.6K"
+                    "visited": "700"
+            }, {
+                "label": "Apr",
+                    "items_sold": "500"
+                    "revenue": "$5.6K"
+                    "visited": "700"
+            }, {
+                "label": "May",
+                    "items_sold": "500"
+                    "revenue": "$5.6K"
+                    "visited": "700"
+            }, {
+                "label": "Jun",
+                    "items_sold": "500"
+                    "revenue": "$5.6K"
+                    "visited": "700"
+            }]
+
+            "data2": [{
+                "label": "Jan",
+                    "value": "420000"
+            }, {
+                "label": "Feb",
+                    "value": "810000"
+            }, {
+                "label": "Mar",
+                    "value": "720000"
+            }, {
+                "label": "Apr",
+                    "value": "550000"
+            }, {
+                "label": "May",
+                    "value": "910000"
+            }, {
+                "label": "Jun",
+                    "value": "510000"
+            }]
+            "data3": [{
+                "label": "Jan",
+                    "value": "420000"
+            }, {
+                "label": "Feb",
+                    "value": "810000"
+            }, {
+                "label": "Mar",
+                    "value": "720000"
+            }, {
+                "label": "Apr",
+                    "value": "550000"
+            }, {
+                "label": "May",
+                    "value": "910000"
+            }, {
+                "label": "Jun",
+                    "value": "510000"
+            }]
+        
+}
+   
