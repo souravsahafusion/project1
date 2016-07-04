@@ -7,11 +7,11 @@
 
             },
 
-            "y_axis_value":[
+            "y_axis_name":[
                {"items_sold","revenue","visited"}
             ],
 
-            "x_axis_value":[
+            "x_axis_name":[
                 {"Jan","Feb","Mar","Apr","May","Jun"}
 
             ],
@@ -21,20 +21,20 @@
 
             {
 
-               "y-axis":[500,5.6,700]
+               "y-axis_value":[500,5.6,700]
                     
             }, {
-                "y-axis_label": "y",
+                
                    
-                   "y-axis":[500,5.6,700]
+                   "y-axis_value":[500,5.6,700]
             }, {
-                "y-axis":[500,5.6,700]
+                "y-axis_value":[500,5.6,700]
             }, {
-               "y-axis":[500,5.6,700]
+               "y-axis_value":[500,5.6,700]
             }, {
-                "y-axis":[500,5.6,700]
+                "y-axis_value":[500,5.6,700]
             }, {
-                "y-axis":[500,5.6,700]
+                "y-axis_value":[500,5.6,700]
             }]
 
             
