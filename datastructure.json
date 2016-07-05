@@ -1,0 +1,37 @@
+
+var jsonData='{
+        
+
+          
+            "chart":{
+                "caption": "caption",
+                "subCaption": "subCaption",
+
+            },
+
+            "y_axis_name": ["items_sold","revenue","visited"],
+            "y_axis_ticks":[4,3,5],
+
+
+            "x_axis_name":["Jan","Feb","Mar","Apr","May","Jun"],
+            
+            "data": [
+               [500,5.6,700], 
+                
+                   
+               [500,5.6,700]
+            , 
+                [500,5.6,700]
+            , 
+               [500,5.6,700]
+            , 
+                [500,5.6,700]
+            , 
+                [500,5.6,700]
+            ]
+
+
+            
+        
+}'
+   
