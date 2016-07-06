@@ -13,6 +13,8 @@ var jsonData={
             },
 
            "y_axis_tick":[5,4,3],
+           "y_axis_map":["revenue","sales","visited"],
+
             
             "data": [
                 {
