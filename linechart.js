@@ -32,7 +32,7 @@ var jsonData={
 
                 },
                 {
-                    "revenue": 75000,      //value for month march
+                    "revenue": 7100,      //value for month march
                     "sales":250,
                     "visited":300,
                     "date":"05/3/2016"
@@ -53,6 +53,7 @@ var tip={
     maxTipValue:0,
     minTipValue:0,
     diffBwTips:0,
+    noOfYTips:0,
     findMin:function(tempMap){
         if ( typeof tempMap !==undefined )
         {
@@ -110,11 +111,38 @@ var tip={
         }
         
         this.diffBwTips = this.maxTipValue - this.minTipValue;
+
+
         console.log(this.minTipValue);
         console.log(this.maxTipValue);
-        console.log(this.diffBwTips);
+        //console.log(this.diffBwTips);
         //console.log(minValue);
 
+
+    },
+    findYTips:function(tempMap)
+    {
+        var diffBwTips = this.diffBwTips;
+        if( ( diffBwTips / 5 ) % 100 == 0 )
+        {
+            this.noOfYTips = 5;
+
+        }else if( ( diffBwTips / 3 ) % 100 == 0 )
+        {
+            this.noOfYTips = 3;
+
+        }else if( ( diffBwTips / 4 ) % 100 == 0 )
+        {
+            this.noOfYTips = 4;
+        }else if( ( diffBwTips / 7 ) % 100 == 0 )
+        {
+            this.noOfYTips = 7;
+        }else{
+
+            this.noOfYTips = 5;
+
+        }
+        console.log( diffBwTips / this.noOfYTips );
 
     }
 };
@@ -133,6 +161,7 @@ for(var i = 0; i<obj.y_axis_map.length;i++)
             range[i].max = range[i].findMax(tempMap);
             //console.log(range[i].max);
             range[i].findRange(tempMap);
+            range[i].findYTips(tempMap);
 
 
 
