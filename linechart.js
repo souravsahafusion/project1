@@ -13,7 +13,7 @@ var jsonData={
             },
 
            "y_axis_tick":[5,4,3],
-            
+            "y_axis_map":["revenue","sales","visited"],
             "data": [
                 {
                     "revenue": 3600,
@@ -50,11 +50,11 @@ var tip={
     max:0,
     range:0,
     findMin:function(){
-
+          
     },
     findMax:function()
     {
-        
+
     }
 };
 function parseData(user_input)
