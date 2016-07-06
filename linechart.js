@@ -8,11 +8,11 @@ var jsonData={
                 "subCaption": "subCaption",
                 "width":500,
                 "height":300
-                ""
+                
 
             },
 
-           
+           "y_axis_tick":[5,4,3],
             
             "data": [
                 {
@@ -44,11 +44,24 @@ var jsonData={
 };
 
 var obj={};
+var tip={
 
+    min:0,
+    max:0,
+    range:0,
+    findMin:function(){
+
+    },
+    findMax:function()
+    {
+        
+    }
+};
 function parseData(user_input)
 {
-obj.chart=user_input.chart;
-alert(obj.chart.caption);
+obj=user_input;
+tip.min
+console.log(obj.data[1]["revenue"]);
 
 }
 parseData(jsonData);
