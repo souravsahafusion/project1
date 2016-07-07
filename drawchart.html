@@ -299,6 +299,22 @@ var tip={
         var y2 = 100 + (this.heightEachChart * chartNo);
         this.drawLine(x1, y1, x2, y2);
 
+        //
+        var noOfYTips = this.noOfYTips;
+        var heightEachChart = this.heightEachChart;
+        var temp_y1 = y1;
+        var temp_x1 = x1;
+        var temp_x2 = x2;
+        for(i = 0; i<noOfYTips; i++)
+        {
+            x1 = temp_x1 - 4;
+            x2 = temp_x2 + 4;
+            y1 = 10 + temp_y1 + (heightEachChart / noOfYTips) * ( i  ); 
+            y2 = 10 + temp_y1 + (heightEachChart / noOfYTips) * ( i  ); 
+            this.drawLine(x1, y1, x2, y2);
+
+        } 
+
 
     },
     drawChart:function(chartNo)
