@@ -20,7 +20,7 @@ var jsonData={
                     "sales":25,
                     "visited":72,
                     "profit":5,
-                    "date":"25/6/2016"
+                    "date":"06/25/2015"
 
                 },
                 {
@@ -28,21 +28,21 @@ var jsonData={
                     "sales":15,
                     "visited":600,
                     "profit":3,
-                    "date":"25/4/2016"
+                    "date":"04/25/2015"
 
                 },
                 {
                     "revenue": 7100,      //value for month march
                     "sales":50,
                     "visited":300,
-                    "date":"05/3/2016"
+                    "date":"03/25/2015"
 
                 },
                 {
                     "revenue": 7900,      //value for month march
                     "sales":150,
                     "visited":900,
-                    "date":"05/3/2016"
+                    "date":"01/05/2015"
 
                 }
 
@@ -62,16 +62,22 @@ var tip={
     minTipValue:0,
     diffBwTips:0,
     noOfYTips:0,
-    monthValue:0,
-    findMin:function(tempMap){
+    //monthValue:0,
+    storeValue:[],
+    findMinAndSetDataValue:function(tempMap){
         if ( typeof tempMap !==undefined )
         {
             var minimum = obj.data[0][tempMap];
 
 
 
+
           for(var i=0;i<obj.data.length;i++)
           {
+            //setting value to the object
+            var monthValue = this.findMonth(i);
+            this.storeValue[monthValue] = obj.data[i][tempMap];
+            console.log(this.storeValue[monthValue]);
             if(obj.data[i][tempMap] < minimum)
             {
                 minimum = obj.data[i][tempMap];
@@ -88,6 +94,8 @@ var tip={
     },
     findMax:function(tempMap)
     {
+        if ( typeof tempMap !==undefined )
+        {
         var maximum = obj.data[0][tempMap];
 
 
@@ -103,6 +111,10 @@ var tip={
             
           }
           return maximum;
+      }else
+      {
+
+      }
 
     },
     findRange:function()
@@ -211,11 +223,13 @@ var tip={
         console.log( this.diffBwTips  / this.noOfYTips );
 
     },
-    findMonth:function()
+    findMonth:function(index)
     {
-        //var date = obj.data[]['06/25/2016'];
-        //dateObject = new Date(date);
-        //this.monthValue = dateObject.getMonth();
+
+        var date = obj.data[index]["date"];
+        console.log(date);
+        dateObject = new Date(date);
+        return dateObject.getMonth();
         //console.log(month[this.monthValue]);
     }
 };
@@ -229,12 +243,13 @@ for(var i = 0; i<obj.y_axis_map.length;i++)
           {
             var tempMap=obj.y_axis_map[i];
             range[i] = new Object(tip);
-            range[i].min = range[i].findMin(tempMap);
+            range[i].min = range[i].findMinAndSetDataValue(tempMap);
             //console.log(range[i].min);
             range[i].max = range[i].findMax(tempMap);
             //console.log(range[i].max);
             range[i].findRange();
             range[i].findYTips();
+            
             
 
 
