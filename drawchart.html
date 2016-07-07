@@ -5,7 +5,7 @@
 <body >
 
 
-<svg id="chart" height="1800" width="600" style="stroke:rgb(255,0,0);stroke-width:2">
+<svg id="chart" height="1800" width="1200" style="stroke:rgb(255,0,0);stroke-width:2">
 </svg>
 
 
@@ -32,7 +32,7 @@ var jsonData={
                     "sales":25,
                     "visited":72,
                     "profit":5,
-                    "date":"06/25/2015"
+                    "date":"04/25/2015"
 
                 },
                 {
@@ -40,7 +40,7 @@ var jsonData={
                     "sales":15,
                     "visited":600,
                     "profit":3,
-                    "date":"04/25/2015"
+                    "date":"02/25/2015"
 
                 },
                 {
@@ -77,8 +77,8 @@ var tip={
     //width:obj.chart.width,
     //height:obj.chart.height,
     //noofcharts:obj.y_axis_map.length,
-    heightEachChart:300,
-    widthEachChart:600,
+    heightEachChart:400,
+    widthEachChart:900,
     chartId:'',
     chartNo:0,
     //monthValue:0,
@@ -268,10 +268,25 @@ var tip={
     {
         var chartNo = this.chartNo;
         var x1 = 100;
-        var x2 = 500;
+        var x2 = 1200;
         var y1 = 100 + (this.heightEachChart * chartNo);
         var y2 = 100 + (this.heightEachChart * chartNo);
         this.drawLine(x1,y1,x2,y2);
+
+        //drawTicks
+        var numberOfTicks = obj.data.length; 
+
+        //console.log(numberOfTicks + 'numberOfTicks');
+        var temp_x1 = x1;
+        var widthEachChart = this.widthEachChart - 20;
+        for(i = 0 ; i < numberOfTicks; i++){
+            
+           x1 = 10 + temp_x1 + (widthEachChart / numberOfTicks) * ( i  );
+           x2 = 10 + temp_x1 + (widthEachChart / numberOfTicks) * ( i  );
+           y1 = 100 + (this.heightEachChart * chartNo) - 4;
+           y2 = 100 + (this.heightEachChart * chartNo) + 4;
+           this.drawLine(x1, y1, x2, y2);            
+        }
 
 
     },
@@ -280,9 +295,9 @@ var tip={
         var chartNo = this.chartNo;
         var x1 = 100;
         var x2 = 100;
-        var y1 = 100 + (this.heightEachChart * (chartNo - 1)) + chartNo * 15;
+        var y1 = 100 + (this.heightEachChart * (chartNo - 1)) + chartNo * 15; //15 used to give space between charts
         var y2 = 100 + (this.heightEachChart * chartNo);
-        this.drawLine(x1,y1,x2,y2);
+        this.drawLine(x1, y1, x2, y2);
 
 
     },
