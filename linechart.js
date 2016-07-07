@@ -33,8 +33,15 @@ var jsonData={
                 },
                 {
                     "revenue": 7100,      //value for month march
-                    "sales":250,
+                    "sales":50,
                     "visited":300,
+                    "date":"05/3/2016"
+
+                },
+                {
+                    "revenue": 7900,      //value for month march
+                    "sales":150,
+                    "visited":900,
                     "date":"05/3/2016"
 
                 }
@@ -43,7 +50,8 @@ var jsonData={
           ]        
 };
 
-var obj={};
+var obj = {};
+var month = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"];
 var tip={
 
     min:0,
@@ -54,6 +62,7 @@ var tip={
     minTipValue:0,
     diffBwTips:0,
     noOfYTips:0,
+    monthValue:0,
     findMin:function(tempMap){
         if ( typeof tempMap !==undefined )
         {
@@ -61,7 +70,7 @@ var tip={
 
 
 
-          for(var i=0;i<obj.y_axis_map.length;i++)
+          for(var i=0;i<obj.data.length;i++)
           {
             if(obj.data[i][tempMap] < minimum)
             {
@@ -83,7 +92,7 @@ var tip={
 
 
 
-          for(var i=0;i<obj.y_axis_map.length;i++)
+          for(var i=0;i<obj.data.length;i++)
           {
             if(obj.data[i][tempMap] > maximum)
             {
@@ -96,7 +105,7 @@ var tip={
           return maximum;
 
     },
-    findRange:function(tempMap)
+    findRange:function()
     {
         var minValue = Math.floor(this.min);
         var lastTwoMinDigit = minValue % 100;
@@ -120,9 +129,10 @@ var tip={
 
 
     },
-    findYTips:function(tempMap)
+    findYTips:function()
     {
         var diffBwTips = this.diffBwTips;
+        var tempDiffBwTips = diffBwTips + 100;
         if( ( diffBwTips / 5 ) % 100 == 0 )
         {
             this.noOfYTips = 5;
@@ -137,13 +147,76 @@ var tip={
         }else if( ( diffBwTips / 7 ) % 100 == 0 )
         {
             this.noOfYTips = 7;
+        }else if( ( diffBwTips / 3 ) % 50 == 0 )
+        {
+            this.noOfYTips = 3;
+
+        }else if( ( diffBwTips / 4 ) % 50 == 0 )
+        {
+            this.noOfYTips = 4;
+        }else if( ( diffBwTips / 7 ) % 50 == 0 )
+        {
+            this.noOfYTips = 7;
+        }else if( ( tempDiffBwTips / 5 ) % 100 == 0 )
+        {
+            this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
+            this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
+            this.noOfYTips = 5;
+            
+        }else if( ( tempDiffBwTips / 3 ) % 100 == 0 )
+        {
+            this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
+            this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
+            this.noOfYTips = 3;
+            
+        }else if( ( tempDiffBwTips / 4 ) % 100 == 0 )
+        {
+            this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
+            this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
+            this.noOfYTips = 4;
+            
+        }else if( ( tempDiffBwTips / 7 ) % 100 == 0 )
+        {
+            this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
+            this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
+            this.noOfYTips = 7;
+            tempDiffBwTips = tempDiffBwTips + 100;
+            
+        }else if( ( tempDiffBwTips / 5 ) % 100 == 0 )
+        {
+            this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
+            this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
+            this.noOfYTips = 5;
+            
+        }else if( ( tempDiffBwTips / 3 ) % 100 == 0 )
+        {
+            this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
+            this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
+            this.noOfYTips = 3;
+            
+        }else if( ( tempDiffBwTips / 4 ) % 100 == 0 )
+        {
+            this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
+            this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
+            this.noOfYTips = 4;
+            
         }else{
+
+
 
             this.noOfYTips = 5;
 
         }
-        console.log( diffBwTips / this.noOfYTips );
+        console.log(this.maxTipValue);
+        console.log( this.diffBwTips  / this.noOfYTips );
 
+    },
+    findMonth:function()
+    {
+        //var date = obj.data[]['06/25/2016'];
+        //dateObject = new Date(date);
+        //this.monthValue = dateObject.getMonth();
+        //console.log(month[this.monthValue]);
     }
 };
 function parseData(input)
@@ -160,8 +233,9 @@ for(var i = 0; i<obj.y_axis_map.length;i++)
             //console.log(range[i].min);
             range[i].max = range[i].findMax(tempMap);
             //console.log(range[i].max);
-            range[i].findRange(tempMap);
-            range[i].findYTips(tempMap);
+            range[i].findRange();
+            range[i].findYTips();
+            
 
 
 
@@ -170,6 +244,9 @@ for(var i = 0; i<obj.y_axis_map.length;i++)
             //range.push(obj.data[i][tempMap])
             //console.log(obj.data[i][tempMap]);
           }
+
+
+ 
 }
 
 parseData(jsonData);
