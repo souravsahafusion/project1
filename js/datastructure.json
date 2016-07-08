@@ -1,0 +1,48 @@
+var jsonData = {
+
+
+
+    "chart": {
+        "caption": "caption",
+        "subCaption": "subCaption",
+        "width": 500,
+        "height": 300
+
+
+    },
+    "month": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"],
+
+
+    "y_axis_tick": [5, 4, 3],
+    "y_axis_map": ["revenue", "sales", "visited"],
+    "data": [{
+            "revenue": 3600.75, //value for month june
+            "sales": 15,
+            "visited": 72,
+            "profit": 5,
+            "date": "04/25/2015"
+
+        }, {
+            "revenue": 5600, // value for month april
+            "sales": 450,
+            "visited": 60,
+            "profit": 50,
+            "date": "02/25/2015"
+
+        }, {
+            "revenue": 7100, //value for month march
+            "sales": 50,
+            "visited": 3000,
+            "date": "03/25/2015"
+
+        }, {
+            "revenue": 50900, //value for month march
+            "sales": 150,
+            "visited": 90,
+            "date": "01/05/2015"
+
+        }
+
+
+    ]
+};
