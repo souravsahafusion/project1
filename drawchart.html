@@ -5,7 +5,7 @@
 <body >
 
 
-<svg id="chart" height="1800" width="1200" style="stroke:rgb(255,0,0);stroke-width:2">
+<svg id="chart" height="1800" width="900" style="stroke:rgb(255,0,0);stroke-width:2">
 </svg>
 
 
@@ -29,31 +29,31 @@ var jsonData={
             "data": [
                 {
                     "revenue": 3600.75,      //value for month june
-                    "sales":25,
+                    "sales":15,
                     "visited":72,
                     "profit":5,
                     "date":"04/25/2015"
 
                 },
                 {
-                    "revenue": 5600,      // value for month april
-                    "sales":15,
-                    "visited":600,
-                    "profit":3,
+                    "revenue": 56000,      // value for month april
+                    "sales":150,
+                    "visited":60,
+                    "profit":50,
                     "date":"02/25/2015"
 
                 },
                 {
                     "revenue": 7100,      //value for month march
                     "sales":50,
-                    "visited":300,
+                    "visited":3000,
                     "date":"03/25/2015"
 
                 },
                 {
-                    "revenue": 7900,      //value for month march
+                    "revenue": 50900,      //value for month march
                     "sales":150,
-                    "visited":900,
+                    "visited":90,
                     "date":"01/05/2015"
 
                 }
@@ -320,6 +320,7 @@ var tip={
             y2 = 10 + temp_y1 + (heightEachChart / noOfYTips) * ( i  ); 
             this.lowLimitYAxis = y1;
             this.drawLine(x1, y1, x2, y2);
+            this.drawLine(x1, y1, this.widthEachChart, y2 );
 
         } 
 
@@ -332,7 +333,7 @@ var tip={
         //console.log(a + ' '+ b);
         var c = this.upLimitYAxis;
         var d = this.lowLimitYAxis;
-        return ((value - a)/(b - a) * (d - c) + c);
+        return ( d - (value - a)/(b - a) * (d - c) );
 
     },
     plotGraph:function()
@@ -343,11 +344,17 @@ var tip={
             var yPointPlot = this.calculateMappingPoint(value);
             var widthEachChart = this.widthEachChart - 20;
             var numberOfTicks = obj.data.length;
-            var xPointPlot  = 10 + this.lowLimitXAxis + (widthEachChart / numberOfTicks) * ( i  );
-            console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY);
-            console.log(xPointPlot + ' '+ yPointPlot );
+            var xPointPlot  = this.lowLimitXAxis + (widthEachChart / numberOfTicks) * ( i  );
+            //this.lastPlottedPointY = this.lowLimitYAxis - this.lastPlottedPointY;
+            //yPointPlot = this.lowLimitYAxis - yPointPlot;
             if(i != 0 ) //skipping the first plot
             {
+
+                console.log(this.lowLimitYAxis);
+                
+                
+                console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
+                console.log(xPointPlot + ' '+ yPointPlot + ' ' + this.tempMap);
                 this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot);
 
 
