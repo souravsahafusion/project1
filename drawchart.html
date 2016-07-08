@@ -5,7 +5,7 @@
 <body >
 
 
-<svg id="chart" height="1800" width="900" style="stroke:rgb(255,0,0);stroke-width:2">
+<svg id="chart" height="1800" width="1200" style="stroke:rgb(255,0,0);stroke-width:2">
  <!--<text id = "text" fill="black"></text> -->
 </svg>
 
@@ -379,6 +379,15 @@ var tip={
         return ( d - (value - a)/(b - a) * (d - c) );
 
     },
+    plotTipPoints:function(xPointPlot, yPointPlot)
+    {
+        var circleTip = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circleTip.setAttribute("cx", xPointPlot); // setting circle 
+        circleTip.setAttribute("cy", yPointPlot); // coordinates
+        circleTip.setAttribute("r", 2);
+        this.chartId.appendChild(circleTip);
+
+    },
     plotGraph:function()
     {
         for(i = 0; i < obj.data.length; i++)
@@ -390,6 +399,8 @@ var tip={
             var xPointPlot  = this.lowLimitXAxis + (widthEachChart / numberOfTicks) * ( i  );
             //this.lastPlottedPointY = this.lowLimitYAxis - this.lastPlottedPointY;
             //yPointPlot = this.lowLimitYAxis - yPointPlot;
+            this.plotTipPoints(xPointPlot, yPointPlot);
+
             if(i != 0 ) //skipping the first plot
             {
 
@@ -409,6 +420,7 @@ var tip={
             
             
         }
+        
 
 
     },
