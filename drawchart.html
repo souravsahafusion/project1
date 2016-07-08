@@ -295,8 +295,8 @@ var tip={
         var chartNo = this.chartNo;
         var x1 = 100;
         var x2 = 900;
-        var y1 = 100 + (this.heightEachChart * chartNo) + (chartNo - 1) * 15;
-        var y2 = 100 + (this.heightEachChart * chartNo) + (chartNo - 1) * 15;
+        var y1 = 100 + (this.heightEachChart * chartNo) + (chartNo - 1) * 35;
+        var y2 = 100 + (this.heightEachChart * chartNo) + (chartNo - 1) * 35;
         this.drawLine(x1,y1,x2,y2);
 
         //drawTicks
@@ -311,8 +311,8 @@ var tip={
            x1 = temp_x1 + (widthEachChart / numberOfTicks) * ( i  );
            x2 = temp_x1 + (widthEachChart / numberOfTicks) * ( i  );
            this.upLimitXAxis = x1;
-           y1 = 100 + (this.heightEachChart * chartNo) - 4 + (chartNo - 1) * 15;
-           y2 = 100 + (this.heightEachChart * chartNo) + 4 + (chartNo - 1) * 15;
+           y1 = 100 + (this.heightEachChart * chartNo) - 4 + (chartNo - 1) * 35;
+           y2 = 100 + (this.heightEachChart * chartNo) + 4 + (chartNo - 1) * 35;
            this.drawLine(x1, y1, x2, y2);            
         }
 
@@ -324,8 +324,8 @@ var tip={
         var x1 = 100;
         var x2 = 100;
         console.log(chartNo + 'chartNo');
-        var y1 = 100 + (this.heightEachChart * (chartNo - 1)) + (chartNo - 1) * 15; //15 used to give space between charts
-        var y2 = 100 + (this.heightEachChart * chartNo) + (chartNo - 1) * 15;
+        var y1 = 100 + (this.heightEachChart * (chartNo - 1)) + (chartNo - 1) * 35; //15 used to give space between charts
+        var y2 = 100 + (this.heightEachChart * chartNo) + (chartNo - 1) * 35;
         this.drawLine(x1, y1, x2, y2);
 
         //draw ticks
