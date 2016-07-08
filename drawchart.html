@@ -5,7 +5,7 @@
 <body >
 
 
-<svg id="chart" height="1800" width="1500" style="stroke:rgb(255,0,0);stroke-width:2">
+<svg id="chart" height="1800" width="1500" stroke-width:2">
  <!--<text id = "text" fill="black"></text> -->
 </svg>
 
@@ -261,13 +261,14 @@ var tip={
         return dateObject.getMonth();
         //console.log(month[this.monthValue]);
     },
-    drawLine:function(x1,y1,x2,y2)
+    drawLine:function(x1,y1,x2,y2,style)
     {
         var line = document.createElementNS("http://www.w3.org/2000/svg", "line");  
         line.setAttribute("x1", x1);          
         line.setAttribute("y1", y1);         
         line.setAttribute("x2", x2);
         line.setAttribute("y2", y2);
+        line.setAttribute("style", style);
         console.log(this.chartId);
         this.chartId.appendChild(line);
         
@@ -312,7 +313,8 @@ var tip={
         var x2 = 900;
         var y1 = 100 + (this.heightEachChart * chartNo) + (chartNo - 1) * 35;
         var y2 = 100 + (this.heightEachChart * chartNo) + (chartNo - 1) * 35;
-        this.drawLine(x1,y1,x2,y2);
+        var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+        this.drawLine(x1,y1,x2,y2,style);
 
         //drawTicks
         var numberOfTicks = obj.data.length; 
@@ -328,7 +330,8 @@ var tip={
            this.upLimitXAxis = x1;
            y1 = 100 + (this.heightEachChart * chartNo) - 4 + (chartNo - 1) * 35;
            y2 = 100 + (this.heightEachChart * chartNo) + 4 + (chartNo - 1) * 35;
-           this.drawLine(x1, y1, x2, y2); 
+           var style = "stroke:rgb(0,0,230);stroke-width:1";
+           this.drawLine(x1, y1, x2, y2,style); 
 
            //put x-axis label 
            console.log(obj.month[i] + 'monthValue');
@@ -353,7 +356,8 @@ var tip={
         console.log(chartNo + 'chartNo');
         var y1 = 100 + (this.heightEachChart * (chartNo - 1)) + (chartNo - 1) * 35; //15 used to give space between charts
         var y2 = 100 + (this.heightEachChart * chartNo) + (chartNo - 1) * 35;
-        this.drawLine(x1, y1, x2, y2);
+        var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+        this.drawLine(x1, y1, x2, y2, style);
 
         //draw ticks
         var noOfYTips = this.noOfYTips;
@@ -373,9 +377,11 @@ var tip={
             y2 = temp_y1 + (heightEachChart / noOfYTips) * ( i  ); 
             
             //drawing ticks
-            this.drawLine(x1, y1, x2, y2);
+            var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+            this.drawLine(x1, y1, x2, y2,style);
             //drawing divs
-            this.drawLine(x1, y1, this.widthEachChart, y2 );
+            var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+            this.drawLine(x1, y1, this.widthEachChart, y2, style );
             //writing the labels
             
 
@@ -409,9 +415,11 @@ var tip={
     plotTipPoints:function(xPointPlot, yPointPlot)
     {
         var circleTip = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
         circleTip.setAttribute("cx", xPointPlot); // setting circle 
         circleTip.setAttribute("cy", yPointPlot); // coordinates
-        circleTip.setAttribute("r", 2);
+        circleTip.setAttribute("r", 3);
+        circleTip.setAttribute("style", style);
         this.chartId.appendChild(circleTip);
 
     },
@@ -436,7 +444,8 @@ var tip={
                 
                 console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
                 console.log(xPointPlot + ' '+ yPointPlot + ' ' + this.tempMap);
-                this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot);
+                var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+                this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot,style);
 
 
 
