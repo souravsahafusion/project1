@@ -74,19 +74,23 @@ var tip={
     minTipValue:0,
     diffBwTips:0,
     noOfYTips:0,
-    //width:obj.chart.width,
-    //height:obj.chart.height,
-    //noofcharts:obj.y_axis_map.length,
     heightEachChart:400,
     widthEachChart:900,
     chartId:'',
     chartNo:0,
-    //monthValue:0,
+    upLimitXAxis:0,
+    lowLimitXAxis:0,
+    upLimitYAxis:0,
+    lowLimitYAxis:0,
     storeValue:[],
+    tempMap:'',
+    lastPlottedPointX:0,
+    lastPlottedPointY:0,
     findMinAndSetDataValue:function(tempMap){
         if ( typeof tempMap !==undefined )
         {
             var minimum = obj.data[0][tempMap];
+            this.tempMap = tempMap;
 
 
 
@@ -278,11 +282,13 @@ var tip={
 
         //console.log(numberOfTicks + 'numberOfTicks');
         var temp_x1 = x1;
+        this.lowLimitXAxis = temp_x1 + 10; //setting the limits from the tip value
         var widthEachChart = this.widthEachChart - 20;
         for(i = 0 ; i < numberOfTicks; i++){
             
            x1 = 10 + temp_x1 + (widthEachChart / numberOfTicks) * ( i  );
            x2 = 10 + temp_x1 + (widthEachChart / numberOfTicks) * ( i  );
+           this.upLimitXAxis = x1;
            y1 = 100 + (this.heightEachChart * chartNo) - 4;
            y2 = 100 + (this.heightEachChart * chartNo) + 4;
            this.drawLine(x1, y1, x2, y2);            
@@ -299,10 +305,11 @@ var tip={
         var y2 = 100 + (this.heightEachChart * chartNo);
         this.drawLine(x1, y1, x2, y2);
 
-        //
+        //draw ticks
         var noOfYTips = this.noOfYTips;
         var heightEachChart = this.heightEachChart;
         var temp_y1 = y1;
+        this.upLimitYAxis = y1 + 10; //setting the top limit value of y axis
         var temp_x1 = x1;
         var temp_x2 = x2;
         for(i = 0; i<noOfYTips; i++)
@@ -311,9 +318,47 @@ var tip={
             x2 = temp_x2 + 4;
             y1 = 10 + temp_y1 + (heightEachChart / noOfYTips) * ( i  ); 
             y2 = 10 + temp_y1 + (heightEachChart / noOfYTips) * ( i  ); 
+            this.lowLimitYAxis = y1;
             this.drawLine(x1, y1, x2, y2);
 
         } 
+
+
+    },
+    calculateMappingPoint:function(value)
+    {
+        var a = this.minTipValue;
+        var b = this.maxTipValue;
+        //console.log(a + ' '+ b);
+        var c = this.upLimitYAxis;
+        var d = this.lowLimitYAxis;
+        return ((value - a)/(b - a) * (d - c) + c);
+
+    },
+    plotGraph:function()
+    {
+        for(i = 0; i < obj.data.length; i++)
+        {
+            var value = this.storeValue[i];
+            var yPointPlot = this.calculateMappingPoint(value);
+            var widthEachChart = this.widthEachChart - 20;
+            var numberOfTicks = obj.data.length;
+            var xPointPlot  = 10 + this.lowLimitXAxis + (widthEachChart / numberOfTicks) * ( i  );
+            console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY);
+            console.log(xPointPlot + ' '+ yPointPlot );
+            if(i != 0 ) //skipping the first plot
+            {
+                this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot);
+
+
+
+            }
+            this.lastPlottedPointX = xPointPlot;
+            this.lastPlottedPointY = yPointPlot;
+            //skipping the 2D array for storing x-y w.r.t month and instead storing the previous x-y coordinates
+            
+            
+        }
 
 
     },
@@ -324,6 +369,7 @@ var tip={
 
         this.drawXAxis();
         this.drawYAxis();
+        this.plotGraph();
 
 
     }
