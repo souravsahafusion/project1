@@ -303,13 +303,13 @@ var tip={
         var numberOfTicks = obj.data.length; 
 
         //console.log(numberOfTicks + 'numberOfTicks');
-        var temp_x1 = x1;
-        this.lowLimitXAxis = temp_x1 + 10; //setting the limits from the tip value
-        var widthEachChart = this.widthEachChart - 20;
+        var temp_x1 = x1 + 10;
+        this.lowLimitXAxis = temp_x1 ; //setting the limits from the tip value
+        var widthEachChart = this.widthEachChart ;
         for(i = 0 ; i < numberOfTicks; i++){
             
-           x1 = 10 + temp_x1 + (widthEachChart / numberOfTicks) * ( i  );
-           x2 = 10 + temp_x1 + (widthEachChart / numberOfTicks) * ( i  );
+           x1 = temp_x1 + (widthEachChart / numberOfTicks) * ( i  );
+           x2 = temp_x1 + (widthEachChart / numberOfTicks) * ( i  );
            this.upLimitXAxis = x1;
            y1 = 100 + (this.heightEachChart * chartNo) - 4 + (chartNo - 1) * 15;
            y2 = 100 + (this.heightEachChart * chartNo) + 4 + (chartNo - 1) * 15;
