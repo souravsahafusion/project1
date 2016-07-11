@@ -10,7 +10,7 @@
         diffBwTips: 0,
         noOfYTips: 0,
         heightEachChart: 400,
-        widthEachChart: 900,
+        widthEachChart: 800,
         chartId: '',
         chartNo: 0,
         upLimitXAxis: 0,
@@ -189,7 +189,9 @@
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
             textElement.innerHTML = textValue;
-            console.log(y + 'label');
+            var style = "transform: rotate(90deg);transform-origin: left top 0;"
+            textElement.setAttribute("style", style);
+            //console.log(y + 'label');
             this.chartId.appendChild(textElement);
 
 
@@ -222,7 +224,7 @@
         drawXAxis: function() {
             var chartNo = this.chartNo;
             var x1 = 100;
-            var x2 = 900;
+            var x2 = 800;
             var y1 = 100 + (this.heightEachChart * chartNo) + (chartNo - 1) * 35;
             var y2 = 100 + (this.heightEachChart * chartNo) + (chartNo - 1) * 35;
             var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
@@ -318,7 +320,7 @@
             return (d - (value - a) / (b - a) * (d - c));
 
         },
-        plotTipPoints: function(xPointPlot, yPointPlot) {
+        plotTipCirle: function(xPointPlot, yPointPlot) {
             var circleTip = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
             circleTip.setAttribute("cx", xPointPlot); // setting circle 
@@ -329,33 +331,39 @@
 
         },
         plotGraph: function() {
-            for (i = 0; i < obj.data.length; i++) {
+            for (i = 0; i < 12; i++) {   /*to be changed later '12' for any number of data i.e. find the last index of the storevalue array*/
                 var value = this.storeValue[i];
-                var yPointPlot = this.calculateMappingPoint(value);
-                var widthEachChart = this.widthEachChart;
-                var numberOfTicks = obj.data.length;
-                var xPointPlot = this.lowLimitXAxis + (widthEachChart / numberOfTicks) * (i);
-                //this.lastPlottedPointY = this.lowLimitYAxis - this.lastPlottedPointY;
-                //yPointPlot = this.lowLimitYAxis - yPointPlot;
-                this.plotTipPoints(xPointPlot, yPointPlot);
-
-                if (i != 0) //skipping the first plot
+                console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
+                if (typeof value != 'undefined')
                 {
+                    var yPointPlot = this.calculateMappingPoint(value);
+                    var widthEachChart = this.widthEachChart;
+                    var numberOfTicks = obj.data.length;
+                    var xPointPlot = this.lowLimitXAxis + (widthEachChart / numberOfTicks) * (i);
+                    //this.lastPlottedPointY = this.lowLimitYAxis - this.lastPlottedPointY;
+                    //yPointPlot = this.lowLimitYAxis - yPointPlot;
+                    this.plotTipCirle(xPointPlot, yPointPlot);
 
-                    //console.log(this.lowLimitYAxis);
+                    if (i != 0) //skipping the first plot
+                    {
+
+                        //console.log(this.lowLimitYAxis);
 
 
-                    //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
-                    //console.log(xPointPlot + ' ' + yPointPlot + ' ' + this.tempMap);
-                    var style = "stroke:rgb(105,105,105);stroke-width:3;";
-                    this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot, style);
+                        //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
+                        //console.log(xPointPlot + ' ' + yPointPlot + ' ' + this.tempMap);
+                        var style = "stroke:rgb(105,105,105);stroke-width:3;";
+                        this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot, style);
 
 
+
+                    }
+                    this.lastPlottedPointX = xPointPlot;
+                    this.lastPlottedPointY = yPointPlot;
+                    //skipping the 2D array for storing x-y w.r.t month and instead storing the previous x-y coordinates
 
                 }
-                this.lastPlottedPointX = xPointPlot;
-                this.lastPlottedPointY = yPointPlot;
-                //skipping the 2D array for storing x-y w.r.t month and instead storing the previous x-y coordinates
+                
 
 
             }
@@ -412,6 +420,7 @@
             //range.push(obj.data[i][tempMap])
             //console.log(obj.data[i][tempMap]);
         }
+         
 
 
 
