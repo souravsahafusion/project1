@@ -5,15 +5,12 @@ var jsonData = {
     "chart": {
         "caption": "caption",
         "subCaption": "subCaption",
-        "width": 500,
-        "height": 300
+        "width": 1500,
+        "height": 1800
 
 
     },
     "month": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"],
-
-
-    "y_axis_tick": [5, 4, 3],
     "y_axis_map": ["revenue", "sales", "visited"],
     "data": [{
             "revenue": 3600.75, //value for month june

@@ -209,6 +209,16 @@
 
 
         },
+        addText:function(x, y, textValue,style)
+        {
+            var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            textElement.setAttribute("x", x);
+            textElement.setAttribute("y", y);
+            textElement.innerHTML = textValue;
+            this.chartId.appendChild(textElement);
+            console.log(x +' xvalue' + y + ' yvalue' + textValue + 'textValue');
+
+        },
         drawXAxis: function() {
             var chartNo = this.chartNo;
             var x1 = 100;
@@ -277,10 +287,10 @@
                 y2 = temp_y1 + (heightEachChart / noOfYTips) * (i);
 
                 //drawing ticks
-                var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+                var style = "stroke:rgb(0,0,230);stroke-width:1";
                 this.drawLine(x1, y1, x2, y2, style);
                 //drawing divs
-                var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+                var style = "stroke:rgb(0,0,230);stroke-width:1";
                 this.drawLine(x1, y1, this.widthEachChart, y2, style);
                 //writing the labels
 
@@ -332,12 +342,12 @@
                 if (i != 0) //skipping the first plot
                 {
 
-                    console.log(this.lowLimitYAxis);
+                    //console.log(this.lowLimitYAxis);
 
 
-                    console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
-                    console.log(xPointPlot + ' ' + yPointPlot + ' ' + this.tempMap);
-                    var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+                    //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
+                    //console.log(xPointPlot + ' ' + yPointPlot + ' ' + this.tempMap);
+                    var style = "stroke:rgb(105,105,105);stroke-width:3;";
                     this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot, style);
 
 
@@ -353,6 +363,18 @@
 
 
         },
+        addChartName: function(chartNo)
+        {
+            var chartName = obj.y_axis_map[chartNo];
+            var x = obj.chart.width - 70;
+            var y = (this.upLimitYAxis + this.lowLimitYAxis) / 2;
+            var style = '';
+            this.addText(x, y, chartName, style);
+
+            
+            //console.log('addChartName');
+
+        },
         drawChart: function(chartNo) {
             this.chartId = document.getElementById("chart");
             this.chartNo = chartNo + 1;
@@ -360,6 +382,8 @@
             this.drawXAxis();
             this.drawYAxis();
             this.plotGraph();
+            this.addChartName(chartNo); //this chartNo is the index value of the array 
+
 
 
         }
