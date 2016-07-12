@@ -214,20 +214,21 @@
 
 
         },
-        addText:function(x, y, textValue,style)
+        addText:function(x, y, textValue,transform)
         {
             var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
             textElement.innerHTML = textValue;
+            textElement.setAttribute("transform",transform);
             this.chartId.appendChild(textElement);
             console.log(x +' xvalue' + y + ' yvalue' + textValue + 'textValue');
 
         },
         drawXAxis: function() {
             var chartNo = this.chartNo;
-            var x1 = widthEachChart / 7;
-            var x2 = widthEachChart + (widthEachChart / 7);
+            var x1 = widthEachChart / 5;
+            var x2 = widthEachChart + (widthEachChart / 5) + (widthEachChart / 20);
             var y1 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
             var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
             var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
@@ -267,8 +268,8 @@
 
         {
             var chartNo = this.chartNo;
-            var x1 = widthEachChart / 7;
-            var x2 = widthEachChart / 7;
+            var x1 = widthEachChart / 5;
+            var x2 = widthEachChart / 5;
             console.log(chartNo + 'chartNo');
             var y1 = (heightEachChart / 4) + (heightEachChart * (chartNo - 1)) + (chartNo - 1) * (heightEachChart / 8); //15 used to give space between charts
             var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
@@ -296,7 +297,7 @@
                 this.drawLine(x1, y1, x2, y2, style);
                 //drawing divs
                 var style = "stroke:rgb(0,0,230);stroke-width:1";
-                this.drawLine(x1, y1, widthEachChart + (widthEachChart / 7), y2, style);
+                this.drawLine(x1, y1, widthEachChart + (widthEachChart / 5) + (widthEachChart / 20), y2, style);
                 //writing the labels
 
 
@@ -377,10 +378,11 @@
         addChartName: function(chartNo)
         {
             var chartName = obj.y_axis_map[chartNo];
-            var x = obj.chart.width - 70;
+            var x = widthEachChart / 70;
             var y = (this.upLimitYAxis + this.lowLimitYAxis) / 2;
-            var style = '';
-            this.addText(x, y, chartName, style);
+            
+            var transform = "rotate(270 " + x + "," + y + ")";
+            this.addText(x, y, chartName, transform);
 
             
             //console.log('addChartName');
