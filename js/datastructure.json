@@ -5,8 +5,8 @@ var jsonData = {
     "chart": {
         "caption": "caption",
         "subCaption": "subCaption",
-        "width": 900,
-        "height": 1500
+        "width": 700,
+        "height": 1800
 
 
     },
@@ -17,16 +17,16 @@ var jsonData = {
             "sales": 75,
             "visited": 720,
             "profit": 50,
-            "date": "05/25/2015"
+            "date": "08/25/2015"
 
-        },{
+        },/*{
             "revenue": 1100.15, //value for month june
             "sales": 750,
             "visited": 720,
             "profit": 500,
             "date": "06/25/2015"
 
-        },{
+        },*/{
             "revenue": 36000, //value for month june
             "sales": 15,
             "visited": 72,
@@ -46,21 +46,21 @@ var jsonData = {
             "visited": 3000,
             "date": "03/25/2015"
 
-        },{
+        },/*{
             "revenue": 7100, //value for month march
             "sales": 50,
             "visited": 3000,
             "date": "07/25/2015"
 
-        },{
+        },*/{
             "revenue": 7500, //value for month march
             "sales": 50,
             "visited": 300,
-            "date": "08/25/2015"
+            "date": "05/25/2015"
 
         }, {
             "revenue": 50900, //value for month march
-            "sales": 150,
+            //"sales": 150,
             "visited": 90,
             "date": "01/05/2015"
 

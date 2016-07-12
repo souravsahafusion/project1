@@ -11,6 +11,7 @@
         minTipValue: 0,
         diffBwTips: 0,
         noOfYTips: 0,
+        noofXTips: 0,
         //heightEachChart: 400,
         //widthEachChart: 800,
         chartId: '',
@@ -155,17 +156,17 @@
                 this.noOfYTips = 5;
 
             }
-            console.log(this.diffBwTips + ' diffBwtips modified');
-            console.log(this.maxTipValue + 'maxTipValue modified');
-            console.log(this.noOfYTips);
-            console.log(this.diffBwTips / this.noOfYTips + 'eachdivrange');
-            console.log(this.diffBwTips / this.noOfYTips + 'each tip range');
+            //console.log(this.diffBwTips + ' diffBwtips modified');
+            //console.log(this.maxTipValue + 'maxTipValue modified');
+            //console.log(this.noOfYTips);
+            //console.log(this.diffBwTips / this.noOfYTips + 'eachdivrange');
+            //console.log(this.diffBwTips / this.noOfYTips + 'each tip range');
 
         },
         findMonth: function(index) {
 
             var date = obj.data[index]["date"];
-            console.log(date);
+            //console.log(date);
             dateObject = new Date(date);
             return dateObject.getMonth();
             //console.log(month[this.monthValue]);
@@ -177,7 +178,7 @@
             line.setAttribute("x2", x2);
             line.setAttribute("y2", y2);
             line.setAttribute("style", style);
-            console.log(this.chartId);
+            //console.log(this.chartId);
             this.chartId.appendChild(line);
 
 
@@ -222,13 +223,14 @@
             textElement.innerHTML = textValue;
             textElement.setAttribute("transform",transform);
             this.chartId.appendChild(textElement);
-            console.log(x +' xvalue' + y + ' yvalue' + textValue + 'textValue');
+            //console.log(x +' xvalue' + y + ' yvalue' + textValue + 'textValue');
 
         },
         drawXAxis: function() {
             var chartNo = this.chartNo;
-            var x1 = widthEachChart / 5;
-            var x2 = widthEachChart + (widthEachChart / 5) + (widthEachChart / 20);
+            var x1 = widthEachChart / 5; // distance from the origin to the yaxis
+            console.log(widthEachChart + 'widthEachChart');
+            var x2 = widthEachChart + (widthEachChart / 5) + (widthEachChart / 20); //the extra divided by 20 added to keep some extra space
             var y1 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
             var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
             var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
@@ -241,26 +243,46 @@
             var temp_x1 = x1 + (widthEachChart / 70);
             this.lowLimitXAxis = temp_x1; //setting the limits from the tip value
             //var widthEachChart = this.widthEachChart;
-            for (i = 0; i < numberOfTicks; i++) {
+            /*
+            */
+            var noofXTips = 0;
+            var countLoop = 0;
+            /*while(countLoop <= numberOfTicks)
+            {
+                
+               
+                this.noofXTips = noofXTips++;
+                
+                if(typeof this.storeValue[noofXTips] !== undefined)
+                {
+                    countLoop++;
+                }
+            }*/
+            this.noofXTips = this.storeValue.length;
+            console.log(this.noofXTips + 'noofXTips' + this.storeValue.length);
+            for (i = 0; i < this.noofXTips; i++) {
 
-                x1 = temp_x1 + (widthEachChart / numberOfTicks) * (i);
-                x2 = temp_x1 + (widthEachChart / numberOfTicks) * (i);
+                x1 = temp_x1 + (widthEachChart / this.noofXTips) * (i);
+                x2 = temp_x1 + (widthEachChart / this.noofXTips) * (i);
                 this.upLimitXAxis = x1;
                 y1 = (heightEachChart / 4) + (heightEachChart * chartNo) - 4 + (chartNo - 1) * (heightEachChart / 8);
                 y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + 4 + (chartNo - 1) * (heightEachChart / 8);
                 var style = "stroke:rgb(0,0,230);stroke-width:1";
+                //
                 this.drawLine(x1, y1, x2, y2, style);
 
                 //put x-axis label 
-                console.log(obj.month[i] + 'monthValue');
-
+                //console.log(obj.month[i] + 'monthValue');
+                
 
                 if (chartNo == obj.y_axis_map.length) {
                     this.chartDivLabelX(obj.month[i], x1, y2);
                 }
+                
 
 
             }
+           
 
 
         },
@@ -270,7 +292,7 @@
             var chartNo = this.chartNo;
             var x1 = widthEachChart / 5;
             var x2 = widthEachChart / 5;
-            console.log(chartNo + 'chartNo');
+            //console.log(chartNo + 'chartNo');
             var y1 = (heightEachChart / 4) + (heightEachChart * (chartNo - 1)) + (chartNo - 1) * (heightEachChart / 8); //15 used to give space between charts
             var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
             var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
@@ -281,7 +303,7 @@
             //var heightEachChart = this.heightEachChart;
             var temp_y1 = y1;
             this.upLimitYAxis = y1; //setting the top limit value of y axis
-            console.log(this.upLimitYAxis + 'upLimitYAxis');
+            //console.log(this.upLimitYAxis + 'upLimitYAxis');
             var temp_x1 = x1;
             var temp_x2 = x2;
             //assigning label text to divs + assigning tics and division draw
@@ -305,7 +327,7 @@
             }
             this.lowLimitYAxis = y1 + (heightEachChart / noOfYTips); //one extra added for temporary purpose
             //this.lowLimitYAxis = y1;
-            console.log(this.lowLimitYAxis + 'lowLimitYAxis');
+            //console.log(this.lowLimitYAxis + 'lowLimitYAxis');
             for (i = 0; i <= noOfYTips; i++) {
                 y2 = temp_y1 + (heightEachChart / noOfYTips) * (i); //+ i * 15;
                 this.chartDivLabelY(y2, i);
@@ -335,20 +357,22 @@
 
         },
         plotGraph: function() {
+            var flagFirstPoint = 0;
             for (i = 0; i < 12; i++) {   /*to be changed later '12' for any number of data i.e. find the last index of the storevalue array*/
                 var value = this.storeValue[i];
-                console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
+                //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
                 if (typeof value != 'undefined')
                 {
                     var yPointPlot = this.calculateMappingPoint(value);
                     //var widthEachChart = this.widthEachChart;
-                    var numberOfTicks = obj.data.length;
-                    var xPointPlot = this.lowLimitXAxis + (widthEachChart / numberOfTicks) * (i);
+                    //var numberOfTicks = obj.data.length;
+                    var xPointPlot = this.lowLimitXAxis + (widthEachChart / this.noofXTips) * (i);
+                    console.log(xPointPlot + ' xPointPlot ');
                     //this.lastPlottedPointY = this.lowLimitYAxis - this.lastPlottedPointY;
                     //yPointPlot = this.lowLimitYAxis - yPointPlot;
                     this.plotTipCirle(xPointPlot, yPointPlot);
 
-                    if (i != 0) //skipping the first plot
+                    if (flagFirstPoint != 0) //skipping the first plot
                     {
 
                         //console.log(this.lowLimitYAxis);
@@ -364,6 +388,7 @@
                     }
                     this.lastPlottedPointX = xPointPlot;
                     this.lastPlottedPointY = yPointPlot;
+                    flagFirstPoint = 1;
                     //skipping the 2D array for storing x-y w.r.t month and instead storing the previous x-y coordinates
 
                 }
@@ -371,6 +396,8 @@
 
 
             }
+            //this.lastPlottedPointY = undefined;
+            //this.lastPlottedPointX = undefined;
 
 
 
@@ -407,7 +434,7 @@
         var range = [];
         //console.log(obj.data[1]["revenue"]);
         //console.log(obj.y_axis_map.length);
-        widthEachChart = obj.chart.width / obj.y_axis_map.length;
+        widthEachChart = obj.chart.width - (obj.chart.width / 2) ;
         heightEachChart = obj.chart.height / obj.y_axis_map.length;
 
 
@@ -416,9 +443,9 @@
             var tempMap = obj.y_axis_map[i];
             range[i] = new Object(tip);
             range[i].min = range[i].findMinAndSetDataValue(tempMap);
-            console.log(range[i].min + 'minimum calculated from different data values');
+            //console.log(range[i].min + 'minimum calculated from different data values');
             range[i].max = range[i].findMax(tempMap);
-            console.log(range[i].max + 'maximum ' + tempMap);
+            //console.log(range[i].max + 'maximum ' + tempMap);
             range[i].findRange();
             range[i].findYTips();
 
