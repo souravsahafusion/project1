@@ -72,6 +72,175 @@
 
         },
         findRange: function() {
+
+            var minValue = Math.floor(this.min);
+            var lastTwoMinDigit = minValue % 100;
+            this.minTipValue = minValue - lastTwoMinDigit;
+            var maxValue = Math.ceil(this.max);
+            var lastTwoMaxDigit = maxValue % 100;
+            if (lastTwoMaxDigit !== 0) {
+                this.maxTipValue = this.max + (100 - lastTwoMaxDigit);
+            } else {
+                this.maxTipValue = this.max + (lastTwoMaxDigit);
+            }
+
+            this.diffBwTips = this.maxTipValue - this.minTipValue;
+            this.findYTips();
+
+
+            console.log(this.minTipValue);
+            console.log(this.maxTipValue);
+            console.log(this.diffBwTips + 'diffBwTips actual');
+            //console.log(minValue);
+
+
+        },
+        checkingForNegative: function(){
+
+            var changeFactor = 0;
+            if(this.min < 0 || this.max < 0) //checking for negative values of min and max
+                {
+                    changeFactor++;  // 1 if only the min is negative
+                    if(this.max < 0)
+                    {
+                        changeFactor++;    // 2 if both min and max are negative
+                    }
+                    
+                }
+            return changeFactor;    
+        },
+        findRangeModified: function(multiplyFactor, changeFactor)
+        {
+            var minValue = this.min * multiplyFactor;
+            var maxValue = this.max * multiplyFactor;
+            if(changeFactor == 1){ //only minimum negative
+
+                minValue = minValue * -1;
+
+            }else if(changeFactor == 2){
+
+                minValue = minValue * -1;
+                maxValue = maxValue * -1;
+            }
+            
+            var temp1 = minValue % 10;
+            var tempMinValue = minValue - temp1;
+            var temp2 = maxValue % tempMinValue;
+            var temp3 = minValue - temp2;
+            var tempMaxValue = maxValue + temp3;
+
+            if(changeFactor == 0){
+
+                this.minTipValue = tempMinValue / multiplyFactor;
+                this.maxTipValue = tempMaxValue / multiplyFactor;
+
+            }else if(changeFactor == 1){ //only minimum negative
+
+                this.minTipValue = tempMinValue / multiplyFactor * -1;
+                this.maxTipValue = tempMaxValue / multiplyFactor;
+
+            }else if(changeFactor == 2) {
+
+                this.minTipValue = tempMinValue / multiplyFactor * -1;
+                this.maxTipValue = tempMaxValue / multiplyFactor * -1;
+
+            }
+
+
+
+        },
+        positionValues: function(){
+
+            var multiplyFactor = 1;
+            var changeFactor = 0;
+            if((Math.floor(this.min) - Math.ceil(this.max))<=2 ){   
+                //checking decimal values for two digit precision
+               multiplyFactor = 100;
+               changeFactor = this.checkingForNegative();
+
+            }else if((this.max - this.min)<0.1){ 
+                // checking decimal values for four digit precision
+                multiplyFactor = 10000;
+                changeFactor = this.checkingForNegative();
+
+
+
+
+            }else if((this.max - this.min)<300){
+                
+                changeFactor = this.checkingForNegative();
+
+            }else{
+
+                changeFactor = this.checkingForNegative();
+                this.findRange();
+
+            }
+            this.diffBwTips = this.maxTipValue - this.minTipValue;
+            
+
+        },
+        findYTipsModified: function()
+        {
+
+        },
+        /*findRangeModified: function(){
+            
+            var minValue = Math.floor(this.min);
+            var lastDigit = minValue % 10;
+            minValue = minValue - lastDigit;
+            var maxValue = Math.ceil(this.max);
+            var lastDigit = maxValue % 10;
+            console.log(minValue + ' after transforming');
+            
+            if (lastDigit !== 0) {
+                
+                maxValue = maxValue + (10 - lastDigit);
+                
+            }
+            console.log(maxValue+ 'after transforming');
+            var diffBwTips = maxValue - minValue;
+            var padding = diffBwTips / 10;
+            var diffTenthPow = 0;
+            
+            while(true){
+                console.log(Math.pow(10,diffTenthPow) + ' padding' +padding );
+                if(Math.pow(10,diffTenthPow) < padding){
+                    
+                    diffTenthPow++;
+                    
+                }else{
+                        diffTenthPow--;
+                        break;
+                }               
+               console.log(diffTenthPow + ' tenthpow');     
+            }
+                       
+            if( padding < 10){
+                diffTenthPow = 1;
+                console.log(diffTenthPow+ 'inside if loop');
+            }
+            console.log(diffBwTips);
+            console.log(diffTenthPow + ' tenthpow outside loop');
+            var remMinValue  = minValue % (Math.pow(10,diffTenthPow));
+            this.minTipValue = minValue - remMinValue;
+            var remMaxValue = maxValue % (Math.pow(10,diffTenthPow));
+            
+            if(remMaxValue !== 0){
+                
+                this.maxTipValue = maxValue + ((Math.pow(10,diffTenthPow)) - remMaxValue);
+                
+            }
+            
+            this.diffBwTips = this.maxTipValue - this.minTipValue;
+            this.findYTipsModified(diffTenthPow);
+            console.log(this.minTipValue);
+            console.log('test entering');
+            console.log(this.maxTipValue);
+            console.log(this.diffBwTips + 'diffBwTips actual');
+            
+        },
+        findRange: function() {
             var minValue = Math.floor(this.min);
             var lastTwoMinDigit = minValue % 100;
             this.minTipValue = minValue - lastTwoMinDigit;
@@ -93,6 +262,59 @@
 
 
         },
+        findYTipsModified: function(diffTenthPow){
+          
+            var minValue = this.minTipValue;
+            var maxValue = this.maxTipValue;
+            var diff = this.diffBwTips;
+            console.log(minValue + 'inside drawing');
+            console.log(maxValue + '');
+            console.log(diff);
+            console.log(diffTenthPow);
+            for(i = 0; i < 10; i++){
+                var flag  = 0;
+                if(((diff / 5) % (Math.pow(10,diffTenthPow))) == 0){
+                    
+                    this.noOfYTips = 5;
+                    flag = 1;
+                    break;
+                    
+                }else if(((diff / 3) % (Math.pow(10,diffTenthPow))) == 0){
+                    
+                    this.noOfYTips = 3;
+                    flag = 1;
+                    break;
+                    
+                }else if(((diff / 4) % (Math.pow(10,diffTenthPow))) == 0){
+                    
+                    this.noOfYTips = 4;
+                    flag = 1;
+                    break;
+                    
+                }else if(((diff / 6) % (Math.pow(10,diffTenthPow))) == 0){
+                    
+                    this.noOfYTips = 6;
+                    flag = 1;
+                    break;
+                    
+                }else if(((diff / 7) % (Math.pow(10,diffTenthPow))) == 0){
+                    
+                    this.noOfYTips = 7;
+                    flag = 1;
+                    break;
+                    
+                }
+                diff = diff + Math.pow(10,diffTenthPow);
+            }
+            this.maxTipValue = this.maxTipValue + (diff - this.diffBwTips);
+            this.diffBwTips = diff;
+            console.log(this.diffBwTips + ' diffBwtips modified');
+            console.log(this.maxTipValue + 'maxTipValue modified');
+            console.log(this.noOfYTips);
+            console.log(this.diffBwTips / this.noOfYTips + 'eachdivrange');
+            console.log(this.diffBwTips / this.noOfYTips + 'each tip range');
+            
+        },*/
         findYTips: function() {
             var diffBwTips = this.diffBwTips;
             var tempDiffBwTips = diffBwTips + 100;
@@ -151,8 +373,6 @@
 
             } else {
 
-
-
                 this.noOfYTips = 5;
 
             }
@@ -171,12 +391,13 @@
             return dateObject.getMonth();
             //console.log(month[this.monthValue]);
         },
-        drawLine: function(x1, y1, x2, y2, style) {
+        drawLine: function(x1, y1, x2, y2, style,className) {
             var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
             line.setAttribute("x1", x1);
             line.setAttribute("y1", y1);
             line.setAttribute("x2", x2);
             line.setAttribute("y2", y2);
+            line.setAttribute("class",className);
             line.setAttribute("style", style);
             //console.log(this.chartId);
             this.chartId.appendChild(line);
@@ -234,7 +455,8 @@
             var y1 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
             var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
             var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
-            this.drawLine(x1, y1, x2, y2, style);
+            var className = "drawXAxis";
+            this.drawLine(x1, y1, x2, y2, style,className);
 
             //drawTicks
             var numberOfTicks = obj.data.length;
@@ -269,7 +491,8 @@
                 y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + 4 + (chartNo - 1) * (heightEachChart / 8);
                 var style = "stroke:rgb(0,0,230);stroke-width:1";
                 //
-                this.drawLine(x1, y1, x2, y2, style);
+                var className = "axisTicks";
+                this.drawLine(x1, y1, x2, y2, style,className);
 
                 //put x-axis label 
                 //console.log(obj.month[i] + 'monthValue');
@@ -296,7 +519,8 @@
             var y1 = (heightEachChart / 4) + (heightEachChart * (chartNo - 1)) + (chartNo - 1) * (heightEachChart / 8); //15 used to give space between charts
             var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
             var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
-            this.drawLine(x1, y1, x2, y2, style);
+            var className = "axisDraw";
+            this.drawLine(x1, y1, x2, y2, style, className);
 
             //draw ticks
             var noOfYTips = this.noOfYTips;
@@ -316,10 +540,12 @@
 
                 //drawing ticks
                 var style = "stroke:rgb(0,0,230);stroke-width:1";
-                this.drawLine(x1, y1, x2, y2, style);
+                var className = "axisTicks";
+                this.drawLine(x1, y1, x2, y2, style, className);
                 //drawing divs
                 var style = "stroke:rgb(0,0,230);stroke-width:1";
-                this.drawLine(x1, y1, widthEachChart + (widthEachChart / 5) + (widthEachChart / 20), y2, style);
+                className = "divLines";
+                this.drawLine(x1, y1, widthEachChart + (widthEachChart / 5) + (widthEachChart / 20), y2, style,className);
                 //writing the labels
 
 
@@ -348,11 +574,12 @@
         },
         plotTipCirle: function(xPointPlot, yPointPlot) {
             var circleTip = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+            //var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
             circleTip.setAttribute("cx", xPointPlot); // setting circle 
             circleTip.setAttribute("cy", yPointPlot); // coordinates
             circleTip.setAttribute("r", 3);
-            circleTip.setAttribute("style", style);
+            circleTip.setAttribute("class", circleTip);
+            //circleTip.setAttribute("style", style);
             this.chartId.appendChild(circleTip);
 
         },
@@ -381,7 +608,8 @@
                         //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
                         //console.log(xPointPlot + ' ' + yPointPlot + ' ' + this.tempMap);
                         var style = "stroke:rgb(105,105,105);stroke-width:3;";
-                        this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot, style);
+                        var className  = "plotGraph";
+                        this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot, style,className);
 
 
 
@@ -429,6 +657,20 @@
         }
     };
 
+    function showCoords(event)
+    {
+        var x = event.clientX;
+        var y = event.clientY;
+        var coor = "X coords: " + x + ", Y coords: " + y;
+        console.log(coor);
+
+    };
+    function clearCoor()
+    {
+
+    };
+
+
     function parseData(input) {
         obj = input;
         var range = [];
@@ -447,9 +689,11 @@
             range[i].max = range[i].findMax(tempMap);
             //console.log(range[i].max + 'maximum ' + tempMap);
             range[i].findRange();
-            range[i].findYTips();
+            //range[i].positionValues();
+            //range[i].findYTips();
 
             range[i].drawChart(i);
+            //range[i].listener();
 
 
 

@@ -1,0 +1,13 @@
+.circleTip{
+	stroke:rgb(255,0,0);
+	stroke-width:1;
+	fill:red;
+}
+.axisTicks{
+	stroke:rgb(255,0,0);
+	stroke-width:1;
+	fill:red;
+}
+body{
+	background-color: yellow;
+}
