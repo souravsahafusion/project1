@@ -3,65 +3,70 @@ var jsonData = {
 
 
     "chart": {
-        "caption": "caption",
-        "subCaption": "subCaption",
-        "width": 900,
-        "height": 1500
+        "caption": "Caption",
+        "subCaption": "Sub Caption",
+        "width": 500,
+        "height": 700
 
 
     },
     "month": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    "y_axis_map": ["revenue", "sales", "visited"],
+    "y_axis_map": [],
     "data": [{
-            "revenue": 3600.75, //value for month june
-            "sales": 75,
-            "visited": 720,
-            "profit": 50,
+            "axis1": 15600, //value for month june
+            "sales": -.753,
+            "visited": .7759,
+            "axis4": -193,
+            "axis": 759,
             "date": "05/25/2015"
 
         },{
-            "revenue": 1100.15, //value for month june
-            "sales": 750,
-            "visited": 720,
-            "profit": 500,
+            "axis1": 11100.15, //value for month june
+            "sales": .7,
+            "visited": .7761,
+            "axis4": 159,
             "date": "06/25/2015"
 
         },{
-            "revenue": 36000, //value for month june
-            "sales": 15,
-            "visited": 72,
-            "profit": 5,
+            "axis1": 3600, //value for month june
+            "sales": -.25,
+            "visited": .7720,
+            "axis4": -70,
             "date": "04/25/2015"
 
         }, {
-            "revenue": 5600, // value for month april
-            "sales": 450,
-            "visited": 60,
-            "profit": 50,
+            "axis1": 9600, // value for month april
+            "sales": .20,
+            "visited": .7711,
+            "axis4": -176,
             "date": "02/25/2015"
 
         }, {
-            "revenue": 7100, //value for month march
-            "sales": 50,
-            "visited": 3000,
+            "axis1": 45100, //value for month march
+            "sales": .30,
+            "visited": .7784,
+            "axis4": 59,
             "date": "03/25/2015"
 
         },{
-            "revenue": 7100, //value for month march
-            "sales": 50,
-            "visited": 3000,
+            "axis1": 19100, //value for month march
+            "sales": .50,
+            "visited": .7716,
+            "axis": 559,
             "date": "07/25/2015"
 
         },{
-            "revenue": 7500, //value for month march
-            "sales": 50,
-            "visited": 300,
+            "axis1": 71500, //value for month march
+            "sales": .350,
+            "visited": .7758,
+            "axis": 129,
             "date": "08/25/2015"
 
         }, {
-            "revenue": 50900, //value for month march
-            "sales": 150,
-            "visited": 90,
+            "axis1": 52300, //value for month march
+            "sales": .10,
+            //"visited": .7746,
+            "axis": 159,
             "date": "01/05/2015"
 
         }
