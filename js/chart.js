@@ -676,8 +676,7 @@ ower of 10 with which it will be checked*/
 
 
             }
-            //this.lastPlottedPointY = undefined;
-            //this.lastPlottedPointX = undefined;
+            
 
 
 
