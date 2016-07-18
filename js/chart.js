@@ -408,7 +408,7 @@
             var x2 = widthEachChart + (widthEachChart / 5) + (widthEachChart / 20); //the extra divided by 20 added to keep some extra space
             var y1 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
             var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
-            var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+            var style = "";
             var className = "drawXAxis";
             this.drawLine(x1, y1, x2, y2, style,className);
 
@@ -431,7 +431,7 @@
                 this.upLimitXAxis = x1;
                 y1 = (heightEachChart / 4) + (heightEachChart * chartNo) - 4 + (chartNo - 1) * (heightEachChart / 8);
                 y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + 4 + (chartNo - 1) * (heightEachChart / 8);
-                var style = "stroke:rgb(0,0,230);stroke-width:1";
+                var style = "";
                 //
                 var className = "axisTicks";
                 this.drawLine(x1, y1, x2, y2, style,className);
@@ -460,7 +460,7 @@
             //console.log(chartNo + 'chartNo');
             var y1 = (heightEachChart / 4) + (heightEachChart * (chartNo - 1)) + (chartNo - 1) * (heightEachChart / 8); //15 used to give space between charts
             var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
-            var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+            var style = "";
             var className = "axisDraw";
             this.drawLine(x1, y1, x2, y2, style, className);
 
@@ -481,11 +481,11 @@
                 y2 = temp_y1 + (heightEachChart / noOfYTips) * (i);
 
                 //drawing ticks
-                var style = "stroke:rgb(0,0,230);stroke-width:1";
+                var style = "";
                 var className = "axisTicks";
                 this.drawLine(x1, y1, x2, y2, style, className);
                 //drawing divs
-                var style = "stroke:rgb(0,0,230);stroke-width:1";
+                var style = "";
                 className = "divLines";
                 this.drawLine(x1, y1, widthEachChart + (widthEachChart / 5) + (widthEachChart / 20), y2, style,className);
                 //writing the labels
@@ -549,7 +549,7 @@
 
                         //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
                         //console.log(xPointPlot + ' ' + yPointPlot + ' ' + this.tempMap);
-                        var style = "stroke:rgb(105,105,105);stroke-width:3;";
+                        var style = "";
                         var className  = "plotGraph";
                         this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot, style,className);
 
@@ -613,20 +613,17 @@
 
 
         };
-        tip.prototype.drawCrossHair = function(x, upLimitYAxis, x, lowLimitYAxis, style, className){
+        tip.prototype.drawCrossHair = function(){
+            var className = "drawCrossHairLines";
+            var x = this.lowLimitXAxis + 30;
+            var y1 = this.lowLimitYAxis;
+            var y2 = this.upLimitYAxis;
+            var style = "stroke:rgb(105,105,105);stroke-width:3;";
+            this.drawLine(x, y1, x, y2, style, className);
+            console.log("drawCrossHairLines");
   
  
-             var line  = this.crossHairLineIns;
-             console.log(line);
- 
-             line.setAttribute("x1", x);
-             line.setAttribute("y1", upLimitYAxis);
-             line.setAttribute("x2", x);
-             line.setAttribute("y2", lowLimitYAxis);
-             line.setAttribute("class",className);
-             line.setAttribute("style", style);
-             //console.log(this.chartId);
-             this.chartId.appendChild(line);
+            
  
  
  
@@ -640,7 +637,7 @@
              var heightRect = this.lowLimitYAxis - this.upLimitYAxis;
              var widthRect = this.upLimitXAxis - this.lowLimitXAxis;
              var rectangleId = 'svgDivs';
-             console.log(rectangleId);
+             console.log(rectangleId + 'rectangleId');
              rect.setAttributeNS(null, 'x', x);
              rect.setAttributeNS(null, 'y', y);
              rect.setAttributeNS(null, 'height', heightRect);
@@ -648,6 +645,13 @@
              rect.setAttribute("class",rectangleId);
              rect.setAttribute("style","fill:transparent;")
              this.chartId.appendChild(rect);
+
+             rect.addEventListener("mousemove", entercordinates,false);
+             rect.addEventListener("mouserollover", showCoords, false);
+             //divNames[i].addEventListener("mousemove", showCoords,false);
+            //rect.addEventListener("mouseout", clearcoor,false);
+
+
  
          };
  
@@ -658,64 +662,59 @@
          var x = event.detail.x;
          //console.log('syncCrossHair');
          var draw = crossHairInstance;
+        draw.crossHairLineIns = crossHairInstance.crossHairLineIns;
+         var line = draw.crossHairLineIns;
+
  
          var elements = document.getElementsByClassName("svgDivs");
                  for(var i = 0; i<elements.length; i++){
                      
-                     var upLimitYAxis = range[i].upLimitYAxis;
-                     var lowLimitYAxis = range[i].lowLimitYAxis;
-                      var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+                    var upLimitYAxis = range[i].upLimitYAxis;
+                    var lowLimitYAxis = range[i].lowLimitYAxis;
+                    var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+                    /*line.setAttribute("x1", x);
+                    line.setAttribute("y1", lowLimitYAxis);
+                    line.setAttribute("x2", x);
+                    line.setAttribute("y2", upLimitYAxis);
+                    line.setAttribute("class","drawCrossHairLines");
+                    line.setAttribute("style", style);
+                    //console.log(this.chartId);
+                    this.chartId.appendChild(line);
+
+*/
+
                      draw.drawLine(x, lowLimitYAxis, x, upLimitYAxis,style, "drawCrossHairLines");
-                     console.log(elements[i] + 'rectangleId'+ upLimitYAxis+'lowLimitYAxis'+lowLimitYAxis);
+                     //console.log(elements[i] + 'rectangleId'+ upLimitYAxis+'lowLimitYAxis'+lowLimitYAxis);
  
  
          }
  
  
      };
+
  
-     function addedEventListener(){
-         var divNames = document.getElementsByClassName("svgDivs");
-         for( var i=0;i<divNames.length;i++){
-             divNames[i].addEventListener("mouseenter", entercordinates,false);
-             divNames[i].addEventListener("mouseleave", clearcoor,false);
-             //divNames[i].addEventListener("mousemove", showCoords,false);
- 
- 
- 
-                 divNames[i].addEventListener("syncCrossHair", createSync , false);
-                 console.log("instance created");
+     // function addedEventListener(){
+         
+     //     var divNames = document.getElementsByClassName("svgDivs");
+     //     for( var i=0;i<divNames.length;i++){
+     //         divNames[i].addEventListener("mousemove", entercordinates,false);
+     //         divNames[i].addEventListener("mouserollover", showCoords, false);
+     //         //divNames[i].addEventListener("mousemove", showCoords,false);
+     //         divNames[i].addEventListener("mouseout", clearcoor,false);
              
-         }
+     //     }
  
-     };
+     // };
      function entercordinates(event){
-         crossHairInstance = new tip();
-         var lineElement = document.createElementNS("http://www.w3.org/2000/svg", "line");
-         console.log("instance created");
-         crossHairInstance.crossHairLineIns = lineElement;
-         crossHairInstance.chartId = document.getElementById("chart");
- 
-         var x = event.clientX;
-         var y = event.clientY;
-         var className = event.currentTarget.id;
-         console.log(className);
          
- 
-         var carr = document.getElementsByClassName("svgDivs");
- 
-         console.log(carr.length+' number of divs');
-         var cEvent = new CustomEvent("syncCrossHair",{
-             "detail":{x:event.clientX}
-         });
-         for( var i=0;i<carr.length;i++){
-             if(carr[i]!=event.target)
-                 carr[i].dispatchEvent(cEvent);
-         }
- 
-             
-         
-         
+ var cArr = document.getElementsByClassName("svgDivs");
+        var rollover = new CustomEvent("mouserollover",{
+            "detail":{x:event.clientX,y:event.clientY}
+        });
+        for( var i=0;i<cArr.length;i++){
+            if(cArr[i]!=event.target)
+                cArr[i].dispatchEvent(rollover);
+        }
  
  
  
@@ -724,13 +723,13 @@
      function clearcoor(event){
  
  
- 
+        
          var elements = document.getElementsByClassName("svgDivs");
-         console.log(elements);
+ 
          for(var i = 0; i<elements.length; i++){
-             console.log("clr");
+             //console.log("clr");
              var lineElement = elements[i].parentNode.getElementsByClassName("drawCrossHairLines");
-             console.log(lineElement);
+             //console.log(lineElement);
              for(var j = 0; j<lineElement.length;j++){
  
                  lineElement[j].setAttribute("visibility","hidden");
@@ -739,32 +738,15 @@
  
      };
      function showCoords(event){
- 
-         
+        
          var x = event.detail.x;
-         console.log(x);
-         var draw = crossHairInstance;
-         draw.crossHairLineIns = crossHairInstance.crossHairLineIns;
- 
- 
- 
-         var elements = document.getElementsByClassName("svgDivs");
-                 
-                 for(var i = 0; i<elements.length; i++){
-                     var lineElement = elements[i].parentNode.getElementsByClassName("drawCrossHairLines");
-                     for(var j = 0; j<lineElement.length;j++){
- 
-                     lineElement[j].setAttribute("visibility","visible");
-                     lineElement[j].setAttribute("x1",x);
-                     lineElement[j].setAttribute("x2",x);
-                  }
-                    
-                     
-          }
- 
- 
          
- 
+         var lineElement = document.getElementsByClassName("drawCrossHairLines");          
+                 for(var i = 0; i<lineElement.length; i++){     
+                     lineElement[i].setAttribute("visibility","visible");
+                     lineElement[i].setAttribute("x1",x);
+                     lineElement[i].setAttribute("x2",x);
+                  }    
          };
  
    
@@ -827,11 +809,14 @@ var range = [];
                 //console.log(this.min);
                range[i].positionValues();
             range[i].findRangeModified();
+            console.log("calling cross hair");
             
             //range[i].findYTips();
 
             range[i].drawChart(i); 
             range[i].drawRectangle(i);
+
+            range[i].drawCrossHair();
 
             }
             
@@ -850,4 +835,4 @@ var range = [];
 
     }
     parseData(jsonData);        
-    addedEventListener(); 
+    //addedEventListener(); 
