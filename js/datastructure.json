@@ -5,8 +5,8 @@ var jsonData = {
     "chart": {
         "caption": "Caption",
         "subCaption": "Sub Caption",
-        "width": 500,
-        "height": 700
+        "width": 1200,
+        "height": 1500
 
 
     },
