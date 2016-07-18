@@ -95,8 +95,6 @@
                         maximum = obj.data[i][tempMap];
 
                     }
-                    //console.log(obj.data[i][tempMap]);
-
                 }
                 return maximum;
             } else {
@@ -166,8 +164,7 @@
             var diffBwTips = (maxValue - minValue); // difference negative for negative values
             var padding = diffBwTips / 10;
             var diffTenthPow = 0;
-            /*calculating the <p>You can use the mark tag to <mark>highlight</mark> text.</p>
-ower of 10 with which it will be checked*/
+            
             while(true){
                 //console.log(Math.pow(10,diffTenthPow) + ' padding' +padding );
                 if(Math.pow(10,diffTenthPow) < padding){
@@ -208,48 +205,7 @@ ower of 10 with which it will be checked*/
             //console.log(this.maxTipValue);
             //console.log(this.diffBwTips + 'diffBwTips actual');
             
-        };/*
-
-        tip.prototype.findRangeModified = function(multiplyFactor, changeFactor)
-        {
-            var minValue = this.min * multiplyFactor;
-            var maxValue = this.max * multiplyFactor;
-            if(changeFactor == 1){ //only minimum negative
-
-                minValue = minValue * -1;
-
-            }else if(changeFactor == 2){
-
-                minValue = minValue * -1;
-                maxValue = maxValue * -1;
-            }
-            
-            var temp1 = minValue % 10;
-            var tempMinValue = minValue - temp1;
-            var temp2 = maxValue % tempMinValue;
-            var temp3 = minValue - temp2;
-            var tempMaxValue = maxValue + temp3;
-
-            if(changeFactor == 0){
-
-                this.minTipValue = tempMinValue / multiplyFactor;
-                this.maxTipValue = tempMaxValue / multiplyFactor;
-
-            }else if(changeFactor == 1){ //only minimum negative
-
-                this.minTipValue = tempMinValue / multiplyFactor * -1;
-                this.maxTipValue = tempMaxValue / multiplyFactor;
-
-            }else if(changeFactor == 2) {
-
-                this.minTipValue = tempMinValue / multiplyFactor * -1;
-                this.maxTipValue = tempMaxValue / multiplyFactor * -1;
-
-            }
-
-
-
-        };*/
+        };
         tip.prototype.scaleValues = function(){
             
             this.min = this.min * this.multiplyFactor;
@@ -361,75 +317,7 @@ ower of 10 with which it will be checked*/
             //console.log(this.diffBwTips / this.noOfYTips + 'each tip range');
             
         };
-/*
-        tip.prototype.findYTips = function() {
-            var diffBwTips = this.diffBwTips;
-            var tempDiffBwTips = diffBwTips + 100;
-            if ((diffBwTips / 5) % 100 == 0) {
-                this.noOfYTips = 5;
 
-            } else if ((diffBwTips / 3) % 100 == 0) {
-                this.noOfYTips = 3;
-
-            } else if ((diffBwTips / 4) % 100 == 0) {
-                this.noOfYTips = 4;
-            } else if ((diffBwTips / 7) % 100 == 0) {
-                this.noOfYTips = 7;
-            } else if ((diffBwTips / 3) % 50 == 0) {
-                this.noOfYTips = 3;
-
-            } else if ((diffBwTips / 4) % 50 == 0) {
-                this.noOfYTips = 4;
-            } else if ((diffBwTips / 7) % 50 == 0) {
-                this.noOfYTips = 7;
-            } else if ((tempDiffBwTips / 5) % 100 == 0) {
-                this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
-                this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
-                this.noOfYTips = 5;
-
-            } else if ((tempDiffBwTips / 3) % 100 == 0) {
-                this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
-                this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
-                this.noOfYTips = 3;
-
-            } else if ((tempDiffBwTips / 4) % 100 == 0) {
-                this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
-                this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
-                this.noOfYTips = 4;
-
-            } else if ((tempDiffBwTips / 7) % 100 == 0) {
-                this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
-                this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
-                this.noOfYTips = 7;
-                tempDiffBwTips = tempDiffBwTips + 100;
-
-            } else if ((tempDiffBwTips / 5) % 100 == 0) {
-                this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
-                this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
-                this.noOfYTips = 5;
-
-            } else if ((tempDiffBwTips / 3) % 100 == 0) {
-                this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
-                this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
-                this.noOfYTips = 3;
-
-            } else if ((tempDiffBwTips / 4) % 100 == 0) {
-                this.maxTipValue = this.maxTipValue + tempDiffBwTips - diffBwTips;
-                this.diffBwTips = this.diffBwTips + tempDiffBwTips - diffBwTips;
-                this.noOfYTips = 4;
-
-            } else {
-
-                this.noOfYTips = 5;
-
-            }
-            //console.log(this.diffBwTips + ' diffBwtips modified');
-            //console.log(this.maxTipValue + 'maxTipValue modified');
-            //console.log(this.noOfYTips);
-            //console.log(this.diffBwTips / this.noOfYTips + 'eachdivrange');
-            //console.log(this.diffBwTips / this.noOfYTips + 'each tip range');
-
-        };*/
         tip.prototype.findMonth = function(index) {
 
             var date = obj.data[index]["date"];
@@ -717,64 +605,12 @@ ower of 10 with which it will be checked*/
             this.addChartName(chartNo); //this chartNo is the index value of the array 
             this.addCaption();
             this.addSubCaption();
-            this.addXLabel();
+            //this.addXLabel();
             
 
 
 
-        };/*
-        tip.prototype.drawCrossHair = function(x, upLimitYAxis, x, lowLimitYAxis){
-            var className = "drawCrossHair";
-            var style = "stroke:rgb(0,0,230);stroke-width:1";
-
-            this.drawLine(x, upLimitYAxis, x, lowLimitYAxis, style, className);
-        };*/
-       
-    //end of tip object
-/*
-    function clearCoor(event){
-
-        var elements = document.getElementsByClassName("drawCrossHair");
-        for(var i = 0; i<elements.length; i++){
-                elements[i].setAttribute("visibility","hidden");
-            }
-
-    };
-    function showCoords(event){
-        var x = event.clientX;
-        var y = event.clientY;
-        var coor = "X coords: " + x + ", Y coords: " + y;
-        //console.log(coor);
-        var draw = new tip();
-        var numberOfGraphs = obj.y_axis_map.length;
-        draw.chartId = document.getElementById("chart"); 
-        //console.log(draw.chartId + ' chartId');
-        //drawCrossHair.drawLine();
-        for(i = 0; i < numberOfGraphs; i++){
-
-            var upLimitYAxis = range[i].upLimitYAxis;
-            var lowLimitYAxis = range[i].lowLimitYAxis;
-            console.log(upLimitYAxis + 'axis show '+ lowLimitYAxis);
-            var className = "drawCrossHair";
-            var style = "stroke:rgb(0,0,230);stroke-width:1";
-            console.log(range[i].lowLimitXAxis+ ' x range'+ range[i].upLimitXAxis);
-            if(range[i].lowLimitXAxis< x < range[i].upLimitXAxis)
-            {
-                draw.drawLine(x, upLimitYAxis, x, lowLimitYAxis, style, className);
-            }
-            
-            //console.log(range[0].upLimitYAxis + 'crosshair '+range[0].lowLimitYAxis );
-            //drawCrossHair.drawCrossHair(x, range[1].upLimitYAxis, x, range[1].lowLimitYAxis);
-            //console.log(range[1].upLimitYAxis + ' '+range[1].lowLimitYAxis );
-
-
-
-
-        }
-    
         };
-
-*/
 var range = [];
 
     function parseData(input) {
@@ -782,11 +618,7 @@ var range = [];
         
         //console.log(obj.data[1]["revenue"]);
         //console.log(obj.y_axis_map.length);
-        
-        /*
-        var tempMap = obj.y_axis_map[0];
-        range.findMinAndSetDataValue(tempMap);
-*/
+     
         
         if(obj.y_axis_map.length < 1){
            var arr = [];
