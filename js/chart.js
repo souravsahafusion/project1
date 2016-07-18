@@ -1,6 +1,7 @@
     var obj = {};
     var heightEachChart = 0; 
     var widthEachChart = 0;
+    var crossHairInstance = '';
     function tip() {
 
         this.min = 0;
@@ -12,6 +13,8 @@
         this.diffBwTips = 0;
         this.noOfYTips = 0;
         this.noofXTips = 0;
+        //heightEachChart: 400,
+        //widthEachChart: 800,
         this.chartId = '';
         this.chartNo = 0;
         this.upLimitXAxis = 0;
@@ -23,29 +26,11 @@
         this.lastPlottedPointX = 0;
         this.lastPlottedPointY = 0;
         this.textLabelId = '';
-        this.changeFactorMin = 0;
-        this.changeFactorMax = 0;
-        this.multiplyFactor = 1;
+        this.crossHairLineIns = '';
     }
         tip.prototype.findMinAndSetDataValue = function(tempMap) {
             if (typeof tempMap !== undefined) {
-                
                 var minimum = obj.data[0][tempMap];
-                 var i = 0;
-                if(typeof minimum == 'undefined'){
-                    
-                
-                while(true){
-                    i++;
-                    minimum = obj.data[i][tempMap];
-                    if(typeof minimum !== 'undefined'){
-                        console.log(minimum + 'initial minimum value');
-                        break;
-                    }
-                                    
-                }
-                }
-                //console.log(minimum + 'initial minimum value');
                 this.tempMap = tempMap;
 
 
@@ -72,22 +57,8 @@
         };
         tip.prototype.findMax = function(tempMap) {
             if (typeof tempMap !== undefined) {
-                 var maximum = obj.data[0][tempMap];
-                var i = 0;
-                if(typeof maximum == 'undefined'){
-                    
-                
-                while(true){
-                    i++;
-                    maximum = obj.data[i][tempMap];
-                    if(typeof maximum !== 'undefined'){
-                        console.log(maximum + 'initial minimum value');
-                        break;
-                    }
-                   
-                    
-                }
-                }
+                var maximum = obj.data[0][tempMap];
+
 
 
                 for (var i = 0; i < obj.data.length; i++) {
@@ -130,86 +101,18 @@
         };
         tip.prototype.checkingForNegative = function(){
 
-            
-            if(this.min < 0 ){ //checking for negative values of min and max
-                    this.changeFactorMin++;  // 1 if only the min is negative
+            var changeFactor = 0;
+            if(this.min < 0 || this.max < 0) //checking for negative values of min and max
+                {
+                    changeFactor++;  // 1 if only the min is negative
+                    if(this.max < 0)
+                    {
+                        changeFactor++;    // 2 if both min and max are negative
+                    }
                     
-                    
-            }
-            if(this.max < 0){
-                this.changeFactorMax++;
-            }
-              
+                }
+            return changeFactor;    
         };
-        tip.prototype.findRangeModified = function(){
-            
-            var minValue = this.min;
-            var lastDigit = minValue % 10;
-            if(lastDigit < 0){
-                lastDigit = 10 + lastDigit;
-            }
-            //console.log(lastDigit+' '+minValue + ' before transforming');
-            //console.log( lastDigit * Math.pow(-1,this.changeFactorMin));
-            minValue = minValue - lastDigit ;
-            var maxValue = this.max;
-            var lastDigit = maxValue % 10;
-            //console.log(minValue + ' after transforming');
-            if(lastDigit < 0){
-                lastDigit = 10 - lastDigit;
-            }
-            if (lastDigit !== 0) {
-                
-                maxValue = maxValue + (10 - lastDigit) * Math.pow(-1,this.changeFactorMax);
-                
-            }
-            //console.log(maxValue+ 'after transforming');
-            var diffBwTips = (maxValue - minValue); // difference negative for negative values
-            var padding = diffBwTips / 10;
-            var diffTenthPow = 0;
-            /*calculating the <p>You can use the mark tag to <mark>highlight</mark> text.</p>
-ower of 10 with which it will be checked*/
-            while(true){
-                //console.log(Math.pow(10,diffTenthPow) + ' padding' +padding );
-                if(Math.pow(10,diffTenthPow) < padding){
-                    
-                    diffTenthPow++;
-                    
-                }else{
-                        diffTenthPow--;
-                        break;
-                }               
-               //console.log(diffTenthPow + ' tenthpow');     
-            }
-                       
-            if( padding < 10){
-                diffTenthPow = 1;
-                //console.log(diffTenthPow+ 'inside if loop');
-            }else if(padding < 1){
-                diffTenthPow = 0;
-            }
-            //console.log(diffBwTips);
-            //console.log(diffTenthPow + ' tenthpow outside loop');
-            var remMinValue  = minValue % (Math.pow(10,diffTenthPow));
-            this.minTipValue = minValue - remMinValue * Math.pow(-1,this.changeFactorMin);
-            var remMaxValue = maxValue % (Math.pow(10,diffTenthPow));
-            
-            if(remMaxValue !== 0){
-                
-                this.maxTipValue = maxValue + ((Math.pow(10,diffTenthPow)) - remMaxValue) * Math.pow(-1,this.changeFactorMax);
-                
-            }else{
-                this.maxTipValue = maxValue;
-            }
-            
-            this.diffBwTips = this.maxTipValue - this.minTipValue;
-            this.findYTipsModified(diffTenthPow);
-            //console.log(this.minTipValue);
-            //console.log('test entering');
-            //console.log(this.maxTipValue);
-            //console.log(this.diffBwTips + 'diffBwTips actual');
-            
-        };/*
-
         tip.prototype.findRangeModified = function(multiplyFactor, changeFactor)
         {
             var minValue = this.min * multiplyFactor;
@@ -249,119 +152,43 @@ ower of 10 with which it will be checked*/
 
 
 
-        };*/
-        tip.prototype.scaleValues = function(){
-            
-            this.min = this.min * this.multiplyFactor;
-            this.max = this.max * this.multiplyFactor;
-            this.checkingForNegative();
-            if(this.changeFactorMin == 1){
-                this.min = Math.ceil(this.min);
-            }else{
-                this.min = Math.floor(this.min);
-            }
-            
-            if(this.changeFactorMax == 1){
-                this.max = Math.floor(this.max);
-            }else{
-                this.max = Math.ceil(this.max);
-            }
         };
         tip.prototype.positionValues =  function(){
 
-            var min  = this.min;
-            var max = this.max;
-            if((max - min)<0.1){ 
-                // checking decimal values for four digit precision
-               this.multiplyFactor = 10000;
-               this.scaleValues();
-                //console.log(this.multiplyFactor +'multiplyFactor');
-
-
-
-
-            }else if((max - min)<= 2 ){   
+            var multiplyFactor = 1;
+            var changeFactor = 0;
+            if((Math.floor(this.min) - Math.ceil(this.max))<=2 ){   
                 //checking decimal values for two digit precision
-                this.multiplyFactor = 100;
-                this.scaleValues();
-                //console.log(this.multiplyFactor+'multiplyFactor');
-               
+               multiplyFactor = 100;
+               changeFactor = this.checkingForNegative();
 
-            } else if((max - min)<10){
+            }else if((this.max - this.min)<0.1){ 
+                // checking decimal values for four digit precision
+                multiplyFactor = 10000;
+                changeFactor = this.checkingForNegative();
+
+
+
+
+            }else if((this.max - this.min)<300){
                 
-                this.multiplyFactor = 10;
-                this.scaleValues();
-                //console.log(this.multiplyFactor+'multiplyFactor');
+                changeFactor = this.checkingForNegative();
 
             }else{
-               //console.log(this.multiplyFactor+'multiplyFactor');
 
-                this.scaleValues();
-                
+                changeFactor = this.checkingForNegative();
+                this.findRange();
 
             }
-            //this.diffBwTips = this.maxTipValue - this.minTipValue;
+            this.diffBwTips = this.maxTipValue - this.minTipValue;
             
+
+        };
+        tip.prototype.findYTipsModified = function()
+        {
 
         };
         
-        tip.prototype.findYTipsModified = function(diffTenthPow){
-          
-            var minValue = this.minTipValue;
-            var maxValue = this.maxTipValue;
-            var diff = this.diffBwTips;
-            //console.log(minValue + 'inside drawing');
-            //console.log(maxValue + '');
-            //console.log(diff);
-            //console.log(diffTenthPow);
-            for(i = 0; i < 10; i++){
-                var flag  = 0;
-                //console.log(diff+'difference'+Math.pow(10,diffTenthPow));
-                if(((diff / 5) % (Math.pow(10,diffTenthPow))) == 0){
-                    
-                    this.noOfYTips = 5;
-                    flag = 1;
-                    break;
-                    
-                }else if(((diff / 3) % (Math.pow(10,diffTenthPow))) == 0){
-                    
-                    this.noOfYTips = 3;
-                    flag = 1;
-                    break;
-                    
-                }else if(((diff / 4) % (Math.pow(10,diffTenthPow))) == 0){
-                    
-                    this.noOfYTips = 4;
-                    flag = 1;
-                    break;
-                    
-                }else if(((diff / 6) % (Math.pow(10,diffTenthPow))) == 0){
-                    
-                    this.noOfYTips = 6;
-                    flag = 1;
-                    break;
-                    
-                }else if(((diff / 7) % (Math.pow(10,diffTenthPow))) == 0){
-                    
-                    this.noOfYTips = 7;
-                    flag = 1;
-                    break;
-                    
-                }
-                
-                diff = diff + Math.pow(10,diffTenthPow);
-            }
-            this.maxTipValue = (this.maxTipValue + (diff - this.diffBwTips)) / this.multiplyFactor;
-            this.diffBwTips = diff / this.multiplyFactor;
-            this.minTipValue = this.minTipValue / this.multiplyFactor;
-            //console.log(this.diffBwTips + ' diffBwtips modified');
-            //console.log(this.maxTipValue + 'maxTipValue modified');
-            //console.log(this.noOfYTips);
-            //console.log(this.diffBwTips / this.noOfYTips + 'eachdivrange');
-            //console.log(this.diffBwTips / this.noOfYTips + 'each tip range');
-            
-        };
-/*
         tip.prototype.findYTips = function() {
             var diffBwTips = this.diffBwTips;
             var tempDiffBwTips = diffBwTips + 100;
@@ -429,7 +256,7 @@ ower of 10 with which it will be checked*/
             //console.log(this.diffBwTips / this.noOfYTips + 'eachdivrange');
             //console.log(this.diffBwTips / this.noOfYTips + 'each tip range');
 
-        };*/
+        };
         tip.prototype.findMonth = function(index) {
 
             var date = obj.data[index]["date"];
@@ -458,11 +285,6 @@ ower of 10 with which it will be checked*/
             var y = y;
             var fontSize  = widthEachChart / 45;
             var textValue = this.maxTipValue - (this.diffBwTips * index / this.noOfYTips);
-            if(this.multiplyFactor == 10000){
-                textValue = parseFloat(textValue).toFixed(3);
-            }else if(this.multiplyFactor == 100){
-                 textValue = parseFloat(textValue).toFixed(1);
-            }
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
             textElement.innerHTML = textValue;
@@ -475,12 +297,6 @@ ower of 10 with which it will be checked*/
 
 
         };
-        tip.prototype.addXLabel = function(){
-            var x = (this.upLimitXAxis + this.lowLimitXAxis)/ 2;
-            var y = obj.chart.height - obj.chart.height * .015;
-            var style = '';
-            this.addText(x, y, obj.chart.caption, style);
-        };
         tip.prototype.chartDivLabelX = function(textValue, x, y) {
             var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
             var x = x - (widthEachChart / 70);
@@ -488,10 +304,6 @@ ower of 10 with which it will be checked*/
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
             textElement.innerHTML = textValue;
-            var transform = "rotate(90 " + x + "," + y + ")";
-            var fontSize  = widthEachChart / 25;
-            textElement.setAttribute("font-size",fontSize);
-            textElement.setAttribute("transform",transform);
             this.chartId.appendChild(textElement);
 
 
@@ -504,8 +316,6 @@ ower of 10 with which it will be checked*/
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
             textElement.innerHTML = textValue;
-            var fontSize  = widthEachChart * .030;
-            textElement.setAttribute("font-size",fontSize);
             textElement.setAttribute("transform",transform);
             this.chartId.appendChild(textElement);
             //console.log(x +' xvalue' + y + ' yvalue' + textValue + 'textValue');
@@ -514,7 +324,7 @@ ower of 10 with which it will be checked*/
         tip.prototype.drawXAxis = function() {
             var chartNo = this.chartNo;
             var x1 = widthEachChart / 5; // distance from the origin to the yaxis
-            //console.log(widthEachChart + 'widthEachChart');
+            console.log(widthEachChart + 'widthEachChart');
             var x2 = widthEachChart + (widthEachChart / 5) + (widthEachChart / 20); //the extra divided by 20 added to keep some extra space
             var y1 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
             var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
@@ -533,7 +343,7 @@ ower of 10 with which it will be checked*/
             */
            
             this.noofXTips = this.storeValue.length;
-            //console.log(this.noofXTips + 'noofXTips' + this.storeValue.length);
+            console.log(this.noofXTips + 'noofXTips' + this.storeValue.length);
             for (i = 0; i < this.noofXTips; i++) {
 
                 x1 = temp_x1 + (widthEachChart / this.noofXTips) * (i);
@@ -685,7 +495,7 @@ ower of 10 with which it will be checked*/
         tip.prototype.addChartName = function(chartNo)
         {
             var chartName = obj.y_axis_map[chartNo];
-            var x = widthEachChart / 40;
+            var x = widthEachChart / 70;
             var y = (this.upLimitYAxis + this.lowLimitYAxis) / 2;
             
             var transform = "rotate(270 " + x + "," + y + ")";
@@ -695,18 +505,6 @@ ower of 10 with which it will be checked*/
             //console.log('addChartName');
 
         };
-        tip.prototype.addCaption = function(){
-            var x = (this.upLimitXAxis + this.lowLimitXAxis)/ 2;
-            var y = obj.chart.height * .015;
-            var style = '';
-            this.addText(x, y, obj.chart.caption, style);
-        };
-        tip.prototype.addSubCaption = function(){
-            var x = (this.upLimitXAxis + this.lowLimitXAxis)/ 2;
-            var y = obj.chart.height * .025;
-            var style = '';
-            this.addText(x, y, obj.chart.subCaption, style);
-        };
         tip.prototype.drawChart = function(chartNo) {
             this.chartId = document.getElementById("chart");
             this.chartNo = chartNo + 1;
@@ -715,14 +513,49 @@ ower of 10 with which it will be checked*/
             this.drawYAxis();
             this.plotGraph();
             this.addChartName(chartNo); //this chartNo is the index value of the array 
-            this.addCaption();
-            this.addSubCaption();
-            this.addXLabel();
-            
 
 
 
-        };/*
+        };
+        tip.prototype.drawCrossHair = function(x, upLimitYAxis, x, lowLimitYAxis, style, className){
+
+            var line  = this.crossHairLineIns;
+            console.log(line);
+
+            line.setAttribute("x1", x);
+            line.setAttribute("y1", upLimitYAxis);
+            line.setAttribute("x2", x);
+            line.setAttribute("y2", lowLimitYAxis);
+            line.setAttribute("class",className);
+            line.setAttribute("style", style);
+            //console.log(this.chartId);
+            this.chartId.appendChild(line);
+
+
+
+
+
+        };
+        tip.prototype.drawRectangle = function(index){
+            var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            var x = this.lowLimitXAxis;
+            var y = this.upLimitYAxis;
+            var heightRect = this.lowLimitYAxis - this.upLimitYAxis;
+            var widthRect = this.upLimitXAxis - this.lowLimitXAxis;
+            var rectangleId = 'svgDivs';
+            console.log(rectangleId);
+            rect.setAttributeNS(null, 'x', x);
+            rect.setAttributeNS(null, 'y', y);
+            rect.setAttributeNS(null, 'height', heightRect);
+            rect.setAttributeNS(null, 'width', widthRect);
+            rect.setAttribute("class",rectangleId);
+            rect.setAttribute("style","fill:transparent;")
+            this.chartId.appendChild(rect);
+
+        };
+
+        /*
+
         tip.prototype.drawCrossHair = function(x, upLimitYAxis, x, lowLimitYAxis){
             var className = "drawCrossHair";
             var style = "stroke:rgb(0,0,230);stroke-width:1";
@@ -730,37 +563,172 @@ ower of 10 with which it will be checked*/
             this.drawLine(x, upLimitYAxis, x, lowLimitYAxis, style, className);
         };*/
        
-    //end of tip object
-/*
-    function clearCoor(event){
+    //end of maxTipValue object
+    function createSync(event)
+    {
+        var x = event.detail.x;
+        //console.log('syncCrossHair');
+        var draw = crossHairInstance;
 
-        var elements = document.getElementsByClassName("drawCrossHair");
+        var elements = document.getElementsByClassName("svgDivs");
+                for(var i = 0; i<elements.length; i++){
+                    
+                    var upLimitYAxis = range[i].upLimitYAxis;
+                    var lowLimitYAxis = range[i].lowLimitYAxis;
+                     var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+                    draw.drawLine(x, lowLimitYAxis, x, upLimitYAxis,style, "drawCrossHairLines");
+                    console.log(elements[i] + 'rectangleId'+ upLimitYAxis+'lowLimitYAxis'+lowLimitYAxis);
+
+
+        }
+
+
+    };
+
+    function addedEventListener(){
+        var divNames = document.getElementsByClassName("svgDivs");
+        for( var i=0;i<divNames.length;i++){
+            divNames[i].addEventListener("mouseenter", entercordinates,false);
+            divNames[i].addEventListener("mouseleave", clearcoor,false);
+            //divNames[i].addEventListener("mousemove", showCoords,false);
+
+
+
+                divNames[i].addEventListener("syncCrossHair", createSync , false);
+                console.log("instance created");
+            
+        }
+
+    };
+    function entercordinates(event){
+        crossHairInstance = new tip();
+        var lineElement = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        crossHairInstance.crossHairLineIns = lineElement;
+        crossHairInstance.chartId = document.getElementById("chart");
+
+        var x = event.clientX;
+        var y = event.clientY;
+        var className = event.currentTarget.id;
+        console.log(className);
+        
+        var carr = document.getElementsByClassName("svgDivs");
+
+        console.log(carr.length+' number of divs');
+        var cEvent = new CustomEvent("syncCrossHair",{
+            "detail":{x:event.clientX}
+        });
+        for( var i=0;i<carr.length;i++){
+            if(carr[i]!=event.target)
+                carr[i].dispatchEvent(cEvent);
+        }
+
+        
+
+
+
+
+        /*
+
+        console.log(lineElement);
+        var numberOfGraphs = obj.y_axis_map.length;
+        var className = "drawCrossHair";
+        var style = "stroke:rgb(0,0,230);stroke-width:1";
+        
+
+        //for()
+        var upLimitXAxis = range[0].upLimitXAxis;
+        var lowLimitXAxis = range[0].lowLimitXAxis;
+
+        console.log(upLimitXAxis + ' upLimitXAxis' + lowLimitXAxis+ ' present pos'+ x);
+        if(lowLimitXAxis < x && x < upLimitXAxis){
+            var upLimitYAxis = range[0].upLimitYAxis;
+            var lowLimitYAxis = range[0].lowLimitYAxis;
+            
+            crossHairInstance.drawCrossHair(x, upLimitYAxis, x, lowLimitYAxis, style, className);
+
+        }*/
+        
+
+
+
+
+    };
+    function clearcoor(event){
+
+
+
+        var elements = document.getElementsByClassName("svgDivs");
+        console.log(elements);
         for(var i = 0; i<elements.length; i++){
-                elements[i].setAttribute("visibility","hidden");
+            console.log("clr");
+            var lineElement = elements[i].parentNode.getElementsByClassName("drawCrossHairLines");
+            console.log(lineElement);
+            for(var j = 0; j<lineElement.length;j++){
+
+                lineElement[j].setAttribute("visibility","hidden");
+            }
             }
 
     };
     function showCoords(event){
-        var x = event.clientX;
+
+        
+        var x = event.detail.x;
+        console.log(x);
+        var draw = crossHairInstance;
+        draw.crossHairLineIns = crossHairInstance.crossHairLineIns;
+
+
+
+        var elements = document.getElementsByClassName("svgDivs");
+                
+                for(var i = 0; i<elements.length; i++){
+                    var lineElement = elements[i].parentNode.getElementsByClassName("drawCrossHairLines");
+                    for(var j = 0; j<lineElement.length;j++){
+
+                    lineElement[j].setAttribute("visibility","visible");
+                    lineElement[j].setAttribute("x1",x);
+                    lineElement[j].setAttribute("x2",x);
+                 }
+                   
+                    
+        }
+
+
+        
+
+        /*var x = event.clientX;
         var y = event.clientY;
+        var elements = document.getElementsByClassName("svgDivs");
+        for(var i = 0; i<elements.length; i++){
         var coor = "X coords: " + x + ", Y coords: " + y;
+        var style = "stroke:rgb(0,0,230);stroke-width:1";
         //console.log(coor);
-        var draw = new tip();
+        var draw = crossHairInstance;
         var numberOfGraphs = obj.y_axis_map.length;
-        draw.chartId = document.getElementById("chart"); 
+        draw.chartId = crossHairInstance.chartId; /* the chart id will be accessed from another object  
+        console.log(draw.chartId);
+        var upLimitXAxis = range[0].upLimitXAxis;
+        var lowLimitXAxis = range[0].lowLimitXAxis;
+        var upLimitYAxis = range[0].upLimitYAxis;
+        var lowLimitYAxis = range[0].lowLimitYAxis;
+        console.log(upLimitYAxis+ 'upLimitYAxis'+lowLimitYAxis);
+        if(lowLimitXAxis < x && x < upLimitXAxis ){
+        draw.drawCrossHair(x, upLimitYAxis, x, lowLimitYAxis, style, "drawCrossHair");
+         }
         //console.log(draw.chartId + ' chartId');
         //drawCrossHair.drawLine();
-        for(i = 0; i < numberOfGraphs; i++){
+        /*for(i = 0; i < numberOfGraphs; i++){
 
             var upLimitYAxis = range[i].upLimitYAxis;
             var lowLimitYAxis = range[i].lowLimitYAxis;
             console.log(upLimitYAxis + 'axis show '+ lowLimitYAxis);
             var className = "drawCrossHair";
             var style = "stroke:rgb(0,0,230);stroke-width:1";
-            console.log(range[i].lowLimitXAxis+ ' x range'+ range[i].upLimitXAxis);
-            if(range[i].lowLimitXAxis< x < range[i].upLimitXAxis)
-            {
-                draw.drawLine(x, upLimitYAxis, x, lowLimitYAxis, style, className);
+            console.log(range[i].lowLimitXAxis+ ' x range'+ range[i].upLimitXAxis + 'x' + x);
+            if(range[i].lowLimitXAxis< x < range[i].upLimitXAxis && range[i].lowLimitYAxis < y < range[i].upLimitYAxis)
+            { 
+                draw.drawCrossHair(x, upLimitYAxis, x, lowLimitYAxis, style, className);
             }
             
             //console.log(range[0].upLimitYAxis + 'crosshair '+range[0].lowLimitYAxis );
@@ -771,78 +739,42 @@ ower of 10 with which it will be checked*/
 
 
         }
-    
+    */
         };
 
-*/
+
 var range = [];
 
     function parseData(input) {
         obj = input;
-        
+        //var range = [];
         //console.log(obj.data[1]["revenue"]);
         //console.log(obj.y_axis_map.length);
-        
-        /*
+        widthEachChart = obj.chart.width - (obj.chart.width / 2) ;
+        heightEachChart = obj.chart.height / obj.y_axis_map.length;
+        /*var range = new tip();
         var tempMap = obj.y_axis_map[0];
         range.findMinAndSetDataValue(tempMap);
 */
-        
-        if(obj.y_axis_map.length < 1){
-           var arr = [];
-           for (var i = 0; i < obj.data.length; i++) {
-               arr[i] = Object.keys(obj.data[i]);
-               //console.log(Object.keys(obj.data[i]));
-
-           }
-            for (var i = 0; i < obj.data.length; i++) {
-                for (var j = 0;j<arr[i].length - 1;j++){
-                    var value = arr[i][j];
-                    //var valueData = obj.data[i][value];
-                    //console.log(value+ ' '+valueData);
-                    if(obj.y_axis_map.indexOf(value) < 0){
-                        obj.y_axis_map.push(arr[i][j]);
-                         
-                    }
-
-                   
-                }
-
-
-
-           }
-            
-        }
-        
-        widthEachChart = obj.chart.width - (obj.chart.width / 2) ;
-        heightEachChart = obj.chart.height / obj.y_axis_map.length;
-        for (var i = 0; i < obj.y_axis_map.length; i++) {
-            //console.log(obj.y_axis_map[i]);
-        }
-        
+       
 
 
 
 
         for (var i = 0; i < obj.y_axis_map.length; i++) {
             var tempMap = obj.y_axis_map[i];
-            //console.log(tempMap+ 'first step');
             range[i] = new tip();
             range[i].min = range[i].findMinAndSetDataValue(tempMap);
             //console.log(range[i].min + 'minimum calculated from different data values');
-            range[i].max = range[i].findMax(tempMap, i);
+            range[i].max = range[i].findMax(tempMap);
             //console.log(range[i].max + 'maximum ' + tempMap);
-            if(range[i].max !== range[i].min){
-                //console.log(this.min);
-               range[i].positionValues();
-            range[i].findRangeModified();
-            
+            range[i].findRange();
+            //range[i].positionValues();
             //range[i].findYTips();
 
-            range[i].drawChart(i); 
-            }
-            
+            range[i].drawChart(i);
             //range[i].listener();
+            range[i].drawRectangle(i);
 
 
 
@@ -857,3 +789,4 @@ var range = [];
 
     }
     parseData(jsonData);        
+    addedEventListener();
