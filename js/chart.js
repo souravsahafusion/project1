@@ -1,6 +1,7 @@
     var obj = {};
     var heightEachChart = 0; 
     var widthEachChart = 0;
+    var crossHairInstance = '';
     function tip() {
 
         this.min = 0;
@@ -26,6 +27,7 @@
         this.changeFactorMin = 0;
         this.changeFactorMax = 0;
         this.multiplyFactor = 1;
+        this.crossHairLineIns = '';
     }
         tip.prototype.findMinAndSetDataValue = function(tempMap) {
             if (typeof tempMap !== undefined) {
@@ -611,6 +613,163 @@
 
 
         };
+        tip.prototype.drawCrossHair = function(x, upLimitYAxis, x, lowLimitYAxis, style, className){
+  
+ 
+             var line  = this.crossHairLineIns;
+             console.log(line);
+ 
+             line.setAttribute("x1", x);
+             line.setAttribute("y1", upLimitYAxis);
+             line.setAttribute("x2", x);
+             line.setAttribute("y2", lowLimitYAxis);
+             line.setAttribute("class",className);
+             line.setAttribute("style", style);
+             //console.log(this.chartId);
+             this.chartId.appendChild(line);
+ 
+ 
+ 
+ 
+ 
+         };
+         tip.prototype.drawRectangle = function(index){
+             var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+             var x = this.lowLimitXAxis;
+             var y = this.upLimitYAxis;
+             var heightRect = this.lowLimitYAxis - this.upLimitYAxis;
+             var widthRect = this.upLimitXAxis - this.lowLimitXAxis;
+             var rectangleId = 'svgDivs';
+             console.log(rectangleId);
+             rect.setAttributeNS(null, 'x', x);
+             rect.setAttributeNS(null, 'y', y);
+             rect.setAttributeNS(null, 'height', heightRect);
+             rect.setAttributeNS(null, 'width', widthRect);
+             rect.setAttribute("class",rectangleId);
+             rect.setAttribute("style","fill:transparent;")
+             this.chartId.appendChild(rect);
+ 
+         };
+ 
+        
+     //end of maxTipValue object
+     function createSync(event)
+     {
+         var x = event.detail.x;
+         //console.log('syncCrossHair');
+         var draw = crossHairInstance;
+ 
+         var elements = document.getElementsByClassName("svgDivs");
+                 for(var i = 0; i<elements.length; i++){
+                     
+                     var upLimitYAxis = range[i].upLimitYAxis;
+                     var lowLimitYAxis = range[i].lowLimitYAxis;
+                      var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+                     draw.drawLine(x, lowLimitYAxis, x, upLimitYAxis,style, "drawCrossHairLines");
+                     console.log(elements[i] + 'rectangleId'+ upLimitYAxis+'lowLimitYAxis'+lowLimitYAxis);
+ 
+ 
+         }
+ 
+ 
+     };
+ 
+     function addedEventListener(){
+         var divNames = document.getElementsByClassName("svgDivs");
+         for( var i=0;i<divNames.length;i++){
+             divNames[i].addEventListener("mouseenter", entercordinates,false);
+             divNames[i].addEventListener("mouseleave", clearcoor,false);
+             //divNames[i].addEventListener("mousemove", showCoords,false);
+ 
+ 
+ 
+                 divNames[i].addEventListener("syncCrossHair", createSync , false);
+                 console.log("instance created");
+             
+         }
+ 
+     };
+     function entercordinates(event){
+         crossHairInstance = new tip();
+         var lineElement = document.createElementNS("http://www.w3.org/2000/svg", "line");
+         console.log("instance created");
+         crossHairInstance.crossHairLineIns = lineElement;
+         crossHairInstance.chartId = document.getElementById("chart");
+ 
+         var x = event.clientX;
+         var y = event.clientY;
+         var className = event.currentTarget.id;
+         console.log(className);
+         
+ 
+         var carr = document.getElementsByClassName("svgDivs");
+ 
+         console.log(carr.length+' number of divs');
+         var cEvent = new CustomEvent("syncCrossHair",{
+             "detail":{x:event.clientX}
+         });
+         for( var i=0;i<carr.length;i++){
+             if(carr[i]!=event.target)
+                 carr[i].dispatchEvent(cEvent);
+         }
+ 
+             
+         
+         
+ 
+ 
+ 
+ 
+     };
+     function clearcoor(event){
+ 
+ 
+ 
+         var elements = document.getElementsByClassName("svgDivs");
+         console.log(elements);
+         for(var i = 0; i<elements.length; i++){
+             console.log("clr");
+             var lineElement = elements[i].parentNode.getElementsByClassName("drawCrossHairLines");
+             console.log(lineElement);
+             for(var j = 0; j<lineElement.length;j++){
+ 
+                 lineElement[j].setAttribute("visibility","hidden");
+             }
+             }
+ 
+     };
+     function showCoords(event){
+ 
+         
+         var x = event.detail.x;
+         console.log(x);
+         var draw = crossHairInstance;
+         draw.crossHairLineIns = crossHairInstance.crossHairLineIns;
+ 
+ 
+ 
+         var elements = document.getElementsByClassName("svgDivs");
+                 
+                 for(var i = 0; i<elements.length; i++){
+                     var lineElement = elements[i].parentNode.getElementsByClassName("drawCrossHairLines");
+                     for(var j = 0; j<lineElement.length;j++){
+ 
+                     lineElement[j].setAttribute("visibility","visible");
+                     lineElement[j].setAttribute("x1",x);
+                     lineElement[j].setAttribute("x2",x);
+                  }
+                    
+                     
+          }
+ 
+ 
+         
+ 
+         };
+ 
+   
+  
+  
 var range = [];
 
     function parseData(input) {
@@ -672,6 +831,8 @@ var range = [];
             //range[i].findYTips();
 
             range[i].drawChart(i); 
+            range[i].drawRectangle(i);
+
             }
             
             //range[i].listener();
@@ -689,3 +850,4 @@ var range = [];
 
     }
     parseData(jsonData);        
+    addedEventListener(); 
