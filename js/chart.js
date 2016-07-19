@@ -372,7 +372,8 @@
             var x = (this.upLimitXAxis + this.lowLimitXAxis)/ 2;
             var y = obj.chart.height - obj.chart.height * .015;
             var style = '';
-            this.addText(x, y, obj.chart.caption, style);
+            var className = "textAdd";
+            this.addText(x, y, obj.chart.caption, style,className);
         };
         Tip.prototype.chartDivLabelX = function(textValue, x, y) {
             var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -391,9 +392,13 @@
 
 
         };
-        Tip.prototype.addText = function(x, y, textValue,transform)
+        Tip.prototype.addText = function(x, y, textValue,transform,className,textElement)
         {
-            var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            //if(typeof textElement == 'undefined'){
+                 var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+
+            //}
+           
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
             textElement.innerHTML = textValue;
@@ -583,7 +588,8 @@
             var y = (this.upLimitYAxis + this.lowLimitYAxis) / 2;
             
             var transform = "rotate(270 " + x + "," + y + ")";
-            this.addText(x, y, chartName, transform);
+            var className = "textAdd";
+            this.addText(x, y, chartName, transform,className);
 
             
             //console.log('addChartName');
@@ -593,13 +599,15 @@
             var x = (this.upLimitXAxis + this.lowLimitXAxis)/ 2;
             var y = obj.chart.height * .015;
             var style = '';
-            this.addText(x, y, obj.chart.caption, style);
+            var className = "textAdd";
+            this.addText(x, y, obj.chart.caption, style,className);
         };
         Tip.prototype.addSubCaption = function(){
             var x = (this.upLimitXAxis + this.lowLimitXAxis)/ 2;
             var y = obj.chart.height * .025;
             var style = '';
-            this.addText(x, y, obj.chart.subCaption, style);
+            var className = "textAdd";
+            this.addText(x, y, obj.chart.subCaption, style,className);
         };
         Tip.prototype.drawChart = function(chartNo) {
             this.chartId = document.getElementById("chart");
@@ -756,8 +764,10 @@
      };
      function showCoords(event){
         
-         var x = event.detail.x;
+         var x = event.detail.x -8;
          var index = -1;
+         var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            
 
          //for loop might not be the best solution for finding the range
          for(var i = 5;i >0; i--){
@@ -785,36 +795,19 @@
                     if(typeof object[i].storeAncorPointsY[index] !== 'undefined'){
                         value = object[i].storeValue[index];
                         var y = object[i].storeAncorPointsY[index];
-                        console.log(value+'value'+object[i].storeAncorPointsY[index]+'ycordinate'+x+' x ');
+                        //console.log(value+'value'+object[i].storeAncorPointsY[index]+'ycordinate'+x+' x ');
                         var transform = "rotate(0 " + x + "," + y + ")";
-                        object[i].addText(x, y,value, transform);
+                        var className = "toolTipText";
+                        object[i].addText(x, y,value, transform,className,textElement);
                     }
                     
                 //}
                 //console.log(object[0].storeAncorPointsY.length);
             }
-         }
-         //for(var i = 0; i < obj.y_axis_map.length; i++){
-            //console.log(x);
-            /*var index = storeAncorPointsX.indexOf(x);
-            console.log(index);
-            var flag = 0;*/
-            /*if(index !== -1){
-                flag = 1;
-                console.log(index + 'inside if loop');
-                for(var j = 0;j < obj.y_axis_map.length; i++){ //the number of loops that exist might need to be increased by 1
-                    value  = range[j].storeValue[index];
-                    if(typeof value !== 'undefined'){
-                        var y = range[j].storeAncorPointsY[index];
-                        console.log(value +'value '+'x ' +x+'y '+ y);
-                    }
+         }else{
 
-                }
-            }*/
-            /*if(flag == 1){
-                break;
-            }*/
-         //}
+         }
+         
          
          var lineElement = document.getElementsByClassName("drawCrossHairLines");          
                  for(var i = 0; i<lineElement.length; i++){     
