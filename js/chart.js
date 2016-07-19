@@ -784,7 +784,10 @@
                 //for(var j = 0; j < obj.data.length; j++){
                     if(typeof object[i].storeAncorPointsY[index] !== 'undefined'){
                         value = object[i].storeValue[index];
+                        var y = object[i].storeAncorPointsY[index];
                         console.log(value+'value'+object[i].storeAncorPointsY[index]+'ycordinate'+x+' x ');
+                        var transform = "rotate(0 " + x + "," + y + ")";
+                        object[i].addText(x, y,value, transform);
                     }
                     
                 //}
