@@ -664,11 +664,11 @@
             for(var i = 0; i < obj.y_axis_map.length; i++){
                 for(var j = 0; j < obj.data.length; j++){
                     if(typeof object[i].storeAncorPointsY[j] !== 'undefined'){
-                        //console.log(object[i].storeAncorPointsY[j]);
+                        console.log(object[i].storeAncorPointsY[j]);
                     }
                     
                 }
-                console.log(object[0].storeAncorPointsY.length);
+                //console.log(object[0].storeAncorPointsY.length);
             }
              /*for(var j = 0; j < obj.data.length; j++){
                      console.log(this.storeAncorPointsY[j]);
@@ -766,30 +766,40 @@
             }
 
          }
+         object = range;
          if(index !== -1){
             console.log(index);
+            for(var i = 0; i < obj.y_axis_map.length; i++){
+                //for(var j = 0; j < obj.data.length; j++){
+                    if(typeof object[i].storeAncorPointsY[index] !== 'undefined'){
+                        console.log(object[i].storeAncorPointsY[index]);
+                    }
+                    
+                //}
+                //console.log(object[0].storeAncorPointsY.length);
+            }
          }
-         // //for(var i = 0; i < obj.y_axis_map.length; i++){
-         //    //console.log(x);
-         //    /*var index = storeAncorPointsX.indexOf(x);
-         //    console.log(index);
-         //    var flag = 0;*/
-         //    if(index !== -1){
-         //        flag = 1;
-         //        console.log(index + 'inside if loop');
-         //        for(var j = 0;j < obj.y_axis_map.length; i++){ //the number of loops that exist might need to be increased by 1
-         //            value  = range[j].storeValue[index];
-         //            if(typeof value !== 'undefined'){
-         //                var y = range[j].storeAncorPointsY[index];
-         //                console.log(value +'value '+'x ' +x+'y '+ y);
-         //            }
+         //for(var i = 0; i < obj.y_axis_map.length; i++){
+            //console.log(x);
+            /*var index = storeAncorPointsX.indexOf(x);
+            console.log(index);
+            var flag = 0;*/
+            /*if(index !== -1){
+                flag = 1;
+                console.log(index + 'inside if loop');
+                for(var j = 0;j < obj.y_axis_map.length; i++){ //the number of loops that exist might need to be increased by 1
+                    value  = range[j].storeValue[index];
+                    if(typeof value !== 'undefined'){
+                        var y = range[j].storeAncorPointsY[index];
+                        console.log(value +'value '+'x ' +x+'y '+ y);
+                    }
 
-         //        }
-         //    }
-         //    /*if(flag == 1){
-         //        break;
-         //    }*/
-         // //}
+                }
+            }*/
+            /*if(flag == 1){
+                break;
+            }*/
+         //}
          
          var lineElement = document.getElementsByClassName("drawCrossHairLines");          
                  for(var i = 0; i<lineElement.length; i++){     
@@ -880,9 +890,9 @@ var range = [];
             //range.push(obj.data[i][tempMap])
             //console.log(obj.data[i][tempMap]);
         }
-        for (var i = 0; i < obj.y_axis_map.length; i++) {
+        /*for (var i = 0; i < obj.y_axis_map.length; i++) {
             range[i].printValues();
-        }
+        }*/
         
 
 
