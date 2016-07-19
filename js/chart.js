@@ -761,10 +761,13 @@
                 if(storeAncorPointsX.indexOf(x-i)!== -1){
                     index = storeAncorPointsX.indexOf(x+i);
                 }
-                console.log(index);
-                
+                //console.log(index);
+
             }
 
+         }
+         if(index !== -1){
+            console.log(index);
          }
          // //for(var i = 0; i < obj.y_axis_map.length; i++){
          //    //console.log(x);
