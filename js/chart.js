@@ -661,7 +661,7 @@
          Tip.prototype.printValues = function(){
             var object = {};
             object = range;
-            for(var i = 0; i < obj.y_axis_map.length; i++){
+            /*for(var i = 0; i < obj.y_axis_map.length; i++){
                 for(var j = 0; j < obj.data.length; j++){
                     if(typeof object[i].storeAncorPointsY[j] !== 'undefined'){
                         console.log(object[i].storeAncorPointsY[j]);
@@ -669,7 +669,14 @@
                     
                 }
                 //console.log(object[0].storeAncorPointsY.length);
+            }*/
+            for(var i = 0; i < obj.y_axis_map.length; i++){
+              
+                        console.log(object[i].storeValue[j]);
+                    
+                //console.log(object[0].storeAncorPointsY.length);
             }
+
              /*for(var j = 0; j < obj.data.length; j++){
                      console.log(this.storeAncorPointsY[j]);
                  }*/
@@ -750,16 +757,20 @@
      function showCoords(event){
         
          var x = event.detail.x;
+         var index = -1;
+
          //for loop might not be the best solution for finding the range
          for(var i = 5;i >0; i--){
 
             if(storeAncorPointsX.indexOf(x+i)!== -1 || storeAncorPointsX.indexOf(x-i)!== -1){
-                var index = 0;  //find better way for choosing index
+                 //index = 0;  //find better way for choosing index
                 if(storeAncorPointsX.indexOf(x+i)!== -1){
                     index = storeAncorPointsX.indexOf(x+i);
+                    x = x+i;
                 }
                 if(storeAncorPointsX.indexOf(x-i)!== -1){
-                    index = storeAncorPointsX.indexOf(x+i);
+                    index = storeAncorPointsX.indexOf(x-i);
+                     x = x-i;
                 }
                 //console.log(index);
 
@@ -772,7 +783,8 @@
             for(var i = 0; i < obj.y_axis_map.length; i++){
                 //for(var j = 0; j < obj.data.length; j++){
                     if(typeof object[i].storeAncorPointsY[index] !== 'undefined'){
-                        console.log(object[i].storeAncorPointsY[index]);
+                        value = object[i].storeValue[index];
+                        console.log(value+'value'+object[i].storeAncorPointsY[index]+'ycordinate'+x+' x ');
                     }
                     
                 //}
