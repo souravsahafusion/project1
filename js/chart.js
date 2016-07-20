@@ -655,13 +655,14 @@
              rect.setAttributeNS(null, 'height', heightRect);
              rect.setAttributeNS(null, 'width', widthRect);
              rect.setAttribute("class",rectangleId);
-             rect.setAttribute("style","fill:transparent;")
+             rect.setAttribute("style","fill:transparent");
+             //rect.setAttribute("visibility","hidden");
              this.chartId.appendChild(rect);
 
              rect.addEventListener("mousemove", entercordinates,false);
              rect.addEventListener("syncCrossHair", showCoords, false);
              //divNames[i].addEventListener("mousemove", showCoords,false);
-            //rect.addEventListener("mouseout", clearcoor,false);
+            rect.addEventListener("mouseleave", clearcoor,false);
 
 
  
@@ -746,21 +747,12 @@
  
      };
      function clearcoor(event){
- 
- 
-        
-         var elements = document.getElementsByClassName("svgDivs");
- 
-         for(var i = 0; i<elements.length; i++){
-             //console.log("clr");
-             var lineElement = elements[i].parentNode.getElementsByClassName("drawCrossHairLines");
-             //console.log(lineElement);
-             for(var j = 0; j<lineElement.length;j++){
- 
-                 lineElement[j].setAttribute("visibility","hidden");
-             }
-             }
- 
+
+        var lineElement = document.getElementsByClassName("drawCrossHairLines");          
+                 for(var i = 0; i<lineElement.length; i++){     
+                     lineElement[i].setAttribute("visibility","hidden");
+                     
+                  }   
      };
      function showCoords(event){
         
@@ -908,4 +900,4 @@ var range = [];
 
     }
     parseData(jsonData);        
-    //addedEventListener(); 
+    
