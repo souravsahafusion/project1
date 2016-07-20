@@ -331,7 +331,7 @@
             return dateObject.getMonth();
             //console.log(month[this.monthValue]);
         };
-        Tip.prototype.drawLine = function(x1, y1, x2, y2, style,className) {
+        Tip.prototype.drawLine = function(x1, y1, x2, y2, style,className,visibility) {
             var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
             line.setAttribute("x1", x1);
             line.setAttribute("y1", y1);
@@ -339,7 +339,11 @@
             line.setAttribute("y2", y2);
             line.setAttribute("class",className);
             line.setAttribute("style", style);
-            //console.log(this.chartId);
+            if(typeof visibility !== 'undefined'){
+                line.setAttribute("visibility", "hidden");
+               
+            }
+          
             this.chartId.appendChild(line);
 
 
@@ -631,7 +635,8 @@
             var y1 = this.lowLimitYAxis;
             var y2 = this.upLimitYAxis;
             var style = "stroke:rgb(105,105,105);stroke-width:3;";
-            this.drawLine(x, y1, x, y2, style, className);
+            var visibility = "hidden";
+            this.drawLine(x, y1, x, y2, style, className,visibility);
             //console.log("drawCrossHairLines");
   
  
@@ -703,32 +708,7 @@
  
         
      //end of maxTipValue object
-     function createSync(event)
-     {
-         var x = event.detail.x;
-         //console.log('syncCrossHair');
-         var draw = crossHairInstance;
-        draw.crossHairLineIns = crossHairInstance.crossHairLineIns;
-         var line = draw.crossHairLineIns;
-
- 
-         var elements = document.getElementsByClassName("svgDivs");
-                 for(var i = 0; i<elements.length; i++){
-                     
-                    var upLimitYAxis = range[i].upLimitYAxis;
-                    var lowLimitYAxis = range[i].lowLimitYAxis;
-                    var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
-                   
-
-                    draw.drawLine(x, lowLimitYAxis, x, upLimitYAxis,style, "drawCrossHairLines");
-                     //console.log(elements[i] + 'rectangleId'+ upLimitYAxis+'lowLimitYAxis'+lowLimitYAxis);
- 
- 
-         }
- 
- 
-     };
-
+     /**/
  
     
      function entercordinates(event){
@@ -758,7 +738,7 @@
         
          var x = event.detail.x -8;
          var index = -1;
-         var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+         
             
 
          //for loop might not be the best solution for finding the range
@@ -781,7 +761,7 @@
          }
          object = range;
          if(index !== -1){
-            console.log(index);
+            //console.log(index);
             for(var i = 0; i < obj.y_axis_map.length; i++){
                 //for(var j = 0; j < obj.data.length; j++){
                     if(typeof object[i].storeAncorPointsY[index] !== 'undefined'){
@@ -790,6 +770,7 @@
                         //console.log(value+'value'+object[i].storeAncorPointsY[index]+'ycordinate'+x+' x ');
                         var transform = "rotate(0 " + x + "," + y + ")";
                         var className = "toolTipText";
+                        var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
                         object[i].addText(x, y,value, transform,className,textElement);
                     }
                     
@@ -806,6 +787,9 @@
                      lineElement[i].setAttribute("visibility","visible");
                      lineElement[i].setAttribute("x1",x);
                      lineElement[i].setAttribute("x2",x);
+
+
+
                   }    
          };
  
