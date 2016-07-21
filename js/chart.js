@@ -4,7 +4,7 @@
     var crossHairInstance = '';
     var storeAncorPointsX = [];
     function Tip() {
-
+        this.chartType = '';
         this.min = 0;
         this.max = 0;
         this.range = 0;
@@ -151,7 +151,7 @@
             this.svg.setAttribute("width", obj.chart.width);
             chartId = document.getElementById("chart");
             chartId.appendChild(this.svg);
-            console.log(this.lowLimitXAxis+ 'lowLimitXAxis');
+            //console.log(this.lowLimitXAxis+ 'lowLimitXAxis');
 
 
 
@@ -437,17 +437,18 @@
         };
         Tip.prototype.drawXAxis = function(check, numberOfColCharts, numberOfCharts) {
             var chartNo = this.chartNo;
-            var x1 = widthEachChart / 5; // distance from the origin to the yaxis
+            var percentileFactor 
+            var x1 = widthEachChart * 0.2; // distance from the origin to the yaxis
             //console.log(widthEachChart + 'widthEachChart');
-            var x2 = widthEachChart + (widthEachChart / 5) + (widthEachChart / 20); //the extra divided by 20 added to keep some extra space
+            var x2 = widthEachChart + (widthEachChart * 0.2); //+ (widthEachChart / 20); //the extra divided by 20 added to keep some extra space
             var y1 = 0;
             var y2 = 0;
             if(check !== 2){ //check is being calculated many number of times
-                y1 = (heightEachChart / 4) ;
-                y2 = (heightEachChart / 4);
+                y1 = (heightEachChart * 0.25) ;
+                y2 = (heightEachChart * 0.25);
             }else{
-                y1 = (heightEachChart / 4) + (heightEachChart );
-                y2 = (heightEachChart / 4) + (heightEachChart );
+                y1 = (heightEachChart * 0.25) + (heightEachChart );
+                y2 = (heightEachChart * 0.25) + (heightEachChart );
             }
             
             //console.log(x1 +' x1 '+ x2 +' x2 '+ y1 +' y1 ');
@@ -459,7 +460,12 @@
             var numberOfTicks = obj.data.length;
 
             //console.log(numberOfTicks + 'numberOfTicks');
-            var temp_x1 = x1 + (widthEachChart / 70);
+            if(obj.chartType == "line"){
+                var temp_x1 = x1 + (.01 * widthEachChart ); /*this variable is used to set the distance from y-axis to the first plotting point*/
+            }else if(obj.chartType == "column"){
+                var temp_x1 = x1 + (.07 * widthEachChart );
+            }
+            
             this.lowLimitXAxis = temp_x1; //setting the limits from the Tip value
             //var widthEachChart = this.widthEachChart;
             /*
@@ -472,20 +478,21 @@
                 x1 = temp_x1 + (widthEachChart / this.noofXTips) * (i);
                 x2 = temp_x1 + (widthEachChart / this.noofXTips) * (i);
                 this.upLimitXAxis = x1;
-                console.log(check +'check');
+                //console.log(check +'check');
                 if(check !== 2){
-                    y1 = (heightEachChart / 4) - 4;
-                    y2 = (heightEachChart / 4) + 4;
+                    y1 = (heightEachChart * 0.25) - 4;
+                    y2 = (heightEachChart * 0.25) + 4;
                 }else{
-                    y1 = (heightEachChart / 4) + (heightEachChart ) - 4 ;
-                    y2 = (heightEachChart / 4) + (heightEachChart ) + 4 ;
+                    y1 = (heightEachChart * 0.25) + (heightEachChart ) - 4 ;
+                    y2 = (heightEachChart * 0.25) + (heightEachChart ) + 4 ;
                 }
-               
-                var style = "";
-                //
-                var className = "axisTicks";
-                this.drawLine(x1, y1, x2, y2, style,className);
+                if(obj.chartType == "line"){
+                    var style = "";                
+                    var className = "axisTicks";
+                    this.drawLine(x1, y1, x2, y2, style,className);
 
+                }
+                
                 //put x-axis label 
                 //console.log(obj.month[i] + 'monthValue');
                 if(check !== 2 && chartNo <= numberOfColCharts){
@@ -508,11 +515,11 @@
 
         {
             var chartNo = this.chartNo;
-            var x1 = widthEachChart / 5;
-            var x2 = widthEachChart / 5;
+            var x1 = widthEachChart * 0.2;
+            var x2 = widthEachChart * 0.2;
             //console.log(chartNo + 'chartNo');
-            var y1 = (heightEachChart / 4) ; //15 used to give space between charts
-            var y2 = (heightEachChart / 4) + (heightEachChart );
+            var y1 = (heightEachChart * 0.25) ; //15 used to give space between charts
+            var y2 = (heightEachChart * 0.25) + (heightEachChart );
             var style = "";
             var className = "axisDraw";
             this.drawLine(x1, y1, x2, y2, style, className);
@@ -540,7 +547,7 @@
                 //drawing divs
                 var style = "";
                 className = "divLines";
-                this.drawLine(x1, y1, widthEachChart + (widthEachChart / 5) + (widthEachChart / 20), y2, style,className);
+                this.drawLine(x1, y1, widthEachChart + (widthEachChart * 0.2) /*+ (widthEachChart / 20)*/, y2, style,className);
                 //writing the labels
 
 
@@ -578,7 +585,55 @@
             this.svg.appendChild(circleTip);
 
         };
-        Tip.prototype.plotGraph = function() {
+        Tip.prototype.plotColumnChart = function(){
+
+            
+            for (i = 0; i < 12; i++) {   /*to be changed later '12' for any number of data i.e. find the last index of the storevalue array*/
+                var value = this.storeValue[i];
+                //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
+                if (typeof value != 'undefined')
+                {
+                    var yPointPlot = this.calculateMappingPoint(value);
+                    //console.log(range.length); need to debug
+                    this.storeAncorPointsY[i] = yPointPlot;
+                    var xPointPlot = this.lowLimitXAxis + (widthEachChart / this.noofXTips) * (i);
+                    storeAncorPointsX[i] = Math.floor(xPointPlot);
+                    //console.log(this.storeAncorPointsY[i] + ' xPointPlot '+ this.storeAncorPointsX[i]);
+                    //this.lastPlottedPointY = this.lowLimitYAxis - this.lastPlottedPointY;
+                    //yPointPlot = this.lowLimitYAxis - yPointPlot;
+
+
+                    /*//this.plotTipCirle(xPointPlot, yPointPlot);
+
+                    if (flagFirstPoint != 0) //skipping the first plot
+                    {*/
+
+                        //console.log(this.lowLimitYAxis);
+
+
+                        //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
+                        //console.log(xPointPlot + ' ' + yPointPlot + ' ' + this.tempMap);
+                        var style = "";
+                        var className  = "plotColumnGraph";
+                        this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot, style,className);
+
+
+
+                    //}
+                    this.lastPlottedPointX = xPointPlot;
+                    this.lastPlottedPointY = yPointPlot;
+                    
+                    //skipping the 2D array for storing x-y w.r.t month and instead storing the previous x-y coordinates
+
+                }
+                
+
+
+            }
+
+        };
+
+        Tip.prototype.plotLineChart = function() {
             var flagFirstPoint = 0;
             for (i = 0; i < 12; i++) {   /*to be changed later '12' for any number of data i.e. find the last index of the storevalue array*/
                 var value = this.storeValue[i];
@@ -656,7 +711,7 @@
             var className = "textAdd";
             this.addText(x, y, obj.chart.subCaption, style,className);
         };
-        Tip.prototype.drawChart = function(chartNo, numberOfCharts, numberOfColCharts) {
+        Tip.prototype.drawChartOutline = function(chartNo, numberOfCharts, numberOfColCharts) {
             this.chartId = document.getElementById("chart");
             this.chartNo = chartNo + 1;
 
@@ -698,7 +753,8 @@
  
  
          };
-         Tip.prototype.drawRectangle = function(index){
+
+         Tip.prototype.drawDivRectangle = function(index){
              var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
              var x = this.lowLimitXAxis;
              var y = this.upLimitYAxis;
@@ -788,7 +844,7 @@
      function showCoords(event){
         
         var x = event.detail.x % obj.chart.width;
-        console.log(x +'showCoords');
+        //lconsole.log(x +'showCoords');
         x = x -8;
          var index = -1;
          
@@ -838,7 +894,7 @@
          var lineElement = document.getElementsByClassName("drawCrossHairLines");          
                  for(var i = 0; i<lineElement.length; i++){     
                      lineElement[i].setAttribute("visibility","visible");
-                     console.log(x + 'crossHairLine');
+                     //console.log(x + 'crossHairLine');
                      lineElement[i].setAttribute("x1",x);
                      lineElement[i].setAttribute("x2",x);
 
@@ -921,12 +977,27 @@ var range = [];
                 //console.log("calling cross hair");
                 
                 //range[i].findYTips();
+                
 
-                range[i].drawChart(i, numberOfCharts, numberOfColCharts); 
-                range[i].plotGraph();
-                range[i].drawRectangle(i);
+                range[i].drawChartOutline(i, numberOfCharts, numberOfColCharts); 
 
-                range[i].drawCrossHair();
+                if(obj.chartType == "line"){
+                    range[i].chartType = "line";
+                    range[i].plotLineChart();
+                    range[i].drawDivRectangle(i); /*rectangle is not required since we don't need to restrict the crooshair, infact no crosshair is there*/
+                    range[i].drawCrossHair();
+
+                }else if(obj.chartType == "column"){
+
+                    range[i].chartType = "column";
+                    range[i].plotColumnChart();
+
+                }
+                
+
+              
+
+                
             
 
             }
