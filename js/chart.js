@@ -151,6 +151,7 @@
             this.svg.setAttribute("width", obj.chart.width);
             chartId = document.getElementById("chart");
             chartId.appendChild(this.svg);
+            console.log(this.lowLimitXAxis+ 'lowLimitXAxis');
 
 
 
@@ -751,7 +752,9 @@
      };
      function showCoords(event){
         
-         var x = event.detail.x -8;
+        var x = event.detail.x % obj.chart.width;
+        console.log(x +'showCoords');
+        x = x -8;
          var index = -1;
          
             
@@ -855,7 +858,8 @@ var range = [];
 
         var windowWidth = window.innerWidth;
         var windowHeight = window.innerHeight;
-        
+        console.log(innerWidth + 'innerWidth');
+        console.log(obj.chart.width +'obj.chart.width');
 
 
 
