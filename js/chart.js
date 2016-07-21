@@ -984,7 +984,7 @@ var range = [];
                 if(obj.chartType == "line"){
                     range[i].chartType = "line";
                     range[i].plotLineChart();
-                    range[i].drawDivRectangle(i); /*rectangle is not required since we don't need to restrict the crooshair, infact no crosshair is there*/
+                     range[i].drawDivRectangle(i); /*rectangle is not required since we don't need to restrict the crooshair, infact no crosshair is there*/
                     range[i].drawCrossHair();
 
                 }else if(obj.chartType == "column"){
