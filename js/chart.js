@@ -598,6 +598,11 @@
                     this.storeAncorPointsY[i] = yPointPlot;
                     var xPointPlot = this.lowLimitXAxis + (widthEachChart / this.noofXTips) * (i);
                     storeAncorPointsX[i] = Math.floor(xPointPlot);
+                    var x = xPointPlot - widthEachChart * .02;
+                    var y = this.lowLimitYAxis;
+                    var heightRect = y - yPointPlot;
+                    var widthRect = widthEachChart * .04;
+                    //console.log(y);
                     //console.log(this.storeAncorPointsY[i] + ' xPointPlot '+ this.storeAncorPointsX[i]);
                     //this.lastPlottedPointY = this.lowLimitYAxis - this.lastPlottedPointY;
                     //yPointPlot = this.lowLimitYAxis - yPointPlot;
@@ -615,7 +620,7 @@
                         //console.log(xPointPlot + ' ' + yPointPlot + ' ' + this.tempMap);
                         var style = "";
                         var className  = "plotColumnGraph";
-                        this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot, style,className);
+                        this.drawColumnRectangle(x, yPointPlot, heightRect, widthRect, className)
 
 
 
@@ -752,6 +757,18 @@
  
  
  
+         };
+         Tip.prototype.drawColumnRectangle = function(x, y, heightRect, widthRect, className){
+
+
+            var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rect.setAttributeNS(null, 'x', x);
+            rect.setAttributeNS(null, 'y', y);
+            rect.setAttributeNS(null, 'height', heightRect);
+            rect.setAttributeNS(null, 'width', widthRect);
+            rect.setAttribute("class", className);
+            this.svg.appendChild(rect);
+
          };
 
          Tip.prototype.drawDivRectangle = function(index){
@@ -984,7 +1001,7 @@ var range = [];
                 if(obj.chartType == "line"){
                     range[i].chartType = "line";
                     range[i].plotLineChart();
-                     range[i].drawDivRectangle(i); /*rectangle is not required since we don't need to restrict the crooshair, infact no crosshair is there*/
+                    range[i].drawDivRectangle(i); /*rectangle is not required since we don't need to restrict the crooshair, infact no crosshair is there*/
                     range[i].drawCrossHair();
 
                 }else if(obj.chartType == "column"){
