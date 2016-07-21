@@ -392,14 +392,23 @@
             var className = "textAdd";
             this.addText(x, y, obj.chart.caption, style,className);
         };
-        Tip.prototype.chartDivLabelX = function(textValue, x, y) {
+        Tip.prototype.chartDivLabelX = function(textValue, x, y, check) {
             var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
             var x = x - (widthEachChart / 70);
             var y = y + (heightEachChart / 40);
+            
+            var transform = '';
+            textElement.innerHTML = textValue;
+            if(check !== 2){
+                y = y - 20;
+                transform = "rotate(0 " + x + "," + y + ")";
+
+            }else{
+                transform = "rotate(90 " + x + "," + y + ")";
+            }
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
-            textElement.innerHTML = textValue;
-            var transform = "rotate(90 " + x + "," + y + ")";
+            
             var fontSize  = widthEachChart / 25;
             textElement.setAttribute("font-size",fontSize);
             textElement.setAttribute("transform",transform);
@@ -426,14 +435,22 @@
             //console.log(x +' xvalue' + y + ' yvalue' + textValue + 'textValue');
 
         };
-        Tip.prototype.drawXAxis = function() {
+        Tip.prototype.drawXAxis = function(check, numberOfColCharts, numberOfCharts) {
             var chartNo = this.chartNo;
             var x1 = widthEachChart / 5; // distance from the origin to the yaxis
-            console.log(widthEachChart + 'widthEachChart');
+            //console.log(widthEachChart + 'widthEachChart');
             var x2 = widthEachChart + (widthEachChart / 5) + (widthEachChart / 20); //the extra divided by 20 added to keep some extra space
-            var y1 = (heightEachChart / 4) ;
-            var y2 = (heightEachChart / 4);
-            console.log(x1 +' x1 '+ x2 +' x2 '+ y1 +' y1 ');
+            var y1 = 0;
+            var y2 = 0;
+            if(check !== 2){ //check is being calculated many number of times
+                y1 = (heightEachChart / 4) ;
+                y2 = (heightEachChart / 4);
+            }else{
+                y1 = (heightEachChart / 4) + (heightEachChart );
+                y2 = (heightEachChart / 4) + (heightEachChart );
+            }
+            
+            //console.log(x1 +' x1 '+ x2 +' x2 '+ y1 +' y1 ');
             var style = "";
             var className = "drawXAxis";
             this.drawLine(x1, y1, x2, y2, style,className);
@@ -455,8 +472,15 @@
                 x1 = temp_x1 + (widthEachChart / this.noofXTips) * (i);
                 x2 = temp_x1 + (widthEachChart / this.noofXTips) * (i);
                 this.upLimitXAxis = x1;
-                y1 = (heightEachChart / 4) - 4;
-                y2 = (heightEachChart / 4) + 4;
+                console.log(check +'check');
+                if(check !== 2){
+                    y1 = (heightEachChart / 4) - 4;
+                    y2 = (heightEachChart / 4) + 4;
+                }else{
+                    y1 = (heightEachChart / 4) + (heightEachChart ) - 4 ;
+                    y2 = (heightEachChart / 4) + (heightEachChart ) + 4 ;
+                }
+               
                 var style = "";
                 //
                 var className = "axisTicks";
@@ -464,10 +488,13 @@
 
                 //put x-axis label 
                 //console.log(obj.month[i] + 'monthValue');
-                
+                if(check !== 2 && chartNo <= numberOfColCharts){
+                    this.chartDivLabelX(obj.month[i], x1, y2, check);
 
-                if (chartNo == obj.y_axis_map.length) {
-                    this.chartDivLabelX(obj.month[i], x1, y2);
+                }
+
+                if (check == 2 && chartNo > (numberOfCharts - numberOfColCharts)) {
+                    this.chartDivLabelX(obj.month[i], x1, y2, check);
                 }
                 
 
@@ -629,11 +656,19 @@
             var className = "textAdd";
             this.addText(x, y, obj.chart.subCaption, style,className);
         };
-        Tip.prototype.drawChart = function(chartNo) {
+        Tip.prototype.drawChart = function(chartNo, numberOfCharts, numberOfColCharts) {
             this.chartId = document.getElementById("chart");
             this.chartNo = chartNo + 1;
 
-            this.drawXAxis();
+            
+
+            var check = 1;
+
+            if(numberOfCharts % 2 == 0){
+                check = 2; //even
+            }     
+            //console.log(numberOfCharts + ' numberOfCharts '+ check + ' check ');
+            this.drawXAxis(check, numberOfColCharts, numberOfCharts);
             this.drawYAxis();
             //this.plotGraph();
             this.addChartName(chartNo); //this chartNo is the index value of the array 
@@ -822,16 +857,18 @@ var range = [];
         
         //console.log(obj.data[1]["revenue"]);
         //console.log(obj.y_axis_map.length);
+        var noOfDatas = obj.data.length;
+        
      
         
         if(obj.y_axis_map.length < 1){
            var arr = [];
-           for (var i = 0; i < obj.data.length; i++) {
+           for (var i = 0; i < noOfDatas; i++) {
                arr[i] = Object.keys(obj.data[i]);
                //console.log(Object.keys(obj.data[i]));
 
            }
-            for (var i = 0; i < obj.data.length; i++) {
+            for (var i = 0; i < noOfDatas; i++) {
                 for (var j = 0;j<arr[i].length - 1;j++){
                     var value = arr[i][j];
                     //var valueData = obj.data[i][value];
@@ -849,22 +886,25 @@ var range = [];
            }
             
         }
-        
+        var numberOfCharts = obj.y_axis_map.length;
         widthEachChart = obj.chart.width - (obj.chart.width / 2) ;
         heightEachChart = obj.chart.height * 0.70;
-        for (var i = 0; i < obj.y_axis_map.length; i++) {
+        /*for (var i = 0; i < obj.y_axis_map.length; i++) {
             //console.log(obj.y_axis_map[i]);
-        }
+        }*/
 
         var windowWidth = window.innerWidth;
         var windowHeight = window.innerHeight;
-        console.log(innerWidth + 'innerWidth');
-        console.log(obj.chart.width +'obj.chart.width');
+        var chartWidth = obj.chart.width;
+        var chartHeight = obj.chart.height;
+        var numberOfColCharts = Math.floor(windowWidth / chartWidth);
+
+        
 
 
 
 
-        for (var i = 0; i < obj.y_axis_map.length; i++) {
+        for (var i = 0; i < numberOfCharts; i++) {
             var tempMap = obj.y_axis_map[i];
             //console.log(tempMap+ 'first step');
             range[i] = new Tip();
@@ -875,18 +915,18 @@ var range = [];
             if(range[i].max !== range[i].min){
                 //console.log(this.min);
                range[i].positionValues();
-                range[i].createSVG();
+               range[i].createSVG();
 
-            range[i].findRangeModified();
-            //console.log("calling cross hair");
-            
-            //range[i].findYTips();
+                range[i].findRangeModified();
+                //console.log("calling cross hair");
+                
+                //range[i].findYTips();
 
-            range[i].drawChart(i); 
-            range[i].plotGraph();
-            range[i].drawRectangle(i);
+                range[i].drawChart(i, numberOfCharts, numberOfColCharts); 
+                range[i].plotGraph();
+                range[i].drawRectangle(i);
 
-            range[i].drawCrossHair();
+                range[i].drawCrossHair();
             
 
             }
