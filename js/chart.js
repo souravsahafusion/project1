@@ -107,30 +107,7 @@
             }
 
         };
-        Tip.prototype.findRange = function() {
-
-            var minValue = Math.floor(this.min);
-            var lastTwoMinDigit = minValue % 100;
-            this.minTipValue = minValue - lastTwoMinDigit;
-            var maxValue = Math.ceil(this.max);
-            var lastTwoMaxDigit = maxValue % 100;
-            if (lastTwoMaxDigit !== 0) {
-                this.maxTipValue = this.max + (100 - lastTwoMaxDigit);
-            } else {
-                this.maxTipValue = this.max + (lastTwoMaxDigit);
-            }
-
-            this.diffBwTips = this.maxTipValue - this.minTipValue;
-            this.findYTips();
-
-
-            //console.log(this.minTipValue);
-            //console.log(this.maxTipValue);
-            //console.log(this.diffBwTips + 'diffBwTips actual');
-            //console.log(minValue);
-
-
-        };
+        
         Tip.prototype.checkingForNegative = function(){
 
             
@@ -150,6 +127,7 @@
             this.svg.setAttribute("height", obj.chart.height);   
             this.svg.setAttribute("width", obj.chart.width);
             chartId = document.getElementById("chart");
+            this.svg.setAttribute("class","chartSVG");
             chartId.appendChild(this.svg);
             //console.log(this.lowLimitXAxis+ 'lowLimitXAxis');
 
@@ -366,7 +344,7 @@
             var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
             var x = widthEachChart / 16;
             var y = y;
-            var fontSize  = widthEachChart / 45;
+            var fontSize  = heightEachChart * .04;
             var textValue = this.maxTipValue - (this.diffBwTips * index / this.noOfYTips);
             if(this.mulTiplyFactor == 10000){
                 textValue = parseFloat(textValue).toFixed(3);
@@ -409,7 +387,7 @@
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
             
-            var fontSize  = widthEachChart / 25;
+            var fontSize  = heightEachChart * .04;
             textElement.setAttribute("font-size",fontSize);
             textElement.setAttribute("transform",transform);
             this.svg.appendChild(textElement);
@@ -428,7 +406,7 @@
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
             textElement.innerHTML = textValue;
-            var fontSize  = widthEachChart * .030;
+            var fontSize  = heightEachChart * .04;
             textElement.setAttribute("font-size",fontSize);
             textElement.setAttribute("transform",transform);
             this.svg.appendChild(textElement);
