@@ -1,6 +1,6 @@
     var obj = {};
-    var heightEachChart = 0; 
-    var widthEachChart = 0;
+    var heightEachChart = 400; 
+    var widthEachChart = 300;
     var crossHairInstance = '';
     var storeAncorPointsX = [];
     function Tip() {
@@ -143,6 +143,18 @@
                 this.changeFactorMax++;
             }
               
+        };
+        Tip.prototype.createSVG = function(){
+            this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            var chartNo = this.chartNo;
+            this.svg.setAttribute("height", obj.chart.height);   
+            this.svg.setAttribute("width", obj.chart.width);
+            chartId = document.getElementById("chart");
+            chartId.appendChild(this.svg);
+
+
+
+
         };
         Tip.prototype.findRangeModified = function(){
             
@@ -344,7 +356,7 @@
                
             }
           
-            this.chartId.appendChild(line);
+            this.svg.appendChild(line);
 
 
 
@@ -366,7 +378,7 @@
             textElement.setAttribute("font-size",fontSize);
             //textElement.setAttribute("style", style);
             //console.log(y + 'label');
-            this.chartId.appendChild(textElement);
+            this.svg.appendChild(textElement);
 
 
 
@@ -390,7 +402,7 @@
             var fontSize  = widthEachChart / 25;
             textElement.setAttribute("font-size",fontSize);
             textElement.setAttribute("transform",transform);
-            this.chartId.appendChild(textElement);
+            this.svg.appendChild(textElement);
 
 
 
@@ -409,17 +421,18 @@
             var fontSize  = widthEachChart * .030;
             textElement.setAttribute("font-size",fontSize);
             textElement.setAttribute("transform",transform);
-            this.chartId.appendChild(textElement);
+            this.svg.appendChild(textElement);
             //console.log(x +' xvalue' + y + ' yvalue' + textValue + 'textValue');
 
         };
         Tip.prototype.drawXAxis = function() {
             var chartNo = this.chartNo;
             var x1 = widthEachChart / 5; // distance from the origin to the yaxis
-            //console.log(widthEachChart + 'widthEachChart');
+            console.log(widthEachChart + 'widthEachChart');
             var x2 = widthEachChart + (widthEachChart / 5) + (widthEachChart / 20); //the extra divided by 20 added to keep some extra space
-            var y1 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
-            var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
+            var y1 = (heightEachChart / 4) ;
+            var y2 = (heightEachChart / 4);
+            console.log(x1 +' x1 '+ x2 +' x2 '+ y1 +' y1 ');
             var style = "";
             var className = "drawXAxis";
             this.drawLine(x1, y1, x2, y2, style,className);
@@ -441,8 +454,8 @@
                 x1 = temp_x1 + (widthEachChart / this.noofXTips) * (i);
                 x2 = temp_x1 + (widthEachChart / this.noofXTips) * (i);
                 this.upLimitXAxis = x1;
-                y1 = (heightEachChart / 4) + (heightEachChart * chartNo) - 4 + (chartNo - 1) * (heightEachChart / 8);
-                y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + 4 + (chartNo - 1) * (heightEachChart / 8);
+                y1 = (heightEachChart / 4) - 4;
+                y2 = (heightEachChart / 4) + 4;
                 var style = "";
                 //
                 var className = "axisTicks";
@@ -470,8 +483,8 @@
             var x1 = widthEachChart / 5;
             var x2 = widthEachChart / 5;
             //console.log(chartNo + 'chartNo');
-            var y1 = (heightEachChart / 4) + (heightEachChart * (chartNo - 1)) + (chartNo - 1) * (heightEachChart / 8); //15 used to give space between charts
-            var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
+            var y1 = (heightEachChart / 4) ; //15 used to give space between charts
+            var y2 = (heightEachChart / 4) + (heightEachChart );
             var style = "";
             var className = "axisDraw";
             this.drawLine(x1, y1, x2, y2, style, className);
@@ -534,7 +547,7 @@
             circleTip.setAttribute("r", 3);
             circleTip.setAttribute("class", circleTip);
             //circleTip.setAttribute("style", style);
-            this.chartId.appendChild(circleTip);
+            this.svg.appendChild(circleTip);
 
         };
         Tip.prototype.plotGraph = function() {
@@ -552,6 +565,8 @@
                     //console.log(this.storeAncorPointsY[i] + ' xPointPlot '+ this.storeAncorPointsX[i]);
                     //this.lastPlottedPointY = this.lowLimitYAxis - this.lastPlottedPointY;
                     //yPointPlot = this.lowLimitYAxis - yPointPlot;
+
+
                     this.plotTipCirle(xPointPlot, yPointPlot);
 
                     if (flagFirstPoint != 0) //skipping the first plot
@@ -619,7 +634,7 @@
 
             this.drawXAxis();
             this.drawYAxis();
-            this.plotGraph();
+            //this.plotGraph();
             this.addChartName(chartNo); //this chartNo is the index value of the array 
             this.addCaption();
             this.addSubCaption();
@@ -662,7 +677,7 @@
              rect.setAttribute("class",rectangleId);
              rect.setAttribute("style","fill:transparent");
              //rect.setAttribute("visibility","hidden");
-             this.chartId.appendChild(rect);
+             this.svg.appendChild(rect);
 
              rect.addEventListener("mousemove", entercordinates,false);
              rect.addEventListener("syncCrossHair", showCoords, false);
@@ -785,6 +800,7 @@
          var lineElement = document.getElementsByClassName("drawCrossHairLines");          
                  for(var i = 0; i<lineElement.length; i++){     
                      lineElement[i].setAttribute("visibility","visible");
+                     console.log(x + 'crossHairLine');
                      lineElement[i].setAttribute("x1",x);
                      lineElement[i].setAttribute("x2",x);
 
@@ -832,10 +848,13 @@ var range = [];
         }
         
         widthEachChart = obj.chart.width - (obj.chart.width / 2) ;
-        heightEachChart = obj.chart.height / obj.y_axis_map.length;
+        heightEachChart = obj.chart.height * 0.70;
         for (var i = 0; i < obj.y_axis_map.length; i++) {
             //console.log(obj.y_axis_map[i]);
         }
+
+        var windowWidth = window.innerWidth;
+        var windowHeight = window.innerHeight;
         
 
 
@@ -852,17 +871,19 @@ var range = [];
             if(range[i].max !== range[i].min){
                 //console.log(this.min);
                range[i].positionValues();
+                range[i].createSVG();
+
             range[i].findRangeModified();
             //console.log("calling cross hair");
             
             //range[i].findYTips();
 
             range[i].drawChart(i); 
+            range[i].plotGraph();
             range[i].drawRectangle(i);
 
             range[i].drawCrossHair();
             
-
 
             }
             
@@ -884,4 +905,3 @@ var range = [];
 
     }
     parseData(jsonData);        
-    
