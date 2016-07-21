@@ -1,9 +1,10 @@
     var obj = {};
-    var heightEachChart = 0; 
-    var widthEachChart = 0;
+    var heightEachChart = 400; 
+    var widthEachChart = 300;
     var crossHairInstance = '';
-    function tip() {
-
+    var storeAncorPointsX = [];
+    function Tip() {
+        this.chartType = '';
         this.min = 0;
         this.max = 0;
         this.range = 0;
@@ -20,16 +21,18 @@
         this.upLimitYAxis = 0;
         this.lowLimitYAxis = 0;
         this.storeValue = [];
+        this.storeAncorPointsX = [];
+        this.storeAncorPointsY = [];
         this.tempMap = '';
         this.lastPlottedPointX = 0;
         this.lastPlottedPointY = 0;
         this.textLabelId = '';
         this.changeFactorMin = 0;
         this.changeFactorMax = 0;
-        this.multiplyFactor = 1;
+        this.mulTiplyFactor = 1;
         this.crossHairLineIns = '';
     }
-        tip.prototype.findMinAndSetDataValue = function(tempMap) {
+        Tip.prototype.findMinAndSetDataValue = function(tempMap) {
             if (typeof tempMap !== undefined) {
                 
                 var minimum = obj.data[0][tempMap];
@@ -57,7 +60,7 @@
                     //setting value to the object
                     var monthValue = this.findMonth(i);
                     this.storeValue[monthValue] = obj.data[i][tempMap];
-                    //console.log(monthValue + 'monthValue');
+                    //console.log(monthValue + 'monthValue');plot
                     //console.log(this.storeValue[monthValue]);
                     if (obj.data[i][tempMap] < minimum) {
                         minimum = obj.data[i][tempMap];
@@ -72,7 +75,7 @@
             }
 
         };
-        tip.prototype.findMax = function(tempMap) {
+        Tip.prototype.findMax = function(tempMap) {
             if (typeof tempMap !== undefined) {
                  var maximum = obj.data[0][tempMap];
                 var i = 0;
@@ -104,31 +107,8 @@
             }
 
         };
-        tip.prototype.findRange = function() {
-
-            var minValue = Math.floor(this.min);
-            var lastTwoMinDigit = minValue % 100;
-            this.minTipValue = minValue - lastTwoMinDigit;
-            var maxValue = Math.ceil(this.max);
-            var lastTwoMaxDigit = maxValue % 100;
-            if (lastTwoMaxDigit !== 0) {
-                this.maxTipValue = this.max + (100 - lastTwoMaxDigit);
-            } else {
-                this.maxTipValue = this.max + (lastTwoMaxDigit);
-            }
-
-            this.diffBwTips = this.maxTipValue - this.minTipValue;
-            this.findYTips();
-
-
-            //console.log(this.minTipValue);
-            //console.log(this.maxTipValue);
-            //console.log(this.diffBwTips + 'diffBwTips actual');
-            //console.log(minValue);
-
-
-        };
-        tip.prototype.checkingForNegative = function(){
+        
+        Tip.prototype.checkingForNegative = function(){
 
             
             if(this.min < 0 ){ //checking for negative values of min and max
@@ -141,7 +121,21 @@
             }
               
         };
-        tip.prototype.findRangeModified = function(){
+        Tip.prototype.createSVG = function(){
+            this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            var chartNo = this.chartNo;
+            this.svg.setAttribute("height", obj.chart.height);   
+            this.svg.setAttribute("width", obj.chart.width);
+            chartId = document.getElementById("chart");
+            this.svg.setAttribute("class","chartSVG");
+            chartId.appendChild(this.svg);
+            //console.log(this.lowLimitXAxis+ 'lowLimitXAxis');
+
+
+
+
+        };
+        Tip.prototype.findRangeModified = function(){
             
             var minValue = this.min;
             var lastDigit = minValue % 10;
@@ -208,10 +202,10 @@
             //console.log(this.diffBwTips + 'diffBwTips actual');
             
         };
-        tip.prototype.scaleValues = function(){
+        Tip.prototype.scaleValues = function(){
             
-            this.min = this.min * this.multiplyFactor;
-            this.max = this.max * this.multiplyFactor;
+            this.min = this.min * this.mulTiplyFactor;
+            this.max = this.max * this.mulTiplyFactor;
             this.checkingForNegative();
             if(this.changeFactorMin == 1){
                 this.min = Math.ceil(this.min);
@@ -225,34 +219,34 @@
                 this.max = Math.ceil(this.max);
             }
         };
-        tip.prototype.positionValues =  function(){
+        Tip.prototype.positionValues =  function(){
 
             var min  = this.min;
             var max = this.max;
             if((max - min)<0.1){ 
                 // checking decimal values for four digit precision
-               this.multiplyFactor = 10000;
+               this.mulTiplyFactor = 10000;
                this.scaleValues();
-                //console.log(this.multiplyFactor +'multiplyFactor');
+                //console.log(this.mulTiplyFactor +'mulTiplyFactor');
 
 
 
 
             }else if((max - min)<= 2 ){   
                 //checking decimal values for two digit precision
-                this.multiplyFactor = 100;
+                this.mulTiplyFactor = 100;
                 this.scaleValues();
-                //console.log(this.multiplyFactor+'multiplyFactor');
+                //console.log(this.mulTiplyFactor+'mulTiplyFactor');
                
 
             } else if((max - min)<10){
                 
-                this.multiplyFactor = 10;
+                this.mulTiplyFactor = 10;
                 this.scaleValues();
-                //console.log(this.multiplyFactor+'multiplyFactor');
+                //console.log(this.mulTiplyFactor+'mulTiplyFactor');
 
             }else{
-               //console.log(this.multiplyFactor+'multiplyFactor');
+               //console.log(this.mulTiplyFactor+'mulTiplyFactor');
 
                 this.scaleValues();
                 
@@ -263,7 +257,7 @@
 
         };
         
-        tip.prototype.findYTipsModified = function(diffTenthPow){
+        Tip.prototype.findYTipsModified = function(diffTenthPow){
           
             var minValue = this.minTipValue;
             var maxValue = this.maxTipValue;
@@ -309,18 +303,18 @@
                 
                 diff = diff + Math.pow(10,diffTenthPow);
             }
-            this.maxTipValue = (this.maxTipValue + (diff - this.diffBwTips)) / this.multiplyFactor;
-            this.diffBwTips = diff / this.multiplyFactor;
-            this.minTipValue = this.minTipValue / this.multiplyFactor;
-            //console.log(this.diffBwTips + ' diffBwtips modified');
+            this.maxTipValue = (this.maxTipValue + (diff - this.diffBwTips)) / this.mulTiplyFactor;
+            this.diffBwTips = diff / this.mulTiplyFactor;
+            this.minTipValue = this.minTipValue / this.mulTiplyFactor;
+            //console.log(this.diffBwTips + ' diffBwTips modified');
             //console.log(this.maxTipValue + 'maxTipValue modified');
             //console.log(this.noOfYTips);
             //console.log(this.diffBwTips / this.noOfYTips + 'eachdivrange');
-            //console.log(this.diffBwTips / this.noOfYTips + 'each tip range');
+            //console.log(this.diffBwTips / this.noOfYTips + 'each Tip range');
             
         };
 
-        tip.prototype.findMonth = function(index) {
+        Tip.prototype.findMonth = function(index) {
 
             var date = obj.data[index]["date"];
             //console.log(date);
@@ -328,7 +322,7 @@
             return dateObject.getMonth();
             //console.log(month[this.monthValue]);
         };
-        tip.prototype.drawLine = function(x1, y1, x2, y2, style,className) {
+        Tip.prototype.drawLine = function(x1, y1, x2, y2, style,className,visibility) {
             var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
             line.setAttribute("x1", x1);
             line.setAttribute("y1", y1);
@@ -336,21 +330,25 @@
             line.setAttribute("y2", y2);
             line.setAttribute("class",className);
             line.setAttribute("style", style);
-            //console.log(this.chartId);
-            this.chartId.appendChild(line);
+            if(typeof visibility !== 'undefined'){
+                line.setAttribute("visibility", "hidden");
+               
+            }
+          
+            this.svg.appendChild(line);
 
 
 
         };
-        tip.prototype.chartDivLabelY = function(y, index) {
+        Tip.prototype.chartDivLabelY = function(y, index) {
             var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
             var x = widthEachChart / 16;
             var y = y;
-            var fontSize  = widthEachChart / 45;
+            var fontSize  = heightEachChart * .04;
             var textValue = this.maxTipValue - (this.diffBwTips * index / this.noOfYTips);
-            if(this.multiplyFactor == 10000){
+            if(this.mulTiplyFactor == 10000){
                 textValue = parseFloat(textValue).toFixed(3);
-            }else if(this.multiplyFactor == 100){
+            }else if(this.mulTiplyFactor == 100){
                  textValue = parseFloat(textValue).toFixed(1);
             }
             textElement.setAttribute("x", x);
@@ -359,56 +357,80 @@
             textElement.setAttribute("font-size",fontSize);
             //textElement.setAttribute("style", style);
             //console.log(y + 'label');
-            this.chartId.appendChild(textElement);
+            this.svg.appendChild(textElement);
 
 
 
 
         };
-        tip.prototype.addXLabel = function(){
+        Tip.prototype.addXLabel = function(){
             var x = (this.upLimitXAxis + this.lowLimitXAxis)/ 2;
             var y = obj.chart.height - obj.chart.height * .015;
             var style = '';
-            this.addText(x, y, obj.chart.caption, style);
+            var className = "textAdd";
+            this.addText(x, y, obj.chart.caption, style,className);
         };
-        tip.prototype.chartDivLabelX = function(textValue, x, y) {
+        Tip.prototype.chartDivLabelX = function(textValue, x, y, check) {
             var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
             var x = x - (widthEachChart / 70);
             var y = y + (heightEachChart / 40);
+            
+            var transform = '';
+            textElement.innerHTML = textValue;
+            if(check !== 2){
+                y = y - 20;
+                transform = "rotate(0 " + x + "," + y + ")";
+
+            }else{
+                transform = "rotate(90 " + x + "," + y + ")";
+            }
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
-            textElement.innerHTML = textValue;
-            var transform = "rotate(90 " + x + "," + y + ")";
-            var fontSize  = widthEachChart / 25;
+            
+            var fontSize  = heightEachChart * .04;
             textElement.setAttribute("font-size",fontSize);
             textElement.setAttribute("transform",transform);
-            this.chartId.appendChild(textElement);
+            this.svg.appendChild(textElement);
 
 
 
 
         };
-        tip.prototype.addText = function(x, y, textValue,transform)
+        Tip.prototype.addText = function(x, y, textValue,transform,className,textElement)
         {
-            var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            //if(typeof textElement == 'undefined'){
+                 var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+
+            //}
+           
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
             textElement.innerHTML = textValue;
-            var fontSize  = widthEachChart * .030;
+            var fontSize  = heightEachChart * .04;
             textElement.setAttribute("font-size",fontSize);
             textElement.setAttribute("transform",transform);
-            this.chartId.appendChild(textElement);
+            this.svg.appendChild(textElement);
             //console.log(x +' xvalue' + y + ' yvalue' + textValue + 'textValue');
 
         };
-        tip.prototype.drawXAxis = function() {
+        Tip.prototype.drawXAxis = function(check, numberOfColCharts, numberOfCharts) {
             var chartNo = this.chartNo;
-            var x1 = widthEachChart / 5; // distance from the origin to the yaxis
+            var percentileFactor 
+            var x1 = widthEachChart * 0.2; // distance from the origin to the yaxis
             //console.log(widthEachChart + 'widthEachChart');
-            var x2 = widthEachChart + (widthEachChart / 5) + (widthEachChart / 20); //the extra divided by 20 added to keep some extra space
-            var y1 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
-            var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
-            var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+            var x2 = widthEachChart + (widthEachChart * 0.2); //+ (widthEachChart / 20); //the extra divided by 20 added to keep some extra space
+            var y1 = 0;
+            var y2 = 0;
+            if(check !== 2){ //check is being calculated many number of times
+                y1 = (heightEachChart * 0.25) ;
+                y2 = (heightEachChart * 0.25);
+            }else{
+                y1 = (heightEachChart * 0.25) + (heightEachChart );
+                y2 = (heightEachChart * 0.25) + (heightEachChart );
+            }
+            
+            //console.log(x1 +' x1 '+ x2 +' x2 '+ y1 +' y1 ');
+            var style = "";
             var className = "drawXAxis";
             this.drawLine(x1, y1, x2, y2, style,className);
 
@@ -416,8 +438,13 @@
             var numberOfTicks = obj.data.length;
 
             //console.log(numberOfTicks + 'numberOfTicks');
-            var temp_x1 = x1 + (widthEachChart / 70);
-            this.lowLimitXAxis = temp_x1; //setting the limits from the tip value
+            if(obj.chartType == "line"){
+                var temp_x1 = x1 + (.01 * widthEachChart ); /*this variable is used to set the distance from y-axis to the first plotting point*/
+            }else if(obj.chartType == "column"){
+                var temp_x1 = x1 + (.07 * widthEachChart );
+            }
+            
+            this.lowLimitXAxis = temp_x1; //setting the limits from the Tip value
             //var widthEachChart = this.widthEachChart;
             /*
             */
@@ -429,19 +456,30 @@
                 x1 = temp_x1 + (widthEachChart / this.noofXTips) * (i);
                 x2 = temp_x1 + (widthEachChart / this.noofXTips) * (i);
                 this.upLimitXAxis = x1;
-                y1 = (heightEachChart / 4) + (heightEachChart * chartNo) - 4 + (chartNo - 1) * (heightEachChart / 8);
-                y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + 4 + (chartNo - 1) * (heightEachChart / 8);
-                var style = "stroke:rgb(0,0,230);stroke-width:1";
-                //
-                var className = "axisTicks";
-                this.drawLine(x1, y1, x2, y2, style,className);
+                //console.log(check +'check');
+                if(check !== 2){
+                    y1 = (heightEachChart * 0.25) - 4;
+                    y2 = (heightEachChart * 0.25) + 4;
+                }else{
+                    y1 = (heightEachChart * 0.25) + (heightEachChart ) - 4 ;
+                    y2 = (heightEachChart * 0.25) + (heightEachChart ) + 4 ;
+                }
+                if(obj.chartType == "line"){
+                    var style = "";                
+                    var className = "axisTicks";
+                    this.drawLine(x1, y1, x2, y2, style,className);
 
+                }
+                
                 //put x-axis label 
                 //console.log(obj.month[i] + 'monthValue');
-                
+                if(check !== 2 && chartNo <= numberOfColCharts){
+                    this.chartDivLabelX(obj.month[i], x1, y2, check);
 
-                if (chartNo == obj.y_axis_map.length) {
-                    this.chartDivLabelX(obj.month[i], x1, y2);
+                }
+
+                if (check == 2 && chartNo > (numberOfCharts - numberOfColCharts)) {
+                    this.chartDivLabelX(obj.month[i], x1, y2, check);
                 }
                 
 
@@ -451,16 +489,16 @@
 
 
         };
-        tip.prototype.drawYAxis = function()
+        Tip.prototype.drawYAxis = function()
 
         {
             var chartNo = this.chartNo;
-            var x1 = widthEachChart / 5;
-            var x2 = widthEachChart / 5;
+            var x1 = widthEachChart * 0.2;
+            var x2 = widthEachChart * 0.2;
             //console.log(chartNo + 'chartNo');
-            var y1 = (heightEachChart / 4) + (heightEachChart * (chartNo - 1)) + (chartNo - 1) * (heightEachChart / 8); //15 used to give space between charts
-            var y2 = (heightEachChart / 4) + (heightEachChart * chartNo) + (chartNo - 1) * (heightEachChart / 8);
-            var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
+            var y1 = (heightEachChart * 0.25) ; //15 used to give space between charts
+            var y2 = (heightEachChart * 0.25) + (heightEachChart );
+            var style = "";
             var className = "axisDraw";
             this.drawLine(x1, y1, x2, y2, style, className);
 
@@ -481,13 +519,13 @@
                 y2 = temp_y1 + (heightEachChart / noOfYTips) * (i);
 
                 //drawing ticks
-                var style = "stroke:rgb(0,0,230);stroke-width:1";
+                var style = "";
                 var className = "axisTicks";
                 this.drawLine(x1, y1, x2, y2, style, className);
                 //drawing divs
-                var style = "stroke:rgb(0,0,230);stroke-width:1";
+                var style = "";
                 className = "divLines";
-                this.drawLine(x1, y1, widthEachChart + (widthEachChart / 5) + (widthEachChart / 20), y2, style,className);
+                this.drawLine(x1, y1, widthEachChart + (widthEachChart * 0.2) /*+ (widthEachChart / 20)*/, y2, style,className);
                 //writing the labels
 
 
@@ -505,7 +543,7 @@
 
 
         };
-        tip.prototype.calculateMappingPoint = function(value) {
+        Tip.prototype.calculateMappingPoint = function(value) {
             var a = this.minTipValue;
             var b = this.maxTipValue;
             //console.log(a + ' '+ b);
@@ -514,7 +552,7 @@
             return (d - (value - a) / (b - a) * (d - c));
 
         };
-        tip.prototype.plotTipCirle = function(xPointPlot, yPointPlot) {
+        Tip.prototype.plotTipCirle = function(xPointPlot, yPointPlot) {
             var circleTip = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             //var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
             circleTip.setAttribute("cx", xPointPlot); // setting circle 
@@ -522,10 +560,63 @@
             circleTip.setAttribute("r", 3);
             circleTip.setAttribute("class", circleTip);
             //circleTip.setAttribute("style", style);
-            this.chartId.appendChild(circleTip);
+            this.svg.appendChild(circleTip);
 
         };
-        tip.prototype.plotGraph = function() {
+        Tip.prototype.plotColumnChart = function(){
+
+            
+            for (i = 0; i < 12; i++) {   /*to be changed later '12' for any number of data i.e. find the last index of the storevalue array*/
+                var value = this.storeValue[i];
+                //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
+                if (typeof value != 'undefined')
+                {
+                    var yPointPlot = this.calculateMappingPoint(value);
+                    //console.log(range.length); need to debug
+                    this.storeAncorPointsY[i] = yPointPlot;
+                    var xPointPlot = this.lowLimitXAxis + (widthEachChart / this.noofXTips) * (i);
+                    storeAncorPointsX[i] = Math.floor(xPointPlot);
+                    var x = xPointPlot - widthEachChart * .02;
+                    var y = this.lowLimitYAxis;
+                    var heightRect = y - yPointPlot;
+                    var widthRect = widthEachChart * .04;
+                    //console.log(y);
+                    //console.log(this.storeAncorPointsY[i] + ' xPointPlot '+ this.storeAncorPointsX[i]);
+                    //this.lastPlottedPointY = this.lowLimitYAxis - this.lastPlottedPointY;
+                    //yPointPlot = this.lowLimitYAxis - yPointPlot;
+
+
+                    /*//this.plotTipCirle(xPointPlot, yPointPlot);
+
+                    if (flagFirstPoint != 0) //skipping the first plot
+                    {*/
+
+                        //console.log(this.lowLimitYAxis);
+
+
+                        //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
+                        //console.log(xPointPlot + ' ' + yPointPlot + ' ' + this.tempMap);
+                        var style = "";
+                        var className  = "plotColumnGraph";
+                        this.drawColumnRectangle(x, yPointPlot, heightRect, widthRect, className)
+
+
+
+                    //}
+                    this.lastPlottedPointX = xPointPlot;
+                    this.lastPlottedPointY = yPointPlot;
+                    
+                    //skipping the 2D array for storing x-y w.r.t month and instead storing the previous x-y coordinates
+
+                }
+                
+
+
+            }
+
+        };
+
+        Tip.prototype.plotLineChart = function() {
             var flagFirstPoint = 0;
             for (i = 0; i < 12; i++) {   /*to be changed later '12' for any number of data i.e. find the last index of the storevalue array*/
                 var value = this.storeValue[i];
@@ -533,12 +624,15 @@
                 if (typeof value != 'undefined')
                 {
                     var yPointPlot = this.calculateMappingPoint(value);
-                    //var widthEachChart = this.widthEachChart;
-                    //var numberOfTicks = obj.data.length;
+                    //console.log(range.length); need to debug
+                    this.storeAncorPointsY[i] = yPointPlot;
                     var xPointPlot = this.lowLimitXAxis + (widthEachChart / this.noofXTips) * (i);
-                    //console.log(xPointPlot + ' xPointPlot ');
+                    storeAncorPointsX[i] = Math.floor(xPointPlot);
+                    //console.log(this.storeAncorPointsY[i] + ' xPointPlot '+ this.storeAncorPointsX[i]);
                     //this.lastPlottedPointY = this.lowLimitYAxis - this.lastPlottedPointY;
                     //yPointPlot = this.lowLimitYAxis - yPointPlot;
+
+
                     this.plotTipCirle(xPointPlot, yPointPlot);
 
                     if (flagFirstPoint != 0) //skipping the first plot
@@ -549,7 +643,7 @@
 
                         //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
                         //console.log(xPointPlot + ' ' + yPointPlot + ' ' + this.tempMap);
-                        var style = "stroke:rgb(105,105,105);stroke-width:3;";
+                        var style = "";
                         var className  = "plotGraph";
                         this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot, style,className);
 
@@ -572,38 +666,49 @@
 
 
         };
-        tip.prototype.addChartName = function(chartNo)
+        Tip.prototype.addChartName = function(chartNo)
         {
             var chartName = obj.y_axis_map[chartNo];
             var x = widthEachChart / 40;
             var y = (this.upLimitYAxis + this.lowLimitYAxis) / 2;
             
             var transform = "rotate(270 " + x + "," + y + ")";
-            this.addText(x, y, chartName, transform);
+            var className = "textAdd";
+            this.addText(x, y, chartName, transform,className);
 
             
             //console.log('addChartName');
 
         };
-        tip.prototype.addCaption = function(){
+        Tip.prototype.addCaption = function(){
             var x = (this.upLimitXAxis + this.lowLimitXAxis)/ 2;
             var y = obj.chart.height * .015;
             var style = '';
-            this.addText(x, y, obj.chart.caption, style);
+            var className = "textAdd";
+            this.addText(x, y, obj.chart.caption, style,className);
         };
-        tip.prototype.addSubCaption = function(){
+        Tip.prototype.addSubCaption = function(){
             var x = (this.upLimitXAxis + this.lowLimitXAxis)/ 2;
             var y = obj.chart.height * .025;
             var style = '';
-            this.addText(x, y, obj.chart.subCaption, style);
+            var className = "textAdd";
+            this.addText(x, y, obj.chart.subCaption, style,className);
         };
-        tip.prototype.drawChart = function(chartNo) {
+        Tip.prototype.drawChartOutline = function(chartNo, numberOfCharts, numberOfColCharts) {
             this.chartId = document.getElementById("chart");
             this.chartNo = chartNo + 1;
 
-            this.drawXAxis();
+            
+
+            var check = 1;
+
+            if(numberOfCharts % 2 == 0){
+                check = 2; //even
+            }     
+            //console.log(numberOfCharts + ' numberOfCharts '+ check + ' check ');
+            this.drawXAxis(check, numberOfColCharts, numberOfCharts);
             this.drawYAxis();
-            this.plotGraph();
+            //this.plotGraph();
             this.addChartName(chartNo); //this chartNo is the index value of the array 
             this.addCaption();
             this.addSubCaption();
@@ -613,158 +718,184 @@
 
 
         };
-        tip.prototype.drawCrossHair = function(x, upLimitYAxis, x, lowLimitYAxis, style, className){
+        Tip.prototype.drawCrossHair = function(){
+            var className = "drawCrossHairLines";
+            var x = this.lowLimitXAxis ;
+            var y1 = this.lowLimitYAxis;
+            var y2 = this.upLimitYAxis;
+            var style = "stroke:rgb(105,105,105);stroke-width:3;";
+            var visibility = "hidden";
+            this.drawLine(x, y1, x, y2, style, className,visibility);
+            //console.log("drawCrossHairLines");
   
  
-             var line  = this.crossHairLineIns;
-             console.log(line);
- 
-             line.setAttribute("x1", x);
-             line.setAttribute("y1", upLimitYAxis);
-             line.setAttribute("x2", x);
-             line.setAttribute("y2", lowLimitYAxis);
-             line.setAttribute("class",className);
-             line.setAttribute("style", style);
-             //console.log(this.chartId);
-             this.chartId.appendChild(line);
+            
  
  
  
  
  
          };
-         tip.prototype.drawRectangle = function(index){
+         Tip.prototype.drawColumnRectangle = function(x, y, heightRect, widthRect, className){
+
+
+            var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rect.setAttributeNS(null, 'x', x);
+            rect.setAttributeNS(null, 'y', y);
+            rect.setAttributeNS(null, 'height', heightRect);
+            rect.setAttributeNS(null, 'width', widthRect);
+            rect.setAttribute("class", className);
+            this.svg.appendChild(rect);
+
+         };
+
+         Tip.prototype.drawDivRectangle = function(index){
              var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
              var x = this.lowLimitXAxis;
              var y = this.upLimitYAxis;
              var heightRect = this.lowLimitYAxis - this.upLimitYAxis;
              var widthRect = this.upLimitXAxis - this.lowLimitXAxis;
              var rectangleId = 'svgDivs';
-             console.log(rectangleId);
+             //console.log(rectangleId + 'rectangleId');
              rect.setAttributeNS(null, 'x', x);
              rect.setAttributeNS(null, 'y', y);
              rect.setAttributeNS(null, 'height', heightRect);
              rect.setAttributeNS(null, 'width', widthRect);
              rect.setAttribute("class",rectangleId);
-             rect.setAttribute("style","fill:transparent;")
-             this.chartId.appendChild(rect);
+             rect.setAttribute("style","fill:transparent");
+             //rect.setAttribute("visibility","hidden");
+             this.svg.appendChild(rect);
+
+             rect.addEventListener("mousemove", entercordinates,false);
+             rect.addEventListener("syncCrossHair", showCoords, false);
+             //divNames[i].addEventListener("mousemove", showCoords,false);
+            rect.addEventListener("mouseleave", clearcoor,false);
+
+
  
+         };
+         Tip.prototype.printValues = function(){
+            var object = {};
+            object = range;
+            /*for(var i = 0; i < obj.y_axis_map.length; i++){
+                for(var j = 0; j < obj.data.length; j++){
+                    if(typeof object[i].storeAncorPointsY[j] !== 'undefined'){
+                        console.log(object[i].storeAncorPointsY[j]);
+                    }
+                    
+                }
+                //console.log(object[0].storeAncorPointsY.length);
+            }*/
+            for(var i = 0; i < obj.y_axis_map.length; i++){
+              
+                        console.log(object[i].storeValue[j]);
+                    
+                //console.log(object[0].storeAncorPointsY.length);
+            }
+
+             /*for(var j = 0; j < obj.data.length; j++){
+                     console.log(this.storeAncorPointsY[j]);
+                 }*/
+
+                
+
+
+
+                
+                
+
+            
+
          };
  
         
      //end of maxTipValue object
-     function createSync(event)
-     {
-         var x = event.detail.x;
-         //console.log('syncCrossHair');
-         var draw = crossHairInstance;
+     /**/
  
-         var elements = document.getElementsByClassName("svgDivs");
-                 for(var i = 0; i<elements.length; i++){
-                     
-                     var upLimitYAxis = range[i].upLimitYAxis;
-                     var lowLimitYAxis = range[i].lowLimitYAxis;
-                      var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
-                     draw.drawLine(x, lowLimitYAxis, x, upLimitYAxis,style, "drawCrossHairLines");
-                     console.log(elements[i] + 'rectangleId'+ upLimitYAxis+'lowLimitYAxis'+lowLimitYAxis);
- 
- 
-         }
- 
- 
-     };
- 
-     function addedEventListener(){
-         var divNames = document.getElementsByClassName("svgDivs");
-         for( var i=0;i<divNames.length;i++){
-             divNames[i].addEventListener("mouseenter", entercordinates,false);
-             divNames[i].addEventListener("mouseleave", clearcoor,false);
-             //divNames[i].addEventListener("mousemove", showCoords,false);
- 
- 
- 
-                 divNames[i].addEventListener("syncCrossHair", createSync , false);
-                 console.log("instance created");
-             
-         }
- 
-     };
+    
      function entercordinates(event){
-         crossHairInstance = new tip();
-         var lineElement = document.createElementNS("http://www.w3.org/2000/svg", "line");
-         console.log("instance created");
-         crossHairInstance.crossHairLineIns = lineElement;
-         crossHairInstance.chartId = document.getElementById("chart");
- 
-         var x = event.clientX;
-         var y = event.clientY;
-         var className = event.currentTarget.id;
-         console.log(className);
          
- 
-         var carr = document.getElementsByClassName("svgDivs");
- 
-         console.log(carr.length+' number of divs');
-         var cEvent = new CustomEvent("syncCrossHair",{
-             "detail":{x:event.clientX}
-         });
-         for( var i=0;i<carr.length;i++){
-             if(carr[i]!=event.target)
-                 carr[i].dispatchEvent(cEvent);
-         }
- 
-             
-         
-         
+ var cArr = document.getElementsByClassName("svgDivs");
+        var rollover = new CustomEvent("syncCrossHair",{
+            "detail":{x:event.clientX,y:event.clientY}
+        });
+        for( var i=0;i<cArr.length;i++){
+            if(cArr[i]!=event.target)
+                cArr[i].dispatchEvent(rollover);
+        }
  
  
  
  
      };
      function clearcoor(event){
- 
- 
- 
-         var elements = document.getElementsByClassName("svgDivs");
-         console.log(elements);
-         for(var i = 0; i<elements.length; i++){
-             console.log("clr");
-             var lineElement = elements[i].parentNode.getElementsByClassName("drawCrossHairLines");
-             console.log(lineElement);
-             for(var j = 0; j<lineElement.length;j++){
- 
-                 lineElement[j].setAttribute("visibility","hidden");
-             }
-             }
- 
+
+        var lineElement = document.getElementsByClassName("drawCrossHairLines");          
+                 for(var i = 0; i<lineElement.length; i++){     
+                     lineElement[i].setAttribute("visibility","hidden");
+                     
+                  }   
      };
      function showCoords(event){
- 
+        
+        var x = event.detail.x % obj.chart.width;
+        //lconsole.log(x +'showCoords');
+        x = x -8;
+         var index = -1;
          
-         var x = event.detail.x;
-         console.log(x);
-         var draw = crossHairInstance;
-         draw.crossHairLineIns = crossHairInstance.crossHairLineIns;
- 
- 
- 
-         var elements = document.getElementsByClassName("svgDivs");
-                 
-                 for(var i = 0; i<elements.length; i++){
-                     var lineElement = elements[i].parentNode.getElementsByClassName("drawCrossHairLines");
-                     for(var j = 0; j<lineElement.length;j++){
- 
-                     lineElement[j].setAttribute("visibility","visible");
-                     lineElement[j].setAttribute("x1",x);
-                     lineElement[j].setAttribute("x2",x);
-                  }
+            
+
+         //for loop might not be the best solution for finding the range
+         for(var i = 5;i >0; i--){
+
+            if(storeAncorPointsX.indexOf(x+i)!== -1 || storeAncorPointsX.indexOf(x-i)!== -1){
+                 //index = 0;  //find better way for choosing index
+                if(storeAncorPointsX.indexOf(x+i)!== -1){
+                    index = storeAncorPointsX.indexOf(x+i);
+                    x = x+i;
+                }
+                if(storeAncorPointsX.indexOf(x-i)!== -1){
+                    index = storeAncorPointsX.indexOf(x-i);
+                     x = x-i;
+                }
+                //console.log(index);
+
+            }
+
+         }
+         object = range;
+         if(index !== -1){
+            //console.log(index);
+            for(var i = 0; i < obj.y_axis_map.length; i++){
+                //for(var j = 0; j < obj.data.length; j++){
+                    if(typeof object[i].storeAncorPointsY[index] !== 'undefined'){
+                        value = object[i].storeValue[index];
+                        var y = object[i].storeAncorPointsY[index];
+                        //console.log(value+'value'+object[i].storeAncorPointsY[index]+'ycordinate'+x+' x ');
+                        var transform = "rotate(0 " + x + "," + y + ")";
+                        var className = "toolTipText";
+                        var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        object[i].addText(x, y,value, transform,className,textElement);
+                    }
                     
-                     
-          }
- 
- 
+                //}
+                //console.log(object[0].storeAncorPointsY.length);
+            }
+         }else{
+
+         }
          
- 
+         
+         var lineElement = document.getElementsByClassName("drawCrossHairLines");          
+                 for(var i = 0; i<lineElement.length; i++){     
+                     lineElement[i].setAttribute("visibility","visible");
+                     //console.log(x + 'crossHairLine');
+                     lineElement[i].setAttribute("x1",x);
+                     lineElement[i].setAttribute("x2",x);
+
+
+
+                  }    
          };
  
    
@@ -777,16 +908,18 @@ var range = [];
         
         //console.log(obj.data[1]["revenue"]);
         //console.log(obj.y_axis_map.length);
+        var noOfDatas = obj.data.length;
+        
      
         
         if(obj.y_axis_map.length < 1){
            var arr = [];
-           for (var i = 0; i < obj.data.length; i++) {
+           for (var i = 0; i < noOfDatas; i++) {
                arr[i] = Object.keys(obj.data[i]);
                //console.log(Object.keys(obj.data[i]));
 
            }
-            for (var i = 0; i < obj.data.length; i++) {
+            for (var i = 0; i < noOfDatas; i++) {
                 for (var j = 0;j<arr[i].length - 1;j++){
                     var value = arr[i][j];
                     //var valueData = obj.data[i][value];
@@ -804,21 +937,28 @@ var range = [];
            }
             
         }
-        
+        var numberOfCharts = obj.y_axis_map.length;
         widthEachChart = obj.chart.width - (obj.chart.width / 2) ;
-        heightEachChart = obj.chart.height / obj.y_axis_map.length;
-        for (var i = 0; i < obj.y_axis_map.length; i++) {
+        heightEachChart = obj.chart.height * 0.70;
+        /*for (var i = 0; i < obj.y_axis_map.length; i++) {
             //console.log(obj.y_axis_map[i]);
-        }
+        }*/
+
+        var windowWidth = window.innerWidth;
+        var windowHeight = window.innerHeight;
+        var chartWidth = obj.chart.width;
+        var chartHeight = obj.chart.height;
+        var numberOfColCharts = Math.floor(windowWidth / chartWidth);
+
         
 
 
 
 
-        for (var i = 0; i < obj.y_axis_map.length; i++) {
+        for (var i = 0; i < numberOfCharts; i++) {
             var tempMap = obj.y_axis_map[i];
             //console.log(tempMap+ 'first step');
-            range[i] = new tip();
+            range[i] = new Tip();
             range[i].min = range[i].findMinAndSetDataValue(tempMap);
             //console.log(range[i].min + 'minimum calculated from different data values');
             range[i].max = range[i].findMax(tempMap, i);
@@ -826,12 +966,34 @@ var range = [];
             if(range[i].max !== range[i].min){
                 //console.log(this.min);
                range[i].positionValues();
-            range[i].findRangeModified();
-            
-            //range[i].findYTips();
+               range[i].createSVG();
 
-            range[i].drawChart(i); 
-            range[i].drawRectangle(i);
+                range[i].findRangeModified();
+                //console.log("calling cross hair");
+                
+                //range[i].findYTips();
+                
+
+                range[i].drawChartOutline(i, numberOfCharts, numberOfColCharts); 
+
+                if(obj.chartType == "line"){
+                    range[i].chartType = "line";
+                    range[i].plotLineChart();
+                    range[i].drawDivRectangle(i); /*rectangle is not required since we don't need to restrict the crooshair, infact no crosshair is there*/
+                    range[i].drawCrossHair();
+
+                }else if(obj.chartType == "column"){
+
+                    range[i].chartType = "column";
+                    range[i].plotColumnChart();
+
+                }
+                
+
+              
+
+                
+            
 
             }
             
@@ -843,6 +1005,9 @@ var range = [];
             //range.push(obj.data[i][tempMap])
             //console.log(obj.data[i][tempMap]);
         }
+        /*for (var i = 0; i < obj.y_axis_map.length; i++) {
+            range[i].printValues();
+        }*/
         
 
 
@@ -850,4 +1015,3 @@ var range = [];
 
     }
     parseData(jsonData);        
-    addedEventListener(); 
