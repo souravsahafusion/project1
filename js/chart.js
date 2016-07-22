@@ -322,13 +322,14 @@
             return dateObject.getMonth();
             //console.log(month[this.monthValue]);
         };
-        Tip.prototype.drawLine = function(x1, y1, x2, y2, style,className,visibility) {
+        Tip.prototype.drawLine = function(x1, y1, x2, y2, style,className,visibility,strokedasharray) {
             var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
             line.setAttribute("x1", x1);
             line.setAttribute("y1", y1);
             line.setAttribute("x2", x2);
             line.setAttribute("y2", y2);
             line.setAttribute("class",className);
+            line.setAttribute("stroke-dasharray", strokedasharray);
             line.setAttribute("style", style);
             if(typeof visibility !== 'undefined'){
                 line.setAttribute("visibility", "hidden");
@@ -344,7 +345,7 @@
             var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
             var x = widthEachChart / 16;
             var y = y;
-            var fontSize  = heightEachChart * .04;
+            var fontSize  = widthEachChart * .04;
             var textValue = this.maxTipValue - (this.diffBwTips * index / this.noOfYTips);
             if(this.mulTiplyFactor == 10000){
                 textValue = parseFloat(textValue).toFixed(3);
@@ -415,10 +416,10 @@
         };
         Tip.prototype.drawXAxis = function(check, numberOfColCharts, numberOfCharts) {
             var chartNo = this.chartNo;
-            var percentileFactor 
+            
             var x1 = widthEachChart * 0.2; // distance from the origin to the yaxis
             //console.log(widthEachChart + 'widthEachChart');
-            var x2 = widthEachChart + (widthEachChart * 0.2); //+ (widthEachChart / 20); //the extra divided by 20 added to keep some extra space
+            var x2 = widthEachChart + (widthEachChart * 0.2)+ (widthEachChart / 20); //the extra divided by 20 added to keep some extra space
             var y1 = 0;
             var y2 = 0;
             if(check !== 2){ //check is being calculated many number of times
@@ -430,7 +431,7 @@
             }
             
             //console.log(x1 +' x1 '+ x2 +' x2 '+ y1 +' y1 ');
-            var style = "";
+            var style = "stroke:rgb(237, 237, 237);stroke-width:1;";
             var className = "drawXAxis";
             this.drawLine(x1, y1, x2, y2, style,className);
 
@@ -465,7 +466,7 @@
                     y2 = (heightEachChart * 0.25) + (heightEachChart ) + 4 ;
                 }
                 if(obj.chartType == "line"){
-                    var style = "";                
+                    var style = "stroke:rgb(237, 237, 237);stroke-width:1;";                
                     var className = "axisTicks";
                     this.drawLine(x1, y1, x2, y2, style,className);
 
@@ -498,7 +499,7 @@
             //console.log(chartNo + 'chartNo');
             var y1 = (heightEachChart * 0.25) ; //15 used to give space between charts
             var y2 = (heightEachChart * 0.25) + (heightEachChart );
-            var style = "";
+            var style = "stroke:rgb(237, 237, 237);stroke-width:1;";
             var className = "axisDraw";
             this.drawLine(x1, y1, x2, y2, style, className);
 
@@ -523,9 +524,9 @@
                 var className = "axisTicks";
                 this.drawLine(x1, y1, x2, y2, style, className);
                 //drawing divs
-                var style = "";
+                var style = "stroke:rgb(237, 237, 237);stroke-width:1;";
                 className = "divLines";
-                this.drawLine(x1, y1, widthEachChart + (widthEachChart * 0.2) /*+ (widthEachChart / 20)*/, y2, style,className);
+                this.drawLine(x1, y1, widthEachChart + (widthEachChart * 0.2) + (widthEachChart / 20), y2, style,className);
                 //writing the labels
 
 
@@ -555,11 +556,12 @@
         Tip.prototype.plotTipCirle = function(xPointPlot, yPointPlot) {
             var circleTip = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             //var style = "stroke:rgb(255,0,0);stroke-width:1;fill:black";
-            circleTip.setAttribute("cx", xPointPlot); // setting circle 
+            circleTip.setAttribute("cx", xPointPlot ); // setting circle 
             circleTip.setAttribute("cy", yPointPlot); // coordinates
-            circleTip.setAttribute("r", 3);
+            circleTip.setAttribute("r", 5);
             circleTip.setAttribute("class", circleTip);
-            //circleTip.setAttribute("style", style);
+            style = "stroke:blue; stroke-width:2;fill:white";
+            circleTip.setAttribute("style", style);
             this.svg.appendChild(circleTip);
 
         };
@@ -576,10 +578,10 @@
                     this.storeAncorPointsY[i] = yPointPlot;
                     var xPointPlot = this.lowLimitXAxis + (widthEachChart / this.noofXTips) * (i);
                     storeAncorPointsX[i] = Math.floor(xPointPlot);
-                    var x = xPointPlot - widthEachChart * .02;
+                    var x = xPointPlot - widthEachChart * .04;
                     var y = this.lowLimitYAxis;
                     var heightRect = y - yPointPlot;
-                    var widthRect = widthEachChart * .04;
+                    var widthRect = widthEachChart * .08;
                     //console.log(y);
                     //console.log(this.storeAncorPointsY[i] + ' xPointPlot '+ this.storeAncorPointsX[i]);
                     //this.lastPlottedPointY = this.lowLimitYAxis - this.lastPlottedPointY;
@@ -596,9 +598,9 @@
 
                         //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
                         //console.log(xPointPlot + ' ' + yPointPlot + ' ' + this.tempMap);
-                        var style = "";
+                        var style = "fill:rgb(30, 122, 205);stroke-width:3;stroke:rgb(30, 122, 205)";
                         var className  = "plotColumnGraph";
-                        this.drawColumnRectangle(x, yPointPlot, heightRect, widthRect, className)
+                        this.drawColumnRectangle(x, yPointPlot, heightRect, widthRect, className, style);
 
 
 
@@ -633,7 +635,7 @@
                     //yPointPlot = this.lowLimitYAxis - yPointPlot;
 
 
-                    this.plotTipCirle(xPointPlot, yPointPlot);
+                   
 
                     if (flagFirstPoint != 0) //skipping the first plot
                     {
@@ -643,19 +645,24 @@
 
                         //console.log(this.lastPlottedPointX + ' ' + this.lastPlottedPointY + ' ' + this.tempMap + ' lastpoint ');
                         //console.log(xPointPlot + ' ' + yPointPlot + ' ' + this.tempMap);
-                        var style = "";
+                        var style = "stroke:rgb(29, 121, 204);stroke-width:6";
                         var className  = "plotGraph";
                         this.drawLine(this.lastPlottedPointX, this.lastPlottedPointY, xPointPlot, yPointPlot, style,className);
+                        this.plotTipCirle(this.lastPlottedPointX, this.lastPlottedPointY);
 
 
 
                     }
+
+                    //this.plotTipCirle(xPointPlot, yPointPlot);
                     this.lastPlottedPointX = xPointPlot;
                     this.lastPlottedPointY = yPointPlot;
+                    
                     flagFirstPoint = 1;
                     //skipping the 2D array for storing x-y w.r.t month and instead storing the previous x-y coordinates
 
                 }
+                this.plotTipCirle(this.lastPlottedPointX, this.lastPlottedPointY);
                 
 
 
@@ -723,9 +730,10 @@
             var x = this.lowLimitXAxis ;
             var y1 = this.lowLimitYAxis;
             var y2 = this.upLimitYAxis;
-            var style = "stroke:rgb(105,105,105);stroke-width:3;";
+            var style = "stroke:rgb(255, 0 , 0);stroke-width:1;";
+            var strokedasharray = "3, 2";
             var visibility = "hidden";
-            this.drawLine(x, y1, x, y2, style, className,visibility);
+            this.drawLine(x, y1, x, y2, style, className,visibility,strokedasharray);
             //console.log("drawCrossHairLines");
   
  
@@ -736,7 +744,7 @@
  
  
          };
-         Tip.prototype.drawColumnRectangle = function(x, y, heightRect, widthRect, className){
+         Tip.prototype.drawColumnRectangle = function(x, y, heightRect, widthRect, className, style){
 
 
             var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -745,6 +753,7 @@
             rect.setAttributeNS(null, 'height', heightRect);
             rect.setAttributeNS(null, 'width', widthRect);
             rect.setAttribute("class", className);
+            rect.setAttribute("style",style);
             this.svg.appendChild(rect);
 
          };
@@ -757,6 +766,7 @@
              var widthRect = this.upLimitXAxis - this.lowLimitXAxis;
              var rectangleId = 'svgDivs';
              //console.log(rectangleId + 'rectangleId');
+             //plotted rectangle div
              rect.setAttributeNS(null, 'x', x);
              rect.setAttributeNS(null, 'y', y);
              rect.setAttributeNS(null, 'height', heightRect);
@@ -765,6 +775,10 @@
              rect.setAttribute("style","fill:transparent");
              //rect.setAttribute("visibility","hidden");
              this.svg.appendChild(rect);
+
+             //svg chart area bound with x y axis
+
+
 
              rect.addEventListener("mousemove", entercordinates,false);
              rect.addEventListener("syncCrossHair", showCoords, false);
