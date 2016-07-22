@@ -758,7 +758,10 @@
          Tip.prototype.columnChartListener = function(rectIns,className){
             
 
-            rectIns.addEventListener("mousemove", entercoordinates.bind(this, className));
+            // rectIns.addEventListener("mousemove", entercoordinates.bind(this, className));
+            rectIns.addEventListener("mousemove", function () {
+                entercoordinates.call(this, className);  
+            });
             
             rectIns.addEventListener("syncCrossHair", columnTrigger);
              //divNames[i].addEventListener("mousemove", showCoords,false);
@@ -969,7 +972,7 @@
 
      };
      function showCoords(event){
-        
+        console.log(this);
         var x = event.detail.x % obj.chart.width;
         //lconsole.log(x +'showCoords');
         x = x -8;
