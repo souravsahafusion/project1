@@ -333,7 +333,7 @@
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
             
-            var fontSize  = heightEachChart * .07;
+            var fontSize  = heightEachChart * .05;
             textElement.setAttribute("font-size",fontSize);
             textElement.setAttribute("transform",transform);
             this.svg.appendChild(textElement);
