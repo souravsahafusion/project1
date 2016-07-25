@@ -1,5 +1,12 @@
 .circleTip{
-	
+	stroke:blue; 
+	stroke-width:2;
+	fill:white;
+}
+.circleTipHighlight{
+	stroke:red; 
+	stroke-width:2;
+	fill:white;
 }
 .axisTicks{
 	stroke:#1e7ac9;
@@ -31,6 +38,6 @@ background-color: ;
 }
 
 .drawXAxis{
-	stroke:rgb(255,0,0);
+	stroke:rgb(237, 237, 237);
 	stroke-width:1;
 }
