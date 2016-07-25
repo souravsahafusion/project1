@@ -339,7 +339,7 @@
             this.svg.appendChild(textElement);
 
         };
-        Tip.prototype.addText = function(x, y, textValue, transform, className,textElement, fontSize){
+        Tip.prototype.addText = function(x, y, textValue, transform, className,textElement, fontSize,style){
         
             if(typeof textElement == 'undefined' ){
                  textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -352,6 +352,7 @@
             //var fontSize  = heightEachChart * .04;
             textElement.setAttribute("font-size",fontSize);
             textElement.setAttribute("transform",transform);
+            textElement.setAttribute("style",style);
             this.svg.appendChild(textElement);
 
         };
@@ -449,6 +450,7 @@
             this.textLabelId = document.getElementById("text");
             var xl = this.chartLowBoundXCoor;
             var width = this.chartUpBoundXCoor - this.chartLowBoundXCoor;
+            var height = heightEachChart / noOfYTips;
             for (i = 0; i < noOfYTips; i++) {
                 x1 = temp_x1 - 4;
                 x2 = temp_x2 + 4;
@@ -466,10 +468,12 @@
                 //writing the labels
                 
                 //drawing the rect
-                /*if(!(i % 2! == 0)){
-                    var yl = 
-                    this.drawRectangle();
-                }*/
+                if((i % 2 == 1)){
+
+                    className = "designRect";
+                    style = "fill:rgb(247,247,247);";
+                    this.drawRectangle(xl, y1, height, width, className, style);
+                }
 
             }
             this.lowLimitYAxis = y1 + (heightEachChart / noOfYTips);
@@ -594,14 +598,14 @@
             var style = "fill:rgb(245,250,255);stroke:rgb(190,223,254);stroke-width:1;";
             this.drawRectangle(x, y, height, width, className, style);
             y = y + (height) * .6;
-            x = (this.chartLowBoundXCoor + this.chartUpBoundXCoor) / 2 * .9;
-            style = "stroke:rgb(129,196,251);"
+            x = (this.chartLowBoundXCoor + this.chartUpBoundXCoor) / 2 * .8;
+            style = "stroke:rgb(6,48,86);"
             var fontSize = heightEachChart * .1;
             var transform = "rotate(0 " + x + "," + y + ")";
             var className = "textAdd";
             var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");;
             //
-            this.addText(x, y, chartName, transform,className,textElement,fontSize);
+            this.addText(x, y, chartName, transform,className,textElement,fontSize,style);
 
         };
        /* Tip.prototype.addCaption = function(){
