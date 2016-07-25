@@ -333,13 +333,13 @@
             textElement.setAttribute("x", x);
             textElement.setAttribute("y", y);
             
-            var fontSize  = heightEachChart * .07;
+            var fontSize  = heightEachChart * .05;
             textElement.setAttribute("font-size",fontSize);
             textElement.setAttribute("transform",transform);
             this.svg.appendChild(textElement);
 
         };
-        Tip.prototype.addText = function(x, y, textValue, transform, className,textElement, fontSize){
+        Tip.prototype.addText = function(x, y, textValue, transform, className,textElement, fontSize,style){
         
             if(typeof textElement == 'undefined' ){
                  textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -352,6 +352,7 @@
             //var fontSize  = heightEachChart * .04;
             textElement.setAttribute("font-size",fontSize);
             textElement.setAttribute("transform",transform);
+            textElement.setAttribute("style",style);
             this.svg.appendChild(textElement);
 
         };
@@ -449,6 +450,7 @@
             this.textLabelId = document.getElementById("text");
             var xl = this.chartLowBoundXCoor;
             var width = this.chartUpBoundXCoor - this.chartLowBoundXCoor;
+            var height = heightEachChart / noOfYTips;
             for (i = 0; i < noOfYTips; i++) {
                 x1 = temp_x1 - 4;
                 x2 = temp_x2 + 4;
@@ -466,10 +468,12 @@
                 //writing the labels
                 
                 //drawing the rect
-                /*if(!(i % 2! == 0)){
-                    var yl = 
-                    this.drawRectangle();
-                }*/
+                if((i % 2 == 1)){
+
+                    className = "designRect";
+                    style = "fill:rgb(247,247,247);";
+                    this.drawRectangle(xl, y1, height, width, className, style);
+                }
 
             }
             this.lowLimitYAxis = y1 + (heightEachChart / noOfYTips);
@@ -512,6 +516,7 @@
                     this.storeAncorPointsY[i] = yPointPlot;
                     var xPointPlot = this.lowLimitXAxis + (widthEachChart / this.noofXTips) * (i);
                     storeAncorPointsX[i] = Math.floor(xPointPlot);
+                    console.log(storeAncorPointsX[i]);
                     var x = xPointPlot - widthEachChart * scaleColChartFactor;
                     var y = this.lowLimitYAxis;
                     var heightRect = y - yPointPlot;
@@ -594,14 +599,14 @@
             var style = "fill:rgb(245,250,255);stroke:rgb(190,223,254);stroke-width:1;";
             this.drawRectangle(x, y, height, width, className, style);
             y = y + (height) * .6;
-            x = (this.chartLowBoundXCoor + this.chartUpBoundXCoor) / 2 * .9;
-            style = "stroke:rgb(129,196,251);"
+            x = (this.chartLowBoundXCoor + this.chartUpBoundXCoor) / 2 * .8;
+            style = "stroke:rgb(6,48,86);"
             var fontSize = heightEachChart * .1;
             var transform = "rotate(0 " + x + "," + y + ")";
             var className = "textAdd";
             var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");;
             //
-            this.addText(x, y, chartName, transform,className,textElement,fontSize);
+            this.addText(x, y, chartName, transform,className,textElement,fontSize,style);
 
         };
        /* Tip.prototype.addCaption = function(){
@@ -646,7 +651,7 @@
          };
          Tip.prototype.columnChartListener = function(rectIns,className){
 
-            rectIns.addEventListener("mousemove", entercoordinates.bind(this, className));
+            rectIns.addEventListener("mousemove", entercoordinates);
             /*rectIns.addEventListener("mousemove", function () {
                 entercoordinates.call(this, className);  
             });*/
@@ -741,20 +746,20 @@
                 //console.log(object[0].storeAncorPointsY.length);
             }*/
 
-             /*for(var j = 0; j < 12; j++){
+             for(var j = 0; j < 12; j++){
                      console.log(this.storeAncorPointsX[j]);
-                 }*/
+                 }
 
          };
  
      //end of maxTipValue object
      /**/
  
-     function entercoordinates(parameter, event ){
+     function entercoordinates( event ){
         //console.log(parameter);
         //console.log(this);
          
- var cArr = document.getElementsByClassName(parameter);
+ var cArr = document.getElementsByClassName("plotColumnGraph");
         var rollover = new CustomEvent("syncCrossHair",{
             "detail":{x:event.clientX,y:event.clientY,ins:this}
         });
@@ -794,7 +799,7 @@
          var x = event.detail.x % obj.chart.width;
         var instance  = event.detail.ins; 
         //console.log(x +'showCoords');
-       // console.log(instance);
+        console.log(instance);
          
         x = x - 8;
         var index = -1;
@@ -803,7 +808,7 @@
 
         for(var i = posScale;i >0; i--){
             //console.log(i);
-            console.log(x+i);
+            //console.log(x+i);
             storeAncorPointsX.indexOf(x+i);
 
             if(storeAncorPointsX.indexOf(x+i)!== -1 || storeAncorPointsX.indexOf(x-i)!== -1){
@@ -815,7 +820,7 @@
                     x = x+i;
                 }
                 if(storeAncorPointsX.indexOf(x-i)!== -1){
-                     console.log(x-posScale);
+                     //console.log(x-posScale);
                     index = storeAncorPointsX.indexOf(x-i);
                      x = x-i;
                 }
@@ -829,11 +834,37 @@
          var value = 0;
          //console.log(index);
          if(index !== -1){
-           
+
+            var columnElement = document.getElementsByClassName("plotColumnGraph");
+            for(var i = 0; i < columnElement.length; i++){
+                var test = Math.floor(columnElement[i].getAttribute("x")); 
+                test = test + widthEachChart * obj.scaleColChartFactor / 100;
+
+                if(test == x){
+                    console.log(x);
+                    columnElement[i].style.fill = "red"; 
+                    columnElement[i].style.stroke = "red";
+
+                }
+                //console.log(test + "columnElement");
+                
+                
+
+                //console.log(x);
+               
+                //console.log(columnElement[i]);
+                // instance.getAttributeNS(x);
+
+            }
+
+                        // console.log(columnElement);
+                        /*instance.style.fill="red";
+
+                        instance.style.stroke = "red";*/
             for(var i = 0; i < obj.y_axis_map.length; i++){
                 //for(var j = 0; j < obj.data.length; j++){
                     if(typeof object[i].storeAncorPointsY[index] !== 'undefined'){
-                        
+                       
                         value = object[i].storeValue[index];
                         var y = object[i].storeAncorPointsY[index];
                         /*var transform = "rotate(0 " + x + "," + y + ")";
@@ -854,7 +885,6 @@
                         toolTipRect.setAttributeNS(null, 'width', widthEachChart * .25);
                         toolTipRect.setAttribute("class","toolTipRect");
                         toolTipRect.setAttribute("style","stroke:rgb(157, 119, 106);fill:rgb(255, 217, 204)");
-                        
                         
                         object[i].svg.appendChild(toolTipRect);
                         toolTipRect.setAttribute("visibility","visible");
@@ -1047,7 +1077,7 @@ var range = [];
                     range[i].drawCrossHair();
 
                 }else if(obj.chartType == "column"){
-                    className = "plotColumnGraph"
+                    className = "plotBoundRectangle"
                     var rectIns = range[i].drawBoundRectangle(className);
                     range[i].chartType = "column";
                     range[i].plotColumnChart();
@@ -1059,7 +1089,7 @@ var range = [];
    
         }
         
-        /*for (var i = 0; i < obj.y_axis_map.length; i++) {
+         /*for(var i = 0; i < obj.y_axis_map.length; i++) {
             range[i].printValues();
         }*/
    
