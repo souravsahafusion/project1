@@ -36,6 +36,7 @@
         this.toolTipTextIns = '';
         this.toolTipBoxIns = '';
         this.yShift = 0;
+        this.selectRectIns = '';
         
     }
         Tip.prototype.findMinAndSetDataValue = function(tempMap) {
@@ -516,7 +517,6 @@
                     this.storeAncorPointsY[i] = yPointPlot;
                     var xPointPlot = this.lowLimitXAxis + (widthEachChart / this.noofXTips) * (i);
                     storeAncorPointsX[i] = Math.floor(xPointPlot);
-                    console.log(storeAncorPointsX[i]);
                     var x = xPointPlot - widthEachChart * scaleColChartFactor;
                     var y = this.lowLimitYAxis;
                     var heightRect = y - yPointPlot;
@@ -649,9 +649,17 @@
             var visibility = "hidden";
             this.drawLine(x, y1, x, y2, style, className,visibility,strokedasharray);
          };
+         Tip.prototype.selectChartListener = function(rectIns){
+            this.selectRectIns = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+
+
+            rectIns.addEventListener("mousedown",instantiateDragCol.bind(this, rectIns));
+            rectIns.addEventListener("mousemove",dragColRect.bind(this, rectIns));
+
+         };
          Tip.prototype.columnChartListener = function(rectIns,className){
 
-            rectIns.addEventListener("mousemove", entercoordinates);
+            rectIns.addEventListener("mousemove", entercoordinates.bind(this, className));
             /*rectIns.addEventListener("mousemove", function () {
                 entercoordinates.call(this, className);  
             });*/
@@ -746,20 +754,20 @@
                 //console.log(object[0].storeAncorPointsY.length);
             }*/
 
-             for(var j = 0; j < 12; j++){
+             /*for(var j = 0; j < 12; j++){
                      console.log(this.storeAncorPointsX[j]);
-                 }
+                 }*/
 
          };
  
      //end of maxTipValue object
      /**/
  
-     function entercoordinates( event ){
-        //console.log(parameter);
+     function entercoordinates(parameter, event ){
+        console.log(parameter+ 'parameter');
         //console.log(this);
          
- var cArr = document.getElementsByClassName("plotColumnGraph");
+ var cArr = document.getElementsByClassName(parameter);
         var rollover = new CustomEvent("syncCrossHair",{
             "detail":{x:event.clientX,y:event.clientY,ins:this}
         });
@@ -799,7 +807,7 @@
          var x = event.detail.x % obj.chart.width;
         var instance  = event.detail.ins; 
         //console.log(x +'showCoords');
-        console.log(instance);
+       // console.log(instance);
          
         x = x - 8;
         var index = -1;
@@ -808,7 +816,7 @@
 
         for(var i = posScale;i >0; i--){
             //console.log(i);
-            //console.log(x+i);
+            console.log(x+i);
             storeAncorPointsX.indexOf(x+i);
 
             if(storeAncorPointsX.indexOf(x+i)!== -1 || storeAncorPointsX.indexOf(x-i)!== -1){
@@ -820,7 +828,7 @@
                     x = x+i;
                 }
                 if(storeAncorPointsX.indexOf(x-i)!== -1){
-                     //console.log(x-posScale);
+                     console.log(x-posScale);
                     index = storeAncorPointsX.indexOf(x-i);
                      x = x-i;
                 }
@@ -834,8 +842,7 @@
          var value = 0;
          //console.log(index);
          if(index !== -1){
-
-            var columnElement = document.getElementsByClassName("plotColumnGraph");
+             var columnElement = document.getElementsByClassName("plotColumnGraph");
             for(var i = 0; i < columnElement.length; i++){
                 var test = Math.floor(columnElement[i].getAttribute("x")); 
                 test = test + widthEachChart * obj.scaleColChartFactor / 100;
@@ -856,15 +863,11 @@
                 // instance.getAttributeNS(x);
 
             }
-
-                        // console.log(columnElement);
-                        /*instance.style.fill="red";
-
-                        instance.style.stroke = "red";*/
+           
             for(var i = 0; i < obj.y_axis_map.length; i++){
                 //for(var j = 0; j < obj.data.length; j++){
                     if(typeof object[i].storeAncorPointsY[index] !== 'undefined'){
-                       
+                        
                         value = object[i].storeValue[index];
                         var y = object[i].storeAncorPointsY[index];
                         /*var transform = "rotate(0 " + x + "," + y + ")";
@@ -885,6 +888,7 @@
                         toolTipRect.setAttributeNS(null, 'width', widthEachChart * .25);
                         toolTipRect.setAttribute("class","toolTipRect");
                         toolTipRect.setAttribute("style","stroke:rgb(157, 119, 106);fill:rgb(255, 217, 204)");
+                        
                         
                         object[i].svg.appendChild(toolTipRect);
                         toolTipRect.setAttribute("visibility","visible");
@@ -1008,6 +1012,24 @@
 
                   }    
          };
+         function instantiateDragCol(parameter, event){
+
+            var rect = this.selectRectIns;
+            rect.setAttributeNS(null, 'x', event.clientX);
+            rect.setAttributeNS(null, 'y', event.clientY);
+            rect.setAttributeNS(null, 'height', 40);
+            rect.setAttributeNS(null, 'width', 4);
+            rect.setAttribute("class","selectRect");
+            rect.setAttribute("style","fill:rgb(0,0,255);stroke:rgb(0,0,0)");
+            console.log(parameter);
+            this.svg.appendChild(rect);
+
+
+         };
+         function dragColRect(parameter, event){
+            var rect = this.selectRectIns;
+
+         };
  
 var range = [];
 
@@ -1077,10 +1099,11 @@ var range = [];
                     range[i].drawCrossHair();
 
                 }else if(obj.chartType == "column"){
-                    className = "plotBoundRectangle"
+                    className = "plotColumnGraph"
                     var rectIns = range[i].drawBoundRectangle(className);
                     range[i].chartType = "column";
                     range[i].plotColumnChart();
+                    range[i].selectChartListener(rectIns);
                     
      
                 }
@@ -1089,7 +1112,7 @@ var range = [];
    
         }
         
-         /*for(var i = 0; i < obj.y_axis_map.length; i++) {
+        /*for (var i = 0; i < obj.y_axis_map.length; i++) {
             range[i].printValues();
         }*/
    
