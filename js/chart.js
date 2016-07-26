@@ -3,6 +3,7 @@
     var widthEachChart = 300;
     var crossHairInstance = '';
     var storeAncorPointsX = [];
+    var flag = 0;
     function Tip() {
         this.chartType = '';
         this.min = 0;
@@ -646,15 +647,17 @@
             var y2 = this.upLimitYAxis;
             var style = "stroke:rgb(255, 0 , 0);stroke-width:1;";
             var strokedasharray = "3, 2";
-            var visibility = "hidden";
+            var visibility = "hidden";  
             this.drawLine(x, y1, x, y2, style, className,visibility,strokedasharray);
          };
          Tip.prototype.selectChartListener = function(rectIns){
             this.selectRectIns = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            var _this = this;
+            this.svg.appendChild(this.selectRectIns )
 
-
-            rectIns.addEventListener("mousedown",instantiateDragCol.bind(this, rectIns));
-            rectIns.addEventListener("mousemove",dragColRect.bind(this, rectIns));
+            rectIns.addEventListener("mousedown",instantiateDragCol.bind(_this));
+            rectIns.addEventListener("mousemove",dragColRect.bind(_this));
+            rectIns.addEventListener("mouseup",releaseColRect.bind(_this));
 
          };
          Tip.prototype.columnChartListener = function(rectIns,className){
@@ -764,7 +767,7 @@
      /**/
  
      function entercoordinates(parameter, event ){
-        console.log(parameter+ 'parameter');
+        //console.log(parameter+ 'parameter');
         //console.log(this);
          
  var cArr = document.getElementsByClassName(parameter);
@@ -816,7 +819,7 @@
 
         for(var i = posScale;i >0; i--){
             //console.log(i);
-            console.log(x+i);
+            //console.log(x+i);
             storeAncorPointsX.indexOf(x+i);
 
             if(storeAncorPointsX.indexOf(x+i)!== -1 || storeAncorPointsX.indexOf(x-i)!== -1){
@@ -828,7 +831,7 @@
                     x = x+i;
                 }
                 if(storeAncorPointsX.indexOf(x-i)!== -1){
-                     console.log(x-posScale);
+                     //console.log(x-posScale);
                     index = storeAncorPointsX.indexOf(x-i);
                      x = x-i;
                 }
@@ -848,7 +851,7 @@
                 test = test + widthEachChart * obj.scaleColChartFactor / 100;
 
                 if(test == x){
-                    console.log(x);
+                    //console.log(x);
                     columnElement[i].style.fill = "red"; 
                     columnElement[i].style.stroke = "red";
 
@@ -1012,22 +1015,74 @@
 
                   }    
          };
-         function instantiateDragCol(parameter, event){
+         function instantiateDragCol(event){
+
+            var xC = event.clientX % obj.chart.width - 10;
+            var yC = event.pageY % obj.chart.height - heightEachChart * range[0].yShift - 45;
+            console.log(xC + 'x ' + 'y '+ yC , obj.chart.width);
+            console.log(event.clientX + 'clientX' + event.clientY + 'clientY');
 
             var rect = this.selectRectIns;
-            rect.setAttributeNS(null, 'x', event.clientX);
-            rect.setAttributeNS(null, 'y', event.clientY);
-            rect.setAttributeNS(null, 'height', 40);
-            rect.setAttributeNS(null, 'width', 4);
+            rect.setAttributeNS(null, 'x', xC );
+            rect.setAttributeNS(null, 'y', yC );
+            rect.setAttributeNS(null, 'height', 1);
+            rect.setAttributeNS(null, 'width', 1);
             rect.setAttribute("class","selectRect");
-            rect.setAttribute("style","fill:rgb(0,0,255);stroke:rgb(0,0,0)");
-            console.log(parameter);
-            this.svg.appendChild(rect);
+            rect.setAttribute("style","fill:transparent;stroke:rgb(0,0,0)");
+            flag = 1;
+            //console.log(parameter);
+            //this.svg.appendChild(rect);
 
 
          };
-         function dragColRect(parameter, event){
+         function dragColRect( event){
+            if(flag == 1){
+                var rect = this.selectRectIns;
+                var xC = event.clientX % obj.chart.width - 10;
+                var yC = event.pageY % obj.chart.height - heightEachChart * range[0].yShift - 45;
+                var xBeg = rect.getAttribute("x");
+                var yBeg = rect.getAttribute("y");
+                var width = Math.abs(xC - xBeg);
+                var height = Math.abs(yBeg - yC);
+                /*if((xC - xPrev) < 0){
+                    rect.setAttributeNS(null, 'x', xC );
+
+                }
+                if((yc - yPrev) < 0){
+                    rect.setAttributeNS(null, 'y', yC );
+                }   */
+               
+                rect.setAttributeNS(null, 'width', width);
+                rect.setAttributeNS(null, 'height', height);
+                 var columnElement = document.getElementsByClassName("plotColumnGraph");
+              for(var i = 0; i < columnElement.length; i++){
+                var test = Math.floor(columnElement[i].getAttribute("x")); 
+                test = test + widthEachChart * obj.scaleColChartFactor / 100;
+
+                if(test <= xC && test >= xBeg){
+                    //console.log(x);
+                    columnElement[i].style.fill = "red"; 
+                    columnElement[i].style.stroke = "red";
+
+                }
+                
+
+                //console.log(xPrev+ 'xPrev ' + yPrev + " yPrev ");  
+                
+            }
+              
+
+
+         }
+        };
+
+         function releaseColRect(event){
             var rect = this.selectRectIns;
+           
+            rect.setAttributeNS(null, 'height', 0);
+            rect.setAttributeNS(null, 'width', 0);
+            flag = 0;
+
 
          };
  
@@ -1099,7 +1154,7 @@ var range = [];
                     range[i].drawCrossHair();
 
                 }else if(obj.chartType == "column"){
-                    className = "plotColumnGraph"
+                    className = "plotColumnBound"
                     var rectIns = range[i].drawBoundRectangle(className);
                     range[i].chartType = "column";
                     range[i].plotColumnChart();
