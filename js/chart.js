@@ -4,6 +4,7 @@
     var crossHairInstance = '';
     var storeAncorPointsX = [];
     var flag = 0;
+    var flagRemoveColor = 0;
     function Tip() {
         this.chartType = '';
         this.min = 0;
@@ -782,6 +783,13 @@
      };
      function removeToolTip(event){
          var object = range; 
+           var columnElement = document.getElementsByClassName("plotColumnGraph");
+            for(var i = 0; i < columnElement.length; i++){
+                
+                    columnElement[i].style.fill = "rgb(30, 122, 205)"; 
+                    columnElement[i].style.stroke = "rgb(30, 122, 205)";
+               
+            }
                  for(var i = 0; i<obj.data.length; i++){     
                     //console.log("removed");
                      var toolTipRect = object[i].toolTipBoxIns;
@@ -791,6 +799,9 @@
                      
                      
                   }
+ console.log('hello');
+                
+
      };
      function clearcoor(event){
 
@@ -808,10 +819,7 @@
      };
      function columnTrigger(event){
          var x = event.detail.x % obj.chart.width;
-        var instance  = event.detail.ins; 
-        //console.log(x +'showCoords');
-       // console.log(instance);
-         
+        
         x = x - 8;
         var index = -1;
         //console.log(x);
@@ -856,15 +864,7 @@
                     columnElement[i].style.stroke = "red";
 
                 }
-                //console.log(test + "columnElement");
-                
-                
-
-                //console.log(x);
                
-                //console.log(columnElement[i]);
-                // instance.getAttributeNS(x);
-
             }
            
             for(var i = 0; i < obj.y_axis_map.length; i++){
@@ -1016,22 +1016,38 @@
                   }    
          };
          function instantiateDragCol(event){
+            if(flagRemoveColor !== 1){
+                var xC = event.clientX % obj.chart.width - 10;
+                var yC = event.pageY % obj.chart.height - heightEachChart * range[0].yShift - 45;
+                console.log(xC + 'x ' + 'y '+ yC , obj.chart.width);
+                console.log(event.clientX + 'clientX' + event.clientY + 'clientY');
 
-            var xC = event.clientX % obj.chart.width - 10;
-            var yC = event.pageY % obj.chart.height - heightEachChart * range[0].yShift - 45;
-            console.log(xC + 'x ' + 'y '+ yC , obj.chart.width);
-            console.log(event.clientX + 'clientX' + event.clientY + 'clientY');
+                var rect = this.selectRectIns;
+                rect.setAttributeNS(null, 'x', xC );
+                rect.setAttributeNS(null, 'y', yC );
+                rect.setAttributeNS(null, 'height', 1);
+                rect.setAttributeNS(null, 'width', 1);
+                rect.setAttribute("class","selectRect");
+                rect.setAttribute("style","fill:transparent;stroke:rgb(0,0,0)");
+                flag = 1;
+                flagRemoveColor = 1;
+                //console.log(parameter);
+                //this.svg.appendChild(rect);
+            }else{
 
-            var rect = this.selectRectIns;
-            rect.setAttributeNS(null, 'x', xC );
-            rect.setAttributeNS(null, 'y', yC );
-            rect.setAttributeNS(null, 'height', 1);
-            rect.setAttributeNS(null, 'width', 1);
-            rect.setAttribute("class","selectRect");
-            rect.setAttribute("style","fill:transparent;stroke:rgb(0,0,0)");
-            flag = 1;
-            //console.log(parameter);
-            //this.svg.appendChild(rect);
+                var columnElement = document.getElementsByClassName("plotColumnGraph");
+            for(var i = 0; i < columnElement.length; i++){
+                
+                    columnElement[i].style.fill = "rgb(30, 122, 205)"; 
+                    columnElement[i].style.stroke = "rgb(30, 122, 205)";
+               
+            }
+            flagRemoveColor = 0;
+                
+            }
+
+
+            
 
 
          };
@@ -1081,6 +1097,7 @@
            
             rect.setAttributeNS(null, 'height', 0);
             rect.setAttributeNS(null, 'width', 0);
+            
             flag = 0;
 
 
