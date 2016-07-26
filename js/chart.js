@@ -783,13 +783,16 @@
      };
      function removeToolTip(event){
          var object = range; 
-           var columnElement = document.getElementsByClassName("plotColumnGraph");
+         if(flagRemoveColor !== 1){
+            var columnElement = document.getElementsByClassName("plotColumnGraph");
             for(var i = 0; i < columnElement.length; i++){
                 
                     columnElement[i].style.fill = "rgb(30, 122, 205)"; 
                     columnElement[i].style.stroke = "rgb(30, 122, 205)";
                
             }
+         }
+           
                  for(var i = 0; i<obj.data.length; i++){     
                     //console.log("removed");
                      var toolTipRect = object[i].toolTipBoxIns;
@@ -1060,6 +1063,10 @@
                 var yBeg = rect.getAttribute("y");
                 var width = Math.abs(xC - xBeg);
                 var height = Math.abs(yBeg - yC);
+                /*if(xBeg < x){
+                    rect.setAttributeNS(null, 'x', xC );
+                    rect.setAttributeNS(null, 'y', yC );
+                }*/
                 /*if((xC - xPrev) < 0){
                     rect.setAttributeNS(null, 'x', xC );
 
