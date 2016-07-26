@@ -1,10 +1,4 @@
-    var obj = {};
-    var heightEachChart = 400; 
-    var widthEachChart = 300;
-    var crossHairInstance = '';
-    var storeAncorPointsX = [];
-    var flag = 0;
-    var flagRemoveColor = 0;
+    
     function Tip() {
         this.chartType = '';
         this.min = 0;
@@ -1079,10 +1073,12 @@
                 rect.setAttributeNS(null, 'height', height);
                  var columnElement = document.getElementsByClassName("plotColumnGraph");
               for(var i = 0; i < columnElement.length; i++){
-                var test = Math.floor(columnElement[i].getAttribute("x")); 
-                test = test + widthEachChart * obj.scaleColChartFactor / 100;
+                var testX = Math.floor(columnElement[i].getAttribute("x")); 
+                testX = testX + widthEachChart * obj.scaleColChartFactor / 100;
+                var testY = Math.floor(columnElement[i].getAttribute("y")); 
+                //console.log(testY + 'y');
 
-                if(test <= xC && test >= xBeg){
+                if(testX <= xC && testX >= xBeg && testY <= yC){
                     //console.log(x);
                     columnElement[i].style.fill = "red"; 
                     columnElement[i].style.stroke = "red";
@@ -1109,8 +1105,88 @@
 
 
          };
+         
+        function arrangeOnMax(){
+            var maxValueArray = [];
+            object = range2;
+            for (var i = 0; i < obj.y_axis_map.length; i++) {
+                maxValueArray.push(object[i].max);
+
+            }
+            var length = maxValueArray.length;
+          
+          for (var i = 0; i < length-1; i++) { //Number of passes
+            var max = i; //min holds the current minimum number position for each pass; i holds the Initial min number
+            for (var j = i+1; j < length; j++) { //Note that j = i + 1 as we only need to go through unsorted array
+              if(maxValueArray[j] > maxValueArray[max]) { //Compare the numbers
+                max = j; //Change the current min number position if a smaller num is found
+              }
+            }
+            if(max != i) { //After each pass, if the current min num != initial min num, exchange the position.
+              //Swap the numbers
+              var y_map_tmp = obj.y_axis_map[i];
+              var tmp = maxValueArray[i];
+              obj.y_axis_map[i] = obj.y_axis_map[max];
+              maxValueArray[i] = maxValueArray[max];
+              obj.y_axis_map[max] = y_map_tmp;
+              maxValueArray[max] = tmp;
+            }
+          }
+
+          for (var i = 0; i < length; i++) {
+             console.log(maxValueArray[i]);
+             console.log(obj.y_axis_map[i]);
+          }
+
+        };
+         function arrangeOnMin(){
+            var minValueArray = [];
+            object = range2;
+            for (var i = 0; i < obj.y_axis_map.length; i++) {
+                minValueArray.push(object[i].min);
+
+            }
+            var length = minValueArray.length;
+          
+          for (var i = 0; i < length-1; i++) { //Number of passes
+            var min = i; //min holds the current minimum number position for each pass; i holds the Initial min number
+            for (var j = i+1; j < length; j++) { //Note that j = i + 1 as we only need to go through unsorted array
+              if(minValueArray[j] < minValueArray[min]) { //Compare the numbers
+                min = j; //Change the current min number position if a smaller num is found
+              }
+            }
+            if(min != i) { //After each pass, if the current min num != initial min num, exchange the position.
+              //Swap the numbers
+              var y_map_tmp = obj.y_axis_map[i];
+              var tmp = minValueArray[i];
+              obj.y_axis_map[i] = obj.y_axis_map[min];
+              minValueArray[i] = minValueArray[min];
+              obj.y_axis_map[min] = y_map_tmp;
+              minValueArray[min] = tmp;
+            }
+          }
+
+          for (var i = 0; i < length; i++) {
+             console.log(minValueArray[i]);
+             console.log(obj.y_axis_map[i]);
+          }
+
+
+         };
+
+
+
  
 var range = [];
+var range2 = [];
+var obj = {};
+var heightEachChart = 400; 
+var widthEachChart = 300;
+var crossHairInstance = '';
+var storeAncorPointsX = [];
+var flag = 0;
+var flagRemoveColor = 0;
+
 
     function parseData(input) {
         obj = input;
@@ -1149,6 +1225,24 @@ var range = [];
         var chartWidth = obj.chart.width;
         var chartHeight = obj.chart.height;
         var numberOfColCharts = Math.floor(windowWidth / chartWidth);
+        for (var i = 0; i < numberOfCharts; i++) {
+            var tempMap = obj.y_axis_map[i];
+            //console.log(tempMap+ 'first step');
+            range2[i] = new Tip();
+            range2[i].min = range2[i].findMinAndSetDataValue(tempMap);
+            //console.log(range[i].min + 'minimum calculated from different data values');
+            range2[i].max = range2[i].findMax(tempMap, i);
+        }
+         var expression = obj.chart_order_func;
+                switch(expression) {
+                    case "minimum":
+                    arrangeOnMin();                          
+                        break;
+                    case "maximum":
+                    arrangeOnMax();    
+                        break;
+                    
+                }
 
         for (var i = 0; i < numberOfCharts; i++) {
             var tempMap = obj.y_axis_map[i];
@@ -1157,8 +1251,11 @@ var range = [];
             range[i].min = range[i].findMinAndSetDataValue(tempMap);
             //console.log(range[i].min + 'minimum calculated from different data values');
             range[i].max = range[i].findMax(tempMap, i);
+        }
             //console.log(range[i].max + 'maximum ' + tempMap);
-            if(range[i].max !== range[i].min){
+           
+             for (var i = 0; i < numberOfCharts; i++) {
+            if(range[i].max !== range[i].min){ //skipping if there is only one value
                 
                range[i].positionValues();
                range[i].createSVG();
