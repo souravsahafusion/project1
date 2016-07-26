@@ -645,6 +645,8 @@
             var visibility = "hidden";  
             this.drawLine(x, y1, x, y2, style, className,visibility,strokedasharray);
          };
+
+
          Tip.prototype.selectChartListener = function(rectIns){
             this.selectRectIns = document.createElementNS("http://www.w3.org/2000/svg", "rect");
             var _this = this;
@@ -725,14 +727,23 @@
              rect.addEventListener("syncCrossHair", showCoords, false);
              //divNames[i].addEventListener("mousemove", showCoords,false);
             rect.addEventListener("mouseleave", clearcoor,false);
-            this.toolTipTextIns = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            this.toolTipBoxIns = document.createElementNS("http://www.w3.org/2000/svg", "rect");  
+            this.toolTipTextIns = document.createElementNS("http://www.w3.org/2000/svg", "text");//might need to be added in column as well
+            this.toolTipBoxIns = document.createElementNS("http://www.w3.org/2000/svg", "rect"); 
+
+            this.selectRectIns = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            var _this = this;
+            this.svg.appendChild(this.selectRectIns )
+
+            rect.addEventListener("mousedown",instantiateDragLine.bind(_this));
+            rect.addEventListener("mousemove",dragLineRect.bind(_this));
+            rect.addEventListener("mouseup",releaseLineRect.bind(_this));
 
 
              //svg chart area bound with x y axis
            /**/
 
          };
+
          Tip.prototype.printValues = function(){
             var object = {};
             object = range;
@@ -796,7 +807,7 @@
                      
                      
                   }
- console.log('hello');
+ 
                 
 
      };
@@ -952,6 +963,21 @@
             //var colorCirle = event.currentTarget.getElementsByClassName(className).style.fill="red";
             //console.log(colorCirle);
             //console.log(index);
+            var columnElement = document.getElementsByClassName("circleTip");
+            console.log(columnElement);
+            for(var i = 0; i < columnElement.length; i++){
+                var test = Math.floor(columnElement[i].getAttribute("cx")); 
+
+                test = test 
+                if(test == x){
+                    
+                    columnElement[i].style.fill = "red"; 
+                    columnElement[i].style.stroke = "red";
+
+                }
+                
+               
+            }
             var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
             for(var i = 0; i < obj.y_axis_map.length; i++){
                
@@ -1011,6 +1037,38 @@
                      lineElement[i].setAttribute("x2",x);
 
                   }    
+         };
+         function instantiateDragLine(event){
+            if(flagRemoveColor !== 1){
+                var xC = event.clientX % obj.chart.width - 10;
+                var yC = event.pageY % obj.chart.height - heightEachChart * range[0].yShift - 45;
+                console.log(xC + 'x ' + 'y '+ yC , obj.chart.width);
+                console.log(event.clientX + 'clientX' + event.clientY + 'clientY');
+
+                var rect = this.selectRectIns;
+                rect.setAttributeNS(null, 'x', xC );
+                rect.setAttributeNS(null, 'y', yC );
+                rect.setAttributeNS(null, 'height', 1);
+                rect.setAttributeNS(null, 'width', 1);
+                rect.setAttribute("class","selectRect");
+                rect.setAttribute("style","fill:transparent;stroke:rgb(0,0,0)");
+                flag = 1;
+                flagRemoveColor = 1;
+                //console.log(parameter);
+                //this.svg.appendChild(rect);
+            }else{
+
+                var columnElement = document.getElementsByClassName("circleTip");
+            for(var i = 0; i < columnElement.length; i++){
+                
+                    columnElement[i].style.fill = "white"; 
+                    columnElement[i].style.stroke = "rgb(30, 122, 205)";
+               
+            }
+            flagRemoveColor = 0;
+                
+            }
+
          };
          function instantiateDragCol(event){
             if(flagRemoveColor !== 1){
@@ -1094,6 +1152,62 @@
 
          }
         };
+        function dragLineRect( event){
+            if(flag == 1){
+                var rect = this.selectRectIns;
+                var xC = event.clientX % obj.chart.width - 10;
+                var yC = event.pageY % obj.chart.height - heightEachChart * range[0].yShift - 45;
+                var xBeg = rect.getAttribute("x");
+                var yBeg = rect.getAttribute("y");
+                var width = Math.abs(xC - xBeg);
+                var height = Math.abs(yBeg - yC);
+                /*if(xBeg < x){
+                    rect.setAttributeNS(null, 'x', xC );
+                    rect.setAttributeNS(null, 'y', yC );
+                }*/
+                /*if((xC - xPrev) < 0){
+                    rect.setAttributeNS(null, 'x', xC );
+
+                }
+                if((yc - yPrev) < 0){
+                    rect.setAttributeNS(null, 'y', yC );
+                }   */
+               
+                rect.setAttributeNS(null, 'width', width);
+                rect.setAttributeNS(null, 'height', height);
+                 var columnElement = document.getElementsByClassName("circleTip");
+              for(var i = 0; i < columnElement.length; i++){
+                var testX = Math.floor(columnElement[i].getAttribute("x")); 
+                testX = testX + widthEachChart * obj.scaleColChartFactor / 100;
+                var testY = Math.floor(columnElement[i].getAttribute("y")); 
+                //console.log(testY + 'y');
+
+                if(testX <= xC && testX >= xBeg && testY <= yC){
+                    //console.log(x);
+                    columnElement[i].style.fill = "red"; 
+                    columnElement[i].style.stroke = "red";
+
+                }
+                
+
+                //console.log(xPrev+ 'xPrev ' + yPrev + " yPrev ");  
+                
+            }
+              
+
+
+         }
+        };
+        function releaseLineRect(event){
+            var rect = this.selectRectIns;
+           
+            rect.setAttributeNS(null, 'height', 0);
+            rect.setAttributeNS(null, 'width', 0);
+            
+            flag = 0;
+
+
+         };
 
          function releaseColRect(event){
             var rect = this.selectRectIns;
@@ -1134,8 +1248,8 @@
           }
 
           for (var i = 0; i < length; i++) {
-             console.log(maxValueArray[i]);
-             console.log(obj.y_axis_map[i]);
+             //console.log(maxValueArray[i]);
+             //console.log(obj.y_axis_map[i]);
           }
 
         };
@@ -1167,8 +1281,8 @@
           }
 
           for (var i = 0; i < length; i++) {
-             console.log(minValueArray[i]);
-             console.log(obj.y_axis_map[i]);
+             //console.log(minValueArray[i]);
+             //console.log(obj.y_axis_map[i]);
           }
 
 
@@ -1273,6 +1387,7 @@ var flagRemoveColor = 0;
                     range[i].plotLineChart();
                     range[i].drawDivRectangle(i); /*rectangle is not required since we don't need to restrict the crooshair, infact no crosshair is there*/
                     range[i].drawCrossHair();
+                    //range[i].selectLineListener(rectIns);
 
                 }else if(obj.chartType == "column"){
                     className = "plotColumnBound"
