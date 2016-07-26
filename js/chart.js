@@ -796,7 +796,7 @@
                      
                      
                   }
- console.log('hello');
+ 
                 
 
      };
@@ -952,6 +952,24 @@
             //var colorCirle = event.currentTarget.getElementsByClassName(className).style.fill="red";
             //console.log(colorCirle);
             //console.log(index);
+            var columnElement = document.getElementsByClassName("circleTip");
+            console.log(columnElement);
+            for(var i = 0; i < columnElement.length; i++){
+                var test = Math.floor(columnElement[i].getAttribute("cx")); 
+
+                test = test /*- widthEachChart * 0.2 + 19*/;
+                console.log(test + 'test');
+                console.log(x + 'x');
+
+                if(test == x){
+                    
+                    columnElement[i].style.fill = "red"; 
+                    columnElement[i].style.stroke = "red";
+
+                }
+                
+               
+            }
             var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
             for(var i = 0; i < obj.y_axis_map.length; i++){
                
@@ -1134,8 +1152,8 @@
           }
 
           for (var i = 0; i < length; i++) {
-             console.log(maxValueArray[i]);
-             console.log(obj.y_axis_map[i]);
+             //console.log(maxValueArray[i]);
+             //console.log(obj.y_axis_map[i]);
           }
 
         };
@@ -1167,8 +1185,8 @@
           }
 
           for (var i = 0; i < length; i++) {
-             console.log(minValueArray[i]);
-             console.log(obj.y_axis_map[i]);
+             //console.log(minValueArray[i]);
+             //console.log(obj.y_axis_map[i]);
           }
 
 
