@@ -9,12 +9,12 @@ var jsonData = {
 
 
     },
-<<<<<<< HEAD
-    "chartType" : "line", 
-=======
+
+   
+
     "chart_order_func" : "minimum",
     "chartType" : "column", 
->>>>>>> trailis
+
     "scaleColChartFactor" : 4,  //in percentage
     "month": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"],
     "y_axis_map": [],
