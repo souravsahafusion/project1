@@ -364,12 +364,12 @@
         var y1 = 0;
         var y2 = 0;
         if (check !== 2) { //check is being calculated many number of times
-            this.yShift = .25;
+            this.yShift = yShiftPer;
             var yShift = this.yShift;
             y1 = (heightEachChart * yShift);
             y2 = (heightEachChart * yShift);
         } else {
-            this.yShift = .25;
+            this.yShift = yShiftPer;
             var yShift = this.yShift;
             y1 = (heightEachChart * yShift) + (heightEachChart);
             y2 = (heightEachChart * yShift) + (heightEachChart);
@@ -423,8 +423,8 @@
 
         var chartNo = this.chartNo;
         var yShift = this.yShift;
-        var x1 = widthEachChart * 0.2;
-        var x2 = widthEachChart * 0.2;
+        var x1 = widthEachChart * distYAxisFromOr;
+        var x2 = widthEachChart * distYAxisFromOr;
         //console.log(chartNo + 'chartNo');
         var y1 = (heightEachChart * yShift);
         var y2 = (heightEachChart * yShift) + (heightEachChart);
@@ -460,7 +460,7 @@
             //drawing divs
             var style = "stroke:rgb(237, 237, 237);stroke-width:1;";
             className = "divLines";
-            this.drawLine(x1, y1, widthEachChart + (widthEachChart * 0.2) /* + (widthEachChart / 20)*/ , y2, style, className);
+            this.drawLine(x1, y1, widthEachChart + (widthEachChart * distYAxisFromOr) /* + (widthEachChart / 20)*/ , y2, style, className);
             //writing the labels
 
             //drawing the rect
@@ -519,7 +519,7 @@
                 var style = "fill:rgb(30, 122, 205);stroke-width:3;stroke:rgb(30, 122, 205)";
                 var className = "plotColumnGraph";
 
-                var rectIns = this.drawColumnRectangle(x, yPointPlot, heightRect, widthRect, className, style);
+                var rectIns = this.drawRectangle(x, yPointPlot, heightRect, widthRect, className, style);
                 this.columnChartListener(rectIns, className);
                 this.lastPlottedPointX = xPointPlot;
                 this.lastPlottedPointY = yPointPlot;
@@ -573,6 +573,7 @@
         rect.setAttribute("class", className);
         rect.setAttribute("style", style);
         this.svg.appendChild(rect);
+        return rect;
 
 
     };
@@ -581,20 +582,21 @@
         var x = this.chartLowBoundXCoor;
         var y = 0;
         if (check !== 2) {
-            y = this.lowLimitYAxis + heightEachChart * .02;
+            y = this.lowLimitYAxis + heightEachChart * chartNameBoxShift;/*heightEachChart * .02; -> space between y-axis and the chartName box*/
+             /*from where the chartName box rectangle will be plotted if the chart name lies below the chart*/
         } else {
-            y = this.upLimitYAxis - heightEachChart * .02 - heightEachChart * .15;
+            y = this.upLimitYAxis - heightEachChart * chartNameBoxShift - heightEachChart * chartNameBoxHtFactor;
         }
 
-        var height = heightEachChart * .15;
+        var height = heightEachChart * chartNameBoxHtFactor;
         var width = this.chartUpBoundXCoor - this.chartLowBoundXCoor;
         var className = "chartName";
         var style = "fill:rgb(245,250,255);stroke:rgb(190,223,254);stroke-width:1;";
         this.drawRectangle(x, y, height, width, className, style);
         y = y + (height) * .6;
-        x = (this.chartLowBoundXCoor + this.chartUpBoundXCoor) / 2 * .8;
+        x = (this.chartLowBoundXCoor + this.chartUpBoundXCoor) / 2 * .8;  //font position determination horizontally
         style = "stroke:rgb(6,48,86);"
-        var fontSize = heightEachChart * .1;
+        var fontSize = heightEachChart * .1;  //font position determination vertically within the box
         var transform = "rotate(0 " + x + "," + y + ")";
         var className = "textAdd";
         var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");;
@@ -670,54 +672,38 @@
         this.toolTipBoxIns = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 
     };
-    Tip.prototype.drawColumnRectangle = function(x, y, heightRect, widthRect, className, style) {
-
-
-        var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        rect.setAttributeNS(null, 'x', x);
-        rect.setAttributeNS(null, 'y', y);
-        rect.setAttributeNS(null, 'height', heightRect);
-        rect.setAttributeNS(null, 'width', widthRect);
-        rect.setAttribute("class", className);
-        rect.setAttribute("style", style);
-        this.svg.appendChild(rect);
-        return rect;
-
-
-    };
+    
     Tip.prototype.drawBoundRectangle = function(className) {
-        var rectBound = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+       
+        style = "stroke:rgb(237, 237, 237);stroke-width:1;fill:transparent";
         var widthRect = this.chartUpBoundXCoor - this.chartLowBoundXCoor;
         var heightRect = this.lowLimitYAxis - this.upLimitYAxis;
-        var y = this.upLimitYAxis;
-        rectBound.setAttributeNS(null, 'x', this.chartLowBoundXCoor);
-        rectBound.setAttributeNS(null, 'y', y);
-        rectBound.setAttributeNS(null, 'height', heightRect);
-        rectBound.setAttributeNS(null, 'width', widthRect);
-        rectBound.setAttribute("class", className);
-        rectBound.setAttribute("style", "stroke:rgb(237, 237, 237);stroke-width:1;fill:transparent");
-        this.svg.appendChild(rectBound);
+        var rectBound = this.drawRectangle(this.chartLowBoundXCoor, this.upLimitYAxis, heightRect, widthRect, className, style);
+        
         return rectBound;
 
     };
 
     Tip.prototype.drawDivRectangle = function(index) {
-        var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        /*var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");*/
         var x = this.lowLimitXAxis;
         var y = this.upLimitYAxis;
         var heightRect = this.lowLimitYAxis - this.upLimitYAxis;
         var widthRect = this.upLimitXAxis - this.lowLimitXAxis;
-        var rectangleId = 'svgDivs';
+        var rectangleDiv = 'svgDivs';
+        style = "fill:transparent";
         //plotted rectangle div
-        rect.setAttributeNS(null, 'x', x);
+        /*rect.setAttributeNS(null, 'x', x);
         rect.setAttributeNS(null, 'y', y);
         rect.setAttributeNS(null, 'height', heightRect);
         rect.setAttributeNS(null, 'width', widthRect);
         rect.setAttribute("class", rectangleId);
         rect.setAttribute("style", "fill:transparent");
         //rect.setAttribute("visibility","hidden");
-        this.svg.appendChild(rect);
-        rect.addEventListener("mousemove", entercoordinates.bind(this, rectangleId));
+        this.svg.appendChild(rect);*/
+        var rect = this.drawRectangle(x, y, heightRect, widthRect, rectangleDiv, style);
+        
+        rect.addEventListener("mousemove", entercoordinates.bind(this, rectangleDiv));
         /*rect.addEventListener("mousemove", function () {
                 entercoordinates.call(this, rectangleId);  
             });*/
@@ -897,7 +883,7 @@
 
                     //object[i].addText(x, y, value, transform, className, textElement);
                     //function call is costly hence avoided
-                    toolTipRect.setAttributeNS(null, 'x', x + widthEachChart * .01);
+                    toolTipRect.setAttributeNS(null, 'x', x + widthEachChart * shiftXTipLine);
                     toolTipRect.setAttributeNS(null, 'y', y - heightEachChart * .1);
                     toolTipRect.setAttributeNS(null, 'height', heightEachChart * .1);
                     toolTipRect.setAttributeNS(null, 'width', widthEachChart * .25);
@@ -997,7 +983,7 @@
 
                     //object[i].addText(x, y, value, transform, className, textElement);
                     //function call is costly hence avoided
-                    toolTipRect.setAttributeNS(null, 'x', x + widthEachChart * .01); //for setting the bound offset of the tooltip
+                    toolTipRect.setAttributeNS(null, 'x', x + widthEachChart * shiftXTipLine); //for setting the bound offset of the tooltip
                     toolTipRect.setAttributeNS(null, 'y', y - heightEachChart * .1);
                     toolTipRect.setAttributeNS(null, 'height', heightEachChart * .1);
                     toolTipRect.setAttributeNS(null, 'width', widthEachChart * .25);
@@ -1322,6 +1308,9 @@
     var shiftXTipLine = .01; //first point plot shift on x-axis from y-axis for column chart
     var shiftXTipCol = .07; //first point plot shift on x-axis from y-axis for column chart
     var distYAxisFromOr = .2; //widthEachChart * distYAxisFromOr
+    var yShiftPer = .25;
+    var chartNameBoxShift = .03;
+    var chartNameBoxHtFactor = .15;
 
 
     function parseData(input) {
