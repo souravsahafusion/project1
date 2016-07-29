@@ -18,7 +18,7 @@ function entercoordinates(parameter, event) {
 };
 
 function removeToolTip(event) {
-    var object = range;
+    var object = chartModel;
     if (flagRemoveColor !== 1) {
         var columnElement = document.getElementsByClassName("plotColumnGraph");
         for (var i = 0; i < columnElement.length; i++) {
@@ -46,7 +46,7 @@ function removeToolTip(event) {
 function clearcoor(event) {
 
     var lineElement = document.getElementsByClassName("drawCrossHairLines");
-    var object = range;
+    var object = chartModel;
     for (var i = 0; i < lineElement.length; i++) {
         lineElement[i].setAttribute("visibility", "hidden");
         var toolTipRect = object[i].toolTipBoxIns;
@@ -90,7 +90,7 @@ function columnTrigger(event) {
 
     }
 
-    var object = range;
+    var object = chartModel;
     var value = 0;
     //console.log(index);
     if (index !== -1) {
@@ -191,7 +191,7 @@ function showCoords(event) {
 
     }
 
-    var object = range;
+    var object = chartModel;
     if (index !== -1) {
         //className = "circleTip"+index;
         //var colorCirle = event.currentTarget.getElementsByClassName(className).style.fill="red";
@@ -274,7 +274,7 @@ function showCoords(event) {
 function instantiateDragLine(event) {
     if (flagRemoveColor !== 1) {
         var xC = event.clientX % obj.chart.width - 10;
-        var yC = event.pageY % obj.chart.height - heightEachChart * range[0].yShift - 45;
+        var yC = event.pageY % obj.chart.height - heightEachChart * chartModel[0].yShift - 45;
         console.log(xC + 'x ' + 'y ' + yC, obj.chart.width);
         console.log(event.clientX + 'clientX' + event.clientY + 'clientY');
 
@@ -308,7 +308,7 @@ function instantiateDragLine(event) {
 function instantiateDragCol(event) {
     if (flagRemoveColor !== 1) {
         var xC = event.clientX % obj.chart.width - 10;
-        var yC = event.pageY % obj.chart.height - heightEachChart * range[0].yShift - 45;
+        var yC = event.pageY % obj.chart.height - heightEachChart * chartModel[0].yShift - 45;
         console.log(xC + 'x ' + 'y ' + yC, obj.chart.width);
         console.log(event.clientX + 'clientX' + event.clientY + 'clientY');
 
@@ -345,7 +345,7 @@ function dragColRect(event) {
     if (flag == 1) {
         var rect = this.selectRectIns;
         var xC = event.clientX % obj.chart.width - 10;
-        var yC = event.pageY % obj.chart.height - heightEachChart * range[0].yShift - 45;
+        var yC = event.pageY % obj.chart.height - heightEachChart * chartModel[0].yShift - 45;
         var xBeg = rect.getAttribute("x");
         var yBeg = rect.getAttribute("y");
         var width = Math.abs(xC - xBeg);
@@ -393,7 +393,7 @@ function dragLineRect(event) {
     if (flag == 1) {
         var rect = this.selectRectIns;
         var xC = event.clientX % obj.chart.width /*- 10*/ ;
-        var yC = event.pageY % obj.chart.height - heightEachChart * range[0].yShift /* - 45*/ ;
+        var yC = event.pageY % obj.chart.height - heightEachChart * chartModel[0].yShift /* - 45*/ ;
         var xBeg = rect.getAttribute("x");
         var yBeg = rect.getAttribute("y");
         var width = Math.abs(xC - xBeg);

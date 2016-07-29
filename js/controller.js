@@ -1,5 +1,8 @@
 
 function parseData(input) {
+
+
+    
      chartBound = new CalValues();
      chartBound.calculateChartOutLines(input);
      var numberOfCharts = obj.y_axis_map.length;

@@ -35,7 +35,7 @@ ColumnChart.prototype.plotColumnChart = function() {
             var className = "plotColumnGraph";
 
             var rectIns = draw.drawRectangle(x, yPointPlot, heightRect, widthRect, className, style);
-            //this.columnChartListener(rectIns, className);
+            this.columnChartListener(rectIns, className);
             instance.lastPlottedPointX = xPointPlot;
             instance.lastPlottedPointY = yPointPlot;
 
@@ -58,7 +58,7 @@ ColumnChart.prototype.calculateMappingPoint = function(value) {
 ColumnChart.prototype.columnChartListener = function(rectIns, className) {
 	var instance = this.instance;
 
-    rectIns.addEventListener("mousemove", entercoordinates.bind(this, className));
+    rectIns.addEventListener("mousemove", entercoordinates.bind(instance, className));
     /*rectIns.addEventListener("mousemove", function () {
         entercoordinates.call(this, className);  
     });*/
@@ -83,5 +83,16 @@ ColumnChart.prototype.drawBoundRectangle = function(className) {
     var rectBound = drawRect.drawRectangle(instance.chartLowBoundXCoor, instance.upLimitYAxis, heightRect, widthRect, className, style);
 
     return rectBound;
+
+};
+ColumnChart.prototype.selectChartListener = function(rectIns) {
+	var instance = this.instance;
+    instance.selectRectIns = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    var _this = instance;
+    instance.svg.appendChild(instance.selectRectIns)
+
+    rectIns.addEventListener("mousedown", instantiateDragCol.bind(_this));
+    rectIns.addEventListener("mousemove", dragColRect.bind(_this));
+    rectIns.addEventListener("mouseup", releaseColRect.bind(_this));
 
 };

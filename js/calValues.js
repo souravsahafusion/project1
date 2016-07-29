@@ -274,7 +274,7 @@ CalValues.prototype.findMinAndSetDataValue = function(tempMap) {
 
 };
 CalValues.prototype.setChartValues = function(tempMap, i){
- var chartModel = [];
+ 
  chartModel[i] = new ChartModel();
  this.instance = chartModel[i];
  chartModel[i].min = this.findMinAndSetDataValue(tempMap);
@@ -303,3 +303,4 @@ return this.instance;
 
 };*/
 var numberOfColCharts = 0;
+var chartModel = [];
