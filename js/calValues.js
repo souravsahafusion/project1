@@ -293,4 +293,13 @@ return this.instance;
  
 
 };
+/*CalValues.prototype.calculateMappingPoint = function(value) {
+    var instance = this.instance;
+    var a = instance.minTipValue;
+    var b = instance.maxTipValue;
+    var c = instance.upLimitYAxis;
+    var d = instance.lowLimitYAxis;
+    return (d - (value - a) / (b - a) * (d - c));
+
+};*/
 var numberOfColCharts = 0;

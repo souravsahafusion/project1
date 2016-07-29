@@ -34,6 +34,7 @@ LineChart.prototype.plotLineChart = function() {
     for (i = 0; i < obj.data.length; i++) { /*to be changed later '12' for any number of data i.e. find the last index of the storevalue array*/
         var value = instance.storeValue[i];
         if (typeof value != 'undefined') {
+        	//var calculate = new CalVaues();
             var yPointPlot = this.calculateMappingPoint(value);
             //console.log(range.length); need to debug
             instance.storeAncorPointsY[i] = yPointPlot;
@@ -63,8 +64,9 @@ LineChart.prototype.plotLineChart = function() {
 
 };
 
+
 LineChart.prototype.calculateMappingPoint = function(value) {
-	var instance = this.instance;
+    var instance = this.instance;
     var a = instance.minTipValue;
     var b = instance.maxTipValue;
     var c = instance.upLimitYAxis;

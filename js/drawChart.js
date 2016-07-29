@@ -52,6 +52,8 @@ DrawChart.prototype.initiateGraph = function(){
             drawChart.initiateDraw();
             break;
         case "column":
+            drawChart = new ColumnChart(instance);
+            drawChart.initiateDraw();
 
             
             break;
