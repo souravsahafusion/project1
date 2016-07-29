@@ -32,5 +32,9 @@ function ChartModel(){
     this.toolTipBoxIns = '';
     this.yShift = 0;
     this.selectRectIns = '';
+    this.svg = '';
+    this.numberOfColCharts = 0;
+    this.numberOfCharts = 0;
+    
 
 }

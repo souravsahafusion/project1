@@ -1,7 +1,7 @@
 
 function parseData(input) {
      chartBound = new CalValues();
-     var numberOfColCharts =chartBound.calculateChartOutLines(input);
+     chartBound.calculateChartOutLines(input);
      var numberOfCharts = obj.y_axis_map.length;
      console.log(numberOfCharts + 'numberOfCharts');
 
@@ -30,7 +30,10 @@ function parseData(input) {
         //console.log(tempMap+ 'first step');
         var range = [];
         range[i] = new CalValues();
-        range[i].setChartValues(tempMap, i);
+        var instance = range[i].setChartValues(tempMap, i);
+
+        range[i] = new DrawChart(instance, i);
+        range[i].initiateGraph();
         /*range[i].min = range[i].indfMinAndSetDataValue(tempMap);
         //console.log(range[i].min + 'minimum calculated from different data values');
         range[i].max = range[i].findMax(tempMap, i);*/

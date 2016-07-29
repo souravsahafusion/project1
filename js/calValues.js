@@ -3,6 +3,8 @@ function CalValues(){
 
 }
 var obj = {};
+var widthEachChart = 0;
+var heightEachChart = 0;
 CalValues.prototype.findYTipsModified = function(diffTenthPow) {
 
     var instance = this.instance;
@@ -204,8 +206,9 @@ CalValues.prototype.findMonth = function(index) {
         return dateObject.getMonth();
     };
 CalValues.prototype.calculateChartOutLines = function (input) {
-    obj = input;
-    var noOfDatas = obj.data.length;
+    var instance = this.instance;
+	obj = input;
+	var noOfDatas = obj.data.length;
 
     if (obj.y_axis_map.length < 1) {
         var arr = [];
@@ -227,17 +230,19 @@ CalValues.prototype.calculateChartOutLines = function (input) {
 
     }
     
-    widthEachChart = obj.chart.width - (obj.chart.width * .5);
-    heightEachChart = obj.chart.height * 0.65;
+    widthEachChart = obj.chart.width - (obj.chart.width * .5); //kept global
+    heightEachChart = obj.chart.height * 0.65; //kept global
     
 
     var windowWidth = window.innerWidth;
     var windowHeight = window.innerHeight;
     var chartWidth = obj.chart.width;
     var chartHeight = obj.chart.height;
-    var numberOfColCharts = Math.floor(windowWidth / chartWidth);
-    console.log(numberOfColCharts + 'numberOfColCharts');
-    return numberOfColCharts;
+    instance.numberOfColCharts =  Math.floor(windowWidth / chartWidth);
+
+
+    //console.log(numberOfColCharts + 'numberOfColCharts');
+    
 };
 CalValues.prototype.findMinAndSetDataValue = function(tempMap) {
     var instance = this.instance;
@@ -287,7 +292,7 @@ CalValues.prototype.setChartValues = function(tempMap, i){
     }
 */
  //console.log(chartModel[i].max);
-
+return this.instance;
  
 
 };
