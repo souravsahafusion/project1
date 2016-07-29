@@ -3,9 +3,9 @@ var jsonData = {
 
 
     "chart": {
-       
-        "width": 500,
-        "height":400
+        
+        "width": 600,
+        "height":300
 
 
     },
@@ -13,9 +13,14 @@ var jsonData = {
    
 
     "chart_order_func" : "minimum",
+<<<<<<< HEAD
     "chartType" : "column", 
 
     "scaleColChartFactor" : 4,  //in percentage
+=======
+    "scaleColChartFactor" : 4,
+    "chartType" : "column",   
+>>>>>>> restructuring
     "month": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"],
     "y_axis_map": [],
     "data": [{
@@ -27,7 +32,7 @@ var jsonData = {
             "date": "05/25/2015"
 
         },{
-            "axis1": 11100, //value for month june
+            "axis1": 11100.15, //value for month june
             "sales": .7,
             "visited": .7761,
             "axis4": 159,
