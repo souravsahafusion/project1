@@ -9,18 +9,9 @@ var jsonData = {
 
 
     },
-
-   
-
     "chart_order_func" : "minimum",
-<<<<<<< HEAD
-    "chartType" : "column", 
-
-    "scaleColChartFactor" : 4,  //in percentage
-=======
     "scaleColChartFactor" : 4,
-    "chartType" : "column",   
->>>>>>> restructuring
+    "chartType" : "line",   
     "month": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"],
     "y_axis_map": [],
     "data": [{

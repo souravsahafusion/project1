@@ -9,8 +9,8 @@ LineChart.prototype.initiateDraw = function(){
     var rectIns = this.drawBoundRectangle(className);
     instance.chartType = "line";
     this.plotLineChart();
-    //range[i].drawDivRectangle(i); /*rectangle is not required since we don't need to restrict the crooshair, infact no crosshair is there*/
-    //range[i].drawCrossHair();
+    this.drawDivRectangle(i); /*rectangle is not required since we don't need to restrict the crooshair, infact no crosshair is there*/
+    this.drawCrossHair();
 };
 
 LineChart.prototype.drawBoundRectangle = function(className) {
@@ -73,4 +73,52 @@ LineChart.prototype.calculateMappingPoint = function(value) {
     var d = instance.lowLimitYAxis;
     return (d - (value - a) / (b - a) * (d - c));
 
+};
+LineChart.prototype.drawDivRectangle = function(index) {
+    /*var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");*/
+    var instance = this.instance;
+    var draw = new PlotGraph(instance);
+    var x = instance.lowLimitXAxis;
+    var y = instance.upLimitYAxis;
+    var heightRect = instance.lowLimitYAxis - instance.upLimitYAxis;
+    var widthRect = instance.upLimitXAxis - instance.lowLimitXAxis;
+    var rectangleDiv = 'svgDivs';
+    style = "fill:transparent";
+    
+    var rect = draw.drawRectangle(x, y, heightRect, widthRect, rectangleDiv, style);
+
+    rect.addEventListener("mousemove", entercoordinates.bind(instance, rectangleDiv));
+    /*rect.addEventListener("mousemove", function () {
+            entercoordinates.call(this, rectangleId);  
+        });*/
+    rect.addEventListener("syncCrossHair", showCoords, false);
+    //divNames[i].addEventListener("mousemove", showCoords,false);
+    rect.addEventListener("mouseleave", clearcoor, false);
+    instance.toolTipTextIns = document.createElementNS("http://www.w3.org/2000/svg", "text"); //might need to be added in column as well
+    instance.toolTipBoxIns = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+
+    instance.selectRectIns = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    var _this = instance;
+    instance.svg.appendChild(instance.selectRectIns)
+
+    rect.addEventListener("mousedown", instantiateDragLine.bind(_this));
+    rect.addEventListener("mousemove", dragLineRect.bind(_this));
+    rect.addEventListener("mouseup", releaseLineRect.bind(_this));
+
+
+    //svg chart area bound with x y axis
+    /**/
+
+};
+LineChart.prototype.drawCrossHair = function() {
+	var instance = this.instance;
+	var draw = new PlotGraph(instance);
+    var className = "drawCrossHairLines";
+    var x = instance.lowLimitXAxis;
+    var y1 = instance.lowLimitYAxis;
+    var y2 = instance.upLimitYAxis;
+    var style = "stroke:rgb(255, 0 , 0);stroke-width:1;";
+    var strokedasharray = "3, 2";
+    var visibility = "hidden";
+    draw.drawLine(x, y1, x, y2, style, className, visibility, strokedasharray);
 };
