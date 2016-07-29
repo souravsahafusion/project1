@@ -6,7 +6,8 @@ this.index = index;
 }
 DrawChart.prototype.drawChartOutline = function() {
 	var instance = this.instance;
-	var numberOfColCharts = instance.numberOfColCharts;
+	
+	console.log(numberOfColCharts);
 	var numberOfCharts = obj.y_axis_map.length;
 	
     instance.chartId = document.getElementById("chart");
@@ -19,10 +20,10 @@ DrawChart.prototype.drawChartOutline = function() {
     }
     
     var xAxis = new DrawXAxis(instance);
-    xAxis.drawXAxis(check, numberOfColCharts, numberOfCharts);
+    xAxis.drawXAxis(check, numberOfCharts);
 
-    //this.drawXAxis(check, numberOfColCharts, numberOfCharts);
-    //this.drawYAxis();
+    var yAxis = new DrawYAxis(instance);
+    yAxis.drawYAxis();
     //this.addChartName(chartNo, check); //this chartNo is the index value of the array 
 
     //this.addXLabel();
@@ -30,9 +31,9 @@ DrawChart.prototype.drawChartOutline = function() {
 };
 DrawChart.prototype.createSVG = function() {
 	var instance = this.instance;
-console.log(instance);
+
     instance.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-   console.log(instance.svg);
+   
     instance.svg.setAttribute("height", obj.chart.height);
     instance.svg.setAttribute("width", obj.chart.width);
     chartId = document.getElementById("chart");
@@ -43,6 +44,23 @@ console.log(instance);
 DrawChart.prototype.initiateGraph = function(){
 	this.createSVG();
 	this.drawChartOutline();
+	var instance = this.instance;
+	var expression = obj.chartType;
+    switch (expression) {
+        case "line":
+            drawChart = new LineChart(instance);
+            drawChart.initiateDraw();
+            break;
+        case "column":
+
+            
+            break;
+
+    }
+	 
+
+
+	
 
 };
 

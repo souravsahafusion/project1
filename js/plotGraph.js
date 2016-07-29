@@ -18,7 +18,7 @@ PlotGraph.prototype.drawLine = function(x1, y1, x2, y2, style, className, visibi
         line.setAttribute("visibility", "hidden");
 
     }
-    console.log(instance.svg );
+    
     instance.svg.appendChild(line);
 
 };
@@ -48,7 +48,7 @@ PlotGraph.prototype.plotTipCirle = function(xPointPlot, yPointPlot, className) {
 
 };
 PlotGraph.prototype.chartDivLabelX = function(textValue, x, y, check) {
-	var instance = this.instance;
+	
     var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
     var x = x - (widthEachChart / 70);
     var y = y + (heightEachChart / 40);
@@ -68,6 +68,26 @@ PlotGraph.prototype.chartDivLabelX = function(textValue, x, y, check) {
     var fontSize = heightEachChart * .05;
     textElement.setAttribute("font-size", fontSize);
     textElement.setAttribute("transform", transform);
+    this.instance.svg.appendChild(textElement);
+    console.log(fontSize);
+
+};
+PlotGraph.prototype.chartDivLabelY = function(y, index) {
+	var instance = this.instance;
+    var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    var x = widthEachChart / 16;
+    var y = y;
+    var fontSize = widthEachChart * .04;
+    var textValue = instance.maxTipValue - (instance.diffBwTips * index / instance.noOfYTips);
+    if (instance.mulTiplyFactor == 10000) {
+        textValue = parseFloat(textValue).toFixed(3);
+    } else if (instance.mulTiplyFactor == 100) {
+        textValue = parseFloat(textValue).toFixed(1);
+    }
+    textElement.setAttribute("x", x);
+    textElement.setAttribute("y", y);
+    textElement.innerHTML = textValue;
+    textElement.setAttribute("font-size", fontSize);
     instance.svg.appendChild(textElement);
 
 };

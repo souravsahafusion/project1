@@ -238,10 +238,7 @@ CalValues.prototype.calculateChartOutLines = function (input) {
     var windowHeight = window.innerHeight;
     var chartWidth = obj.chart.width;
     var chartHeight = obj.chart.height;
-    instance.numberOfColCharts =  Math.floor(windowWidth / chartWidth);
-
-
-    //console.log(numberOfColCharts + 'numberOfColCharts');
+    numberOfColCharts =  Math.floor(windowWidth / chartWidth);
     
 };
 CalValues.prototype.findMinAndSetDataValue = function(tempMap) {
@@ -296,3 +293,4 @@ return this.instance;
  
 
 };
+var numberOfColCharts = 0;
