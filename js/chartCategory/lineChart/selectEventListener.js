@@ -12,8 +12,8 @@ function releaseLineRect(event) {
 function dragLineRect(event) {
     if (flag == 1) {
         var rect = this.selectRectIns;
-        var xC = event.clientX % obj.chart.width /*- 10*/ ;
-        var yC = event.pageY % obj.chart.height - heightEachChart * chartModel[0].yShift /* - 45*/ ;
+        var xC = event.clientX % obj.chart.width - 10 ;
+        var yC = event.pageY % obj.chart.height - heightEachChart * chartModel[0].yShift - 45 ;
         var xBeg = rect.getAttribute("x");
         var yBeg = rect.getAttribute("y");
         var width = Math.abs(xC - xBeg);
