@@ -6,7 +6,7 @@ function instantiateDragLine(event) {
     
     if (flagRemoveColor !== 1) {
             var xC = event.clientX % obj.chart.width - 10;
-            var yC = event.pageY % obj.chart.height - heightEachChart * chartModel[0].yShift ;
+            var yC = event.pageY % obj.chart.height - heightEachChart * chartModel[0].yShift - 45;
             console.log(xC + 'x ' + 'y ' + yC, obj.chart.width);
             console.log(event.clientX + 'clientX' + event.clientY + 'clientY');
 
@@ -43,7 +43,7 @@ function dragLineRect(event) {
     if (flag == 1) {
             var rect = this.selectRectIns;
             var xC = event.clientX % obj.chart.width - 10;
-            var yC = event.pageY % obj.chart.height - heightEachChart * chartModel[0].yShift  ;
+            var yC = event.pageY % obj.chart.height - heightEachChart * chartModel[0].yShift - 45 ;
             var xBeg = rect.getAttribute("x");
             var yBeg = rect.getAttribute("y");
             var width = Math.abs(xC - xBeg);
