@@ -1,12 +1,12 @@
-function DrawXAxis(instance){
-this.instance = instance;
+function DrawXAxis(instance) {
+    this.instance = instance;
 }
 
 DrawXAxis.prototype.drawXAxis = function(check, numberOfCharts) {
-	var instance = this.instance;
+    var instance = this.instance;
     var chartNo = instance.chartNo;
     lineDraw = new PlotGraph(instance);
-    
+
 
 
 
@@ -45,7 +45,7 @@ DrawXAxis.prototype.drawXAxis = function(check, numberOfCharts) {
      */
     instance.noofXTips = instance.storeValue.length;
     for (i = 0; i < instance.noofXTips; i++) {
-    	//console.log(instance.noofXTips + 'noofXTips');
+        //console.log(instance.noofXTips + 'noofXTips');
         x1 = temp_x1 + (widthEachChart / instance.noofXTips) * (i);
         x2 = temp_x1 + (widthEachChart / instance.noofXTips) * (i);
         instance.upLimitXAxis = x1;
@@ -62,21 +62,21 @@ DrawXAxis.prototype.drawXAxis = function(check, numberOfCharts) {
 
 
             lineDraw.drawLine(x1, y1, x2, y2, style, className);
-            
+
         }
 
 
         //put x-axis label 
         //console.log(check+ ' check'+ numberOfColCharts + ' numberOfColCharts');
         if (check !== 2 && chartNo <= numberOfColCharts) {
-        	console.log("test");
+            console.log("test");
             lineDraw.chartDivLabelX(obj.month[i], x1, y2, check);
 
         }
 
         if (check == 2 && chartNo > (numberOfCharts - numberOfColCharts)) {
-        	console.log("test");
-           lineDraw.chartDivLabelX(obj.month[i], x1, y2, check);
+            console.log("test");
+            lineDraw.chartDivLabelX(obj.month[i], x1, y2, check);
         }
     }
 };

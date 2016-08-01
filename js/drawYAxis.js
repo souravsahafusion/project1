@@ -1,12 +1,12 @@
-function DrawYAxis(instance){
+function DrawYAxis(instance) {
 
-this.instance = instance;
+    this.instance = instance;
 
 }
 
 DrawYAxis.prototype.drawYAxis = function() {
-	var instance = this.instance;
-	draw = new PlotGraph(instance);
+    var instance = this.instance;
+    draw = new PlotGraph(instance);
 
     var chartNo = instance.chartNo;
     var yShift = instance.yShift;

@@ -1,11 +1,11 @@
-function PlotGraph(instance){
+function PlotGraph(instance) {
 
-this.instance = instance;
+    this.instance = instance;
 
 
 }
 PlotGraph.prototype.drawLine = function(x1, y1, x2, y2, style, className, visibility, strokedasharray) {
-	var instance = this.instance;
+    var instance = this.instance;
     var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     line.setAttribute("x1", x1);
     line.setAttribute("y1", y1);
@@ -18,7 +18,7 @@ PlotGraph.prototype.drawLine = function(x1, y1, x2, y2, style, className, visibi
         line.setAttribute("visibility", "hidden");
 
     }
-    
+
     instance.svg.appendChild(line);
 
 };
@@ -47,8 +47,25 @@ PlotGraph.prototype.plotTipCirle = function(xPointPlot, yPointPlot, className) {
     this.instance.svg.appendChild(circleTip);
 
 };
+PlotGraph.prototype.addText = function(x, y, textValue, transform, className, textElement, fontSize, style) {
+
+    if (typeof textElement == 'undefined') {
+        textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+
+    }
+
+    textElement.setAttribute("x", x);
+    textElement.setAttribute("y", y);
+    textElement.innerHTML = textValue;
+    //var fontSize  = heightEachChart * .04;
+    textElement.setAttribute("font-size", fontSize);
+    textElement.setAttribute("transform", transform);
+    textElement.setAttribute("style", style);
+    this.instance.svg.appendChild(textElement);
+
+};
 PlotGraph.prototype.chartDivLabelX = function(textValue, x, y, check) {
-	
+
     var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
     var x = x - (widthEachChart / 70);
     var y = y + (heightEachChart / 40);
@@ -73,7 +90,7 @@ PlotGraph.prototype.chartDivLabelX = function(textValue, x, y, check) {
 
 };
 PlotGraph.prototype.chartDivLabelY = function(y, index) {
-	var instance = this.instance;
+    var instance = this.instance;
     var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
     var x = widthEachChart / 16;
     var y = y;

@@ -1,5 +1,5 @@
-function ChartModel(){
-	this.chartType = '';
+function ChartModel() {
+    this.chartType = '';
     this.min = 0;
     this.max = 0;
     this.range = 0;
@@ -35,6 +35,6 @@ function ChartModel(){
     this.svg = '';
     this.numberOfColCharts = 0;
     this.numberOfCharts = 0;
-    
+
 
 }

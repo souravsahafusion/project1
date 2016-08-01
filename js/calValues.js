@@ -1,4 +1,4 @@
-function CalValues(){
+function CalValues() {
     this.instance = '';
 
 }
@@ -201,14 +201,14 @@ CalValues.prototype.findMax = function(tempMap) {
 };
 CalValues.prototype.findMonth = function(index) {
 
-        var date = obj.data[index]["date"];
-        dateObject = new Date(date);
-        return dateObject.getMonth();
-    };
-CalValues.prototype.calculateChartOutLines = function (input) {
+    var date = obj.data[index]["date"];
+    dateObject = new Date(date);
+    return dateObject.getMonth();
+};
+CalValues.prototype.calculateChartOutLines = function(input) {
     var instance = this.instance;
-	obj = input;
-	var noOfDatas = obj.data.length;
+    obj = input;
+    var noOfDatas = obj.data.length;
 
     if (obj.y_axis_map.length < 1) {
         var arr = [];
@@ -229,17 +229,17 @@ CalValues.prototype.calculateChartOutLines = function (input) {
         }
 
     }
-    
+
     widthEachChart = obj.chart.width - (obj.chart.width * .5); //kept global
     heightEachChart = obj.chart.height * 0.65; //kept global
-    
+
 
     var windowWidth = window.innerWidth;
     var windowHeight = window.innerHeight;
     var chartWidth = obj.chart.width;
     var chartHeight = obj.chart.height;
-    numberOfColCharts =  Math.floor(windowWidth / chartWidth);
-    
+    numberOfColCharts = Math.floor(windowWidth / chartWidth);
+
 };
 CalValues.prototype.findMinAndSetDataValue = function(tempMap) {
     var instance = this.instance;
@@ -273,34 +273,42 @@ CalValues.prototype.findMinAndSetDataValue = function(tempMap) {
     return minimum;
 
 };
-CalValues.prototype.setChartValues = function(tempMap, i){
- 
- chartModel[i] = new ChartModel();
- this.instance = chartModel[i];
- chartModel[i].min = this.findMinAndSetDataValue(tempMap);
- chartModel[i].max = this.findMax(tempMap);
- this.positionValues();
- this.findRangeModified();
-/*for (var j = 0; j < obj.data.length; j++) {
-        //setting value to the object
-       
-        console.log(this.instance.storeValue[j]) ;
-       
-    }
-*/
- //console.log(chartModel[i].max);
-return this.instance;
- 
+CalValues.prototype.setChartValues = function(tempMap, i) {
+
+    chartModel[i] = new ChartModel();
+    this.instance = chartModel[i];
+    chartModel[i].min = this.findMinAndSetDataValue(tempMap);
+    chartModel[i].max = this.findMax(tempMap);
+    this.positionValues();
+    this.findRangeModified();
+    /*for (var j = 0; j < obj.data.length; j++) {
+            //setting value to the object
+           
+            console.log(this.instance.storeValue[j]) ;
+           
+        }
+    */
+    //console.log(chartModel[i].max);
+    return this.instance;
+
 
 };
-/*CalValues.prototype.calculateMappingPoint = function(value) {
-    var instance = this.instance;
-    var a = instance.minTipValue;
-    var b = instance.maxTipValue;
-    var c = instance.upLimitYAxis;
-    var d = instance.lowLimitYAxis;
-    return (d - (value - a) / (b - a) * (d - c));
 
-};*/
+CalValues.prototype.customChartArrange = function() {
+    
+    
+    for (var i = 0; i < obj.y_axis_map.length; i++) {
+            var tempMap = obj.y_axis_map[i];
+            //console.log(tempMap+ 'first step');
+        
+            range2[i] = new ChartModel();
+            this.instance = range2[i];
+            range2[i].min = this.findMinAndSetDataValue(tempMap);
+            //console.log(range[i].min + 'minimum calculated from different data values');
+            range2[i].max = this.findMax(tempMap, i);
+        }
+    
+};
 var numberOfColCharts = 0;
 var chartModel = [];
+var range2 = [];
