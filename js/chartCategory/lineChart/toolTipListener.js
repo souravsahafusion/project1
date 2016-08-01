@@ -27,7 +27,7 @@ function showCoords(event) {
     if (index !== -1) {
 
         var textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        for (var i = 0; i < obj.y_axis_map.length; i++) {
+        for (var i = 0; i < object.length; i++) {
 
             if (typeof object[i].storeAncorPointsY[index] !== 'undefined') {
                 value = object[i].storeValue[index];
@@ -66,7 +66,7 @@ function showCoords(event) {
 
         }
     } else {
-        for (var i = 0; i < obj.y_axis_map.length; i++) {
+        for (var i = 0; i < object.length; i++) {
 
             var toolTipRect = object[i].toolTipBoxIns;
             toolTipRect.setAttribute("visibility", "hidden");
@@ -84,7 +84,7 @@ function clearcoor(event) {
 
 
     var object = chartModel;
-    for (var i = 0; i < obj.data.length; i++) {
+    for (var i = 0; i < object.length; i++) {
 
         var toolTipRect = object[i].toolTipBoxIns;
         toolTipRect.setAttribute("visibility", "hidden");

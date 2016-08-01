@@ -120,7 +120,7 @@ function removeToolTip(event) {
         }
     }
 
-    for (var i = 0; i < obj.data.length; i++) {
+    for (var i = 0; i < object.length; i++) {
         //console.log("removed");
         var toolTipRect = object[i].toolTipBoxIns;
         toolTipRect.setAttribute("visibility", "hidden");
