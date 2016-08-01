@@ -28,6 +28,7 @@ function dragColRect(event) {
         if((yc - yPrev) < 0){
             rect.setAttributeNS(null, 'y', yC );
         }   */
+        flagRemoveColor = 1;
 
         rect.setAttributeNS(null, 'width', width);
         rect.setAttributeNS(null, 'height', height);
@@ -75,7 +76,7 @@ function instantiateDragCol(event) {
         rect.setAttribute("class", "selectRect");
         rect.setAttribute("style", "fill:transparent;stroke:rgb(0,0,0)");
         flag = 1;
-        flagRemoveColor = 1;
+        
         //console.log(parameter);
         //this.svg.appendChild(rect);
     } else {
